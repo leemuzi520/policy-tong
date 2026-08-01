@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:,">
 <title>政策通 — 企业政策申报智能诊断平台</title>
 <style>
 /* ============================================================
@@ -2805,6 +2806,18 @@ body {
           </select>
         </div>
         <div class="form-group">
+          <label>已获得资质（选最高一级）</label>
+          <select id="mLevel">
+            <option value="">请选择</option>
+            <option value="0">还没入库创新型（从零开始）</option>
+            <option value="1">已入库创新型中小企业</option>
+            <option value="2">已获省级专精特新中小企业</option>
+            <option value="3">已是专精特新「小巨人」</option>
+            <option value="4">已是重点「小巨人」（中央财政支持）</option>
+            <option value="5">已是制造业单项冠军</option>
+          </select>
+        </div>
+        <div class="form-group">
           <label>上年度营业收入</label>
           <select id="mRevenue">
             <option value="">请选择</option>
@@ -2847,7 +2860,7 @@ body {
           </select>
         </div>
         <div class="form-group">
-          <label>近三年有无重大安全/环保/质量事故</label>
+          <label>近三年有无重大安全/环保/质量事故（含经营异常/失信/重大违法违规）</label>
           <select id="mAccident">
             <option value="">请选择</option>
             <option value="无">无</option>
@@ -2860,6 +2873,123 @@ body {
             <option value="">请选择</option>
             <option value="是">是</option>
             <option value="否">否</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>从事特定细分市场年限（省级与小巨人 ≥3 年、单项冠军 ≥10 年）</label>
+          <select id="mSegYears">
+            <option value="">请选择</option>
+            <option value="<3年">< 3 年</option>
+            <option value="3-5年">3 - 5 年</option>
+            <option value="5-10年">5 - 10 年</option>
+            <option value=">10年">> 10 年</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>主营业务收入占营收比例（省级 ≥80%、小巨人 ≥90%）</label>
+          <select id="mMainRatio">
+            <option value="">请选择</option>
+            <option value="≥90%">≥ 90%</option>
+            <option value="80%-90%">80% - 90%</option>
+            <option value="<80%">< 80%</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>近两年营业收入复合增长率（小巨人要求 ≥5%）</label>
+          <select id="mGrowth">
+            <option value="">请选择</option>
+            <option value="≥5%">≥ 5%</option>
+            <option value="<5%">< 5%</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>上年末资产负债率（省级 ≤80%、小巨人 ≤75%）</label>
+          <select id="mDebt">
+            <option value="">请选择</option>
+            <option value="≤55%">≤ 55%</option>
+            <option value="55%-75%">55% - 75%</option>
+            <option value="75%-80%">75% - 80%</option>
+            <option value=">80%">> 80%</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>近两年新增股权投资（合格机构投资者实缴；省级营收不足 1500 万时 ≥2000 万可豁免）</label>
+          <select id="mEquity">
+            <option value="">请选择</option>
+            <option value="≥2000万">≥ 2000 万</option>
+            <option value="<2000万">< 2000 万</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>近两年研发费用合计金额（省级 ≥100 万、小巨人 ≥1200 万）</label>
+          <select id="mRDTotal">
+            <option value="">请选择</option>
+            <option value="<100万">< 100 万</option>
+            <option value="100万-1200万">100 万 - 1200 万</option>
+            <option value="≥1200万">≥ 1200 万</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>专精特新发展评价得分（培育平台 zjtx.miit.gov.cn 查询，省级 ≥50、小巨人 ≥60）</label>
+          <select id="mEval">
+            <option value="">请选择</option>
+            <option value="≥60分">≥ 60 分</option>
+            <option value="50-60分">50 - 60 分</option>
+            <option value="<50分">< 50 分</option>
+            <option value="未查询">未查询（需登录平台自查）</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>主导产品市场占有率（省级靠前、小巨人 ≥10% 或国内前三、单项冠军全球前 3）</label>
+          <select id="mMarketShare">
+            <option value="">请选择</option>
+            <option value="全球前3">全球前 3</option>
+            <option value="国内前三或≥10%">国内前三或 ≥10%</option>
+            <option value="较为靠前">较为靠前（无量化）</option>
+            <option value="一般">一般</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>主导产品是否属于六基/产业链关键环节（小巨人硬条件）</label>
+          <select id="mSixBase">
+            <option value="">请选择</option>
+            <option value="是">是</option>
+            <option value="否">否</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>是否在境内外公开发行股票（重点小巨人资格：须未上市）</label>
+          <select id="mListed">
+            <option value="">请选择</option>
+            <option value="未上市">未上市</option>
+            <option value="已上市">已上市</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>是否已编制「三新一强」推进计划且投资总额 >2000 万（重点小巨人核心要件）</label>
+          <select id="mInvest">
+            <option value="">请选择</option>
+            <option value="已编制且>2000万">已编制且投资 >2000 万</option>
+            <option value="未编制或不足">未编制或投资不足</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>是否满足创新型直通条件（高企有效期内/省级以上科技奖励/省部级研发机构/股权融资 ≥500 万，满足任一即可）</label>
+          <select id="mDirect">
+            <option value="">请选择</option>
+            <option value="是">是，满足至少一项</option>
+            <option value="否">否</option>
+            <option value="不清楚">不清楚</option>
           </select>
         </div>
         <div class="form-group">
@@ -2955,7 +3085,7 @@ body {
           </select>
         </div>
         <div class="form-group">
-          <label>近三年有无重大安全/环保/质量事故</label>
+          <label>近三年有无重大安全/环保/质量事故（含经营异常/失信/重大违法违规）</label>
           <select id="pAccident">
             <option value="">请选择</option>
             <option value="无">无</option>
@@ -2963,12 +3093,73 @@ body {
           </select>
         </div>
         <div class="form-group">
-          <label>主营业务收入占营收比例（小巨人要求 ≥90%）</label>
+          <label>从事特定细分市场年限（2/3/5 层判断：省级与小巨人 ≥3 年、单项冠军 ≥10 年）</label>
+          <select id="pSegYears">
+            <option value="">请选择</option>
+            <option value="<3年">< 3 年</option>
+            <option value="3-5年">3 - 5 年</option>
+            <option value="5-10年">5 - 10 年</option>
+            <option value=">10年">> 10 年</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>主营业务收入占营收比例（省级 ≥80%、小巨人 ≥90%）</label>
           <select id="pMainRatio">
             <option value="">请选择</option>
             <option value="≥90%">≥ 90%</option>
-            <option value="<90%">< 90%</option>
+            <option value="80%-90%">80% - 90%</option>
+            <option value="<80%">< 80%</option>
             <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>近两年营业收入复合增长率（小巨人要求 ≥5%）</label>
+          <select id="pGrowth">
+            <option value="">请选择</option>
+            <option value="≥5%">≥ 5%</option>
+            <option value="<5%">< 5%</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>上年末资产负债率（省级 ≤80%、小巨人 ≤75%）</label>
+          <select id="pDebt">
+            <option value="">请选择</option>
+            <option value="≤55%">≤ 55%</option>
+            <option value="55%-75%">55% - 75%</option>
+            <option value="75%-80%">75% - 80%</option>
+            <option value=">80%">> 80%</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>近两年新增股权投资（合格机构投资者实缴；省级营收不足 1500 万时 ≥2000 万可豁免）</label>
+          <select id="pEquity">
+            <option value="">请选择</option>
+            <option value="≥2000万">≥ 2000 万</option>
+            <option value="<2000万">< 2000 万</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>近两年研发费用合计金额（省级 ≥100 万、小巨人 ≥1200 万）</label>
+          <select id="pRDTotal">
+            <option value="">请选择</option>
+            <option value="<100万">< 100 万</option>
+            <option value="100万-1200万">100 万 - 1200 万</option>
+            <option value="≥1200万">≥ 1200 万</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>专精特新发展评价得分（培育平台 zjtx.miit.gov.cn 查询，省级 ≥50、小巨人 ≥60）</label>
+          <select id="pEval">
+            <option value="">请选择</option>
+            <option value="≥60分">≥ 60 分</option>
+            <option value="50-60分">50 - 60 分</option>
+            <option value="<50分">< 50 分</option>
+            <option value="未查询">未查询（需登录平台自查）</option>
           </select>
         </div>
         <div class="form-group">
@@ -2981,11 +3172,40 @@ body {
           </select>
         </div>
         <div class="form-group">
-          <label>申请产品市场占有率是否全球前 3（单项冠军要求）</label>
-          <select id="pGlobalShare">
+          <label>主导产品市场占有率（省级靠前、小巨人 ≥10% 或国内前三、单项冠军全球前 3）</label>
+          <select id="pMarketShare">
+            <option value="">请选择</option>
+            <option value="全球前3">全球前 3</option>
+            <option value="国内前三或≥10%">国内前三或 ≥10%</option>
+            <option value="较为靠前">较为靠前（无量化）</option>
+            <option value="一般">一般</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>主导产品是否属于六基/产业链关键环节（小巨人硬条件）</label>
+          <select id="pSixBase">
             <option value="">请选择</option>
             <option value="是">是</option>
             <option value="否">否</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>是否在境内外公开发行股票（重点小巨人资格：须未上市）</label>
+          <select id="pListed">
+            <option value="">请选择</option>
+            <option value="未上市">未上市</option>
+            <option value="已上市">已上市</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>是否已编制「三新一强」推进计划且投资总额 >2000 万（重点小巨人核心要件）</label>
+          <select id="pInvest">
+            <option value="">请选择</option>
+            <option value="已编制且>2000万">已编制且投资 >2000 万</option>
+            <option value="未编制或不足">未编制或投资不足</option>
             <option value="不清楚">不清楚</option>
           </select>
         </div>
@@ -3004,7 +3224,7 @@ body {
 // ============================================================
 // 数据版本：任何政策数据变更后更新此值（同步更新自诊断报告页脚日期戳）
 // ============================================================
-const DATA_VERSION = '2026-08-01';
+const DATA_VERSION = '2026-08-02';
 
 // ============================================================
 // 政策数据（核心资产，新增政策在此追加）
@@ -3074,57 +3294,80 @@ const POLICIES = [
     issuingBody: "工信部",
     level: "国家级",
     deadline: "每年 1 批 · 2026 第八批 4.25-5.25 填报",
-    updated: "2026-08-01",
+    updated: "2026-08-02",
     source: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" },
     notice: { name: "《关于开展 2026 年度专精特新「小巨人」企业认定和复核工作的通知》（工信厅企业函〔2026〕117 号）", url: "https://wap.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_83857a4773ac4583bd1540eeb78bcbcb.html", timeline: "2026 第八批：4.25-5.25 线上填报 → 5.25-6.30 省级初核推荐 → 6.30 材料寄送截止" },
-    summary: "专精特新梯度培育的最高层级荣誉。认定本身无中央直接奖补；中央财政奖补针对「重点小巨人」专项（财建〔2024〕148 号）：每家企业连续支持三年、合计 600 万元测算，绩效挂钩、95% 以上直达企业；地方配套以各省当年政策为准。前提：先获省级「专精特新」中小企业称号。硬门槛（2026 年 4 月起执行《优质中小企业梯度培育管理办法》新标准）：营收 ≥5000 万元、主营占比 ≥90%、研发费用近两年合计 ≥1200 万元且占比 ≥3%、Ⅰ类知识产权 4 项以上、细分市场占有率 ≥10% 或国内前三、发展评价得分 ≥60。申报每年 1 批（年度通知制）；2026 年第八批 4 月 25 日-5 月 25 日线上填报、省级初核推荐至 6 月 30 日（工信厅企业函〔2026〕117 号）。申报免费，材料建议提前半年准备。",
+    basis: [
+      { name: "《中小企业专精特新发展评价指标体系》（工信厅企业〔2024〕75 号）", url: "http://gxj.xinxiang.gov.cn/zwgk/public/6638681/9530434.html" }
+    ],
+    summary: "专精特新梯度培育的最高层级荣誉。认定本身无中央直接奖补；中央财政奖补针对「重点小巨人」专项（财建〔2024〕148 号）：每家企业连续支持三年、合计 600 万元测算，绩效挂钩、95% 以上直达企业；地方配套以各省当年政策为准。前提：先获省级「专精特新」中小企业称号。认定条件（2026-04-01 起按《优质中小企业梯度培育管理办法》附件 2 七项指标执行，同时满足）：已获专精特新称号且细分市场 ≥3 年；营收 ≥5000 万元、主营占比 ≥90%、近两年营收复合增长率 ≥5%（复核企业不考查）、上年末资产负债率 ≤75%；近两年研发费用合计 ≥1200 万元且每年占比 ≥3%；Ⅰ类知识产权 ≥4 项（近三年国家级科技奖励排名前三可豁免）；市占率 ≥10% 或国内前三；主导产品属于六基/产业链关键环节；专精特新发展评价 ≥60 分（培育平台自动计算）。新申请按 2 号文标准，2026 年度复核仍按 2022 年 63 号文标准把握（117 号通知）。申报每年 1 批；2026 年第八批 4 月 25 日-5 月 25 日线上填报、省级初核推荐至 6 月 30 日。申报免费，材料建议提前半年准备。",
     subsidy: "认定「小巨人」本身无中央直接奖补；中央奖补为「重点小巨人」专项（财建〔2024〕148 号）：每家企业连续三年合计 600 万元测算、分两次下达、绩效挂钩、95% 以上直达企业；地方配套以各省当年政策为准。",
     applicableIndustries: ["电子信息","生物与新医药","航空航天","新材料","新能源与节能","资源与环境","先进制造与自动化","制造业（通用）"],
     conditions: [
       {
         category: "基础合规",
         items: [
-          { name: "在境内注册、独立法人", required: true, weight: 3, description: "符合《中小企业划型标准规定》" },
-          { name: "成立 3 年以上", required: true, weight: 2, description: "截至上年末从事特定细分市场时间达 3 年以上（关键领域补短板/填空白企业可放宽）", autoMatch: "years", rule: v => v === ">5年" || v === "3-5年" },
-          { name: "已获得专精特新中小企业称号", required: true, weight: 3, description: "申报「小巨人」须先认定为省级专精特新中小企业（2026 年 2 号文基础条件）" },
-          { name: "近三年无重大安全/质量/环境事故", required: true, weight: 3, veto: true, description: "需出具相关主管部门证明", autoMatch: "accident", rule: v => v === "无" },
-          { name: "非制造业单项冠军企业", required: true, weight: 3, description: "已获制造业单项冠军示范企业或单项冠军产品的企业，不再推荐新申请（117 号通知）" },
-          { name: "无控股/同质关联冲突", required: true, weight: 3, description: "与已认定「小巨人」企业存在控股关系的企业、同一集团内生产相似主导产品的企业不予推荐（117 号通知）" }
+          { name: "在境内注册、独立法人", required: true, weight: 3, description: "符合《中小企业划型标准规定》（工信部联企业〔2011〕300 号）" },
+          { name: "已获专精特新中小企业称号（3 年有效期内）", required: true, weight: 3, autoMatch: "level", rule: v => v >= 2, description: "2 号文附件 2（一）：申报「小巨人」须先认定为省级专精特新中小企业，且在有效期内" },
+          { name: "截至上年末从事特定细分市场 ≥3 年", required: true, weight: 3, autoMatch: "segYears", rule: v => v === "3-5年" || v === "5-10年" || v === ">10年", description: "2 号文附件 2（一）；原 63 号文「关键领域补短板/填空白企业可放宽至 2 年」条款已废止；以从事细分市场的实际年限计，非成立年限" },
+          { name: "近三年无重大安全/质量/环境事故", required: true, weight: 3, veto: true, description: "含较大生产安全事故、重大网络和数据安全事件、重大环境违法行为、严重质量问题、数据造假等（2 号文附件 3 说明）；数据造假将取消创新型/专精特新/小巨人称号且三年内不得再申报（117 号通知）", autoMatch: "accident", rule: v => v === "无" },
+          { name: "非制造业单项冠军企业", required: true, weight: 3, description: "已获制造业单项冠军示范企业或单项冠军产品的企业，不再推荐新申请（117 号通知推荐要求（四））" },
+          { name: "无控股/同质关联冲突", required: true, weight: 3, description: "与已认定「小巨人」企业存在控股关系的企业、同一集团内生产相似主导产品的企业不予推荐（117 号通知推荐要求（四））" }
         ]
       },
       {
-        category: "专业化（主营业务）",
+        category: "认定条件（须同时满足，2 号文附件 2 七项指标）",
         items: [
-          { name: "主营业务收入占营收 ≥ 90%", required: true, weight: 2, description: "上年度主营业务收入总额占营业收入总额比重不低于 90%（2026 年新标准，原为 70%）", autoMatch: "mainRatio", rule: v => v === "≥90%" ? true : v === "<90%" ? false : undefined },
-          { name: "上年度营业收入 ≥ 5000 万元", required: true, weight: 2, description: "2026 年新标准经营规模要求", autoMatch: "revenue", rule: v => v === "5000万-1亿" || v === "1亿-4亿" || v === ">4亿" },
-          { name: "近两年营业收入复合增长率 ≥ 5%", required: true, weight: 2, description: "复核企业不考查该项指标" },
-          { name: "上年末资产负债率 ≤ 75%", required: true, weight: 1, description: "2026 年新标准财务健康指标" },
-          { name: "主导产品在细分市场占有率位于全国前列", required: true, weight: 3, description: "细分市场占有率达到 10% 以上或国内前三名，且享有较高知名度、影响力（2026 年起材料简化，如实说明即可，无需第三方证明）" }
+          { name: "上年度营业收入 ≥ 5000 万元", required: true, weight: 2, description: "2 号文附件 2（二）经营规模门槛；以审计报告为准", autoMatch: "revenue", rule: v => v === "5000万-1亿" || v === "1亿-4亿" || v === ">4亿" },
+          { name: "主营业务收入占营收 ≥ 90%", required: true, weight: 2, description: "2 号文附件 2（二），由原 70% 提高；主营业务收入、主营业务成本须纳入审计报告（117 号通知）", autoMatch: "mainRatio", rule: v => v === "≥90%" ? true : v === "80%-90%" || v === "<80%" ? false : undefined },
+          { name: "近两年营业收入复合增长率 ≥ 5%", required: true, weight: 2, autoMatch: "growth", rule: v => v === "≥5%" ? true : v === "<5%" ? false : undefined, description: "2 号文附件 2（二）；复核企业不考查该项指标" },
+          { name: "上年末资产负债率 ≤ 75%", required: true, weight: 1, autoMatch: "debt", rule: v => v === "≤55%" || v === "55%-75%", description: "2 号文附件 2（二）财务健康指标" },
+          { name: "近两年研发费用合计 ≥1200 万元且每年占营收比重 ≥3%", required: true, weight: 3, autoMatch: "rd", rule: (v, profile) => v === "<3%" ? false : profile.rdTotal === "≥1200万" ? true : profile.rdTotal === "100万-1200万" || profile.rdTotal === "<100万" ? false : undefined, description: "2 号文附件 2（三）；两年合计金额与每年占比均须达标，以审计报告为准" },
+          { name: "主导产品市占率 ≥10% 或国内前三", required: true, weight: 3, autoMatch: "marketShare", rule: v => v === "全球前3" || v === "国内前三或≥10%", description: "2 号文附件 2（五）：在国内或国际细分市场占有率达到 10% 以上或国内前三名，且享有较高知名度、影响力；企业如实说明即可，无需第三方证明（附件 3 说明 + 117 号通知）" },
+          { name: "主导产品属于六基/产业链关键环节", required: true, weight: 3, autoMatch: "sixBase", rule: v => v === "是" ? true : v === "否" ? false : undefined, description: "2 号文附件 2（六）：属于制造业核心基础零部件、核心基础元器件、关键软件、先进基础工艺、关键基础材料、产业技术基础，或属于改造提升传统产业、培育壮大新兴产业、布局建设未来产业，位于产业链关键环节，对提升产业链供应链韧性和安全水平发挥重要作用" },
+          { name: "专精特新发展评价得分 ≥ 60 分", required: true, weight: 3, autoMatch: "eval", rule: v => v === "≥60分", description: "由培育平台按《中小企业专精特新发展评价指标体系》（工信厅企业〔2024〕75 号）自动计算，登录 zjtx.miit.gov.cn 查询本年度得分，无需自行测算；未查询前此项无法核验。复核企业近两年任意一年达 60 分以上即可（2 号文附件 2（七））" }
         ]
       },
       {
-        category: "精细化",
-        items: [
-          { name: "取得质量管理体系认证", required: true, weight: 1, description: "如 ISO9001 或同等级别质量管理体系认证", autoMatch: "cert", rule: v => v.includes("ISO9001") },
-          { name: "拥有自主品牌", required: true, weight: 2, description: "拥有注册商标或品牌" },
-          { name: "产品通过国际/国内权威认证", required: false, weight: 1, description: "如 CE、UL、CCC 等产品认证" }
+        category: "Ⅰ类知识产权 ≥4 项（或满足豁免条件）",
+        anyOf: true,
+        paths: [
+          {
+            name: "知识产权条件（正常路径）",
+            anyOf: true,
+            autoMatch: "ipr",
+            rule: v => v === "6-15" || v === ">15", // 专利总数 ≥6 件从严覆盖 4 项Ⅰ类（表单标签口径；具体Ⅰ类构成以自诊断逐项核实为准）
+            items: [
+              { name: "拥有 ≥4 项与主导产品相关的Ⅰ类知识产权且实际应用产生经济效益", required: true, weight: 3, description: "Ⅰ类=发明专利（含国防专利）、植物新品种、国家级农作物品种、国家新药、国家一级中药保护品种、集成电路布图设计专有权；不含转入的Ⅰ类知产，企业应在权利人排名前三（附件 3 说明）；专利数据以国家知识产权局数据为准，涉及布图设计等其他Ⅰ类知产仍需提供证书（117 号通知）" }
+            ]
+          },
+          {
+            name: "豁免条件（满足 1 项即可）",
+            anyOf: true,
+            hint: "满足以下 1 项即可豁免知识产权条件",
+            items: [
+              { name: "近三年获得国家级科技奖励（获奖单位排名前三）", required: true, weight: 2, description: "国家级科技奖励包括国家科学技术进步奖、国家自然科学奖、国家技术发明奖，以及国防科技奖（附件 3 说明）；以获奖证书落款时间为准（近三年内）" }
+            ]
+          }
         ]
       },
       {
-        category: "创新能力",
+        category: "加分项（非认定硬条件）",
         items: [
-          { name: "研发费用投入达标", required: true, weight: 3, description: "近两年研发费用合计不低于 1200 万元，且每年占营业收入比重均不低于 3%（2026 年新标准）", autoMatch: "rd", rule: v => v !== "<3%" }, // 2026 年新标准：各营收档统一 ≥3% + 合计 1200 万（合计金额须人工核验）
-          { name: "拥有 4 项以上与主导产品相关的Ⅰ类知识产权", required: true, weight: 2, description: "Ⅰ类知识产权含发明专利（含国防专利）、植物新品种、集成电路布图设计等；近三年获国家级科技奖励（排名前三）的企业可豁免本项", autoMatch: "ipr", rule: v => v === ">15" || v === "6-15" }, // 表单仅区分专利总数不区分类型，按「≥6 件」从严覆盖 4 项Ⅰ类（宁可漏判不可误判）
-          { name: "专精特新发展评价得分 ≥ 60 分", required: true, weight: 2, description: "本年度中小企业专精特新发展评价得分达 60 分以上（依据《中小企业专精特新发展评价指标体系（试行）》）" },
-          { name: "自建或联合建立研发机构", required: true, weight: 2, description: "如技术中心、实验室、博士后工作站等" },
+          { name: "取得质量管理体系认证", required: false, weight: 1, description: "如 ISO9001 或同等级别质量管理体系认证；2 号文七项指标不含此项，但复核企业按 63 号文标准仍会考查（精细化指标）", autoMatch: "cert", rule: v => v.includes("ISO9001") },
+          { name: "拥有自主品牌", required: false, weight: 2, description: "拥有注册商标或品牌；63 号文复核标准特色化指标要求，2 号文新申请非硬性" },
+          { name: "产品通过国际/国内权威认证", required: false, weight: 1, description: "如 CE、UL、CCC 等产品认证；63 号文复核标准精细化指标（管理体系认证或发达国家和地区产品认证）" },
+          { name: "自建或联合建立研发机构", required: false, weight: 2, description: "如技术中心、实验室、博士后工作站等；63 号文复核标准创新能力一般性条件，2 号文新申请非硬性" },
           { name: "主持或参与制修订标准", required: false, weight: 2, description: "国际/国家/行业标准均可" }
         ]
       },
       {
-        category: "产业链配套",
+        category: "申报要求（117 号通知）",
         items: [
-          { name: "属于工业「六基」领域或制造强国十大重点产业", required: true, weight: 3, description: "主导产品属于制造业核心基础零部件、核心基础元器件、关键软件、先进基础工艺、关键基础材料、产业基础技术，或属于改造提升传统产业、培育壮大新兴产业、布局建设未来产业，位于产业链关键环节" },
-          { name: "关键领域补短板/填空白/替代进口", required: false, weight: 3, description: "技术实力在细分领域具有明显竞争优势" }
+          { name: "线上填报 + 线下报送一致", required: true, weight: 1, description: "培育平台（zjtx.miit.gov.cn）线上填报 4.25-5.25；线下以属地中小企业主管部门要求为准，线上与线下数据应保持一致" },
+          { name: "审计报告赋码上传", required: true, weight: 1, description: "财务数据依据会计师事务所审计报告，须在财政部注册会计师行业统一监管平台（acc.mof.gov.cn）完成报备后上传已赋码电子原件；主营业务收入、主营业务成本纳入审计报告" },
+          { name: "如实说明市占率并填报专利数量", required: true, weight: 1, description: "无需第三方机构出具的市占率证明和国内发明专利证书；专利数据以国家知识产权局数据为准" },
+          { name: "免费申报、谨防中介", required: true, weight: 1, description: "申请与复核均不收取任何费用；工信部未委托任何机构开展申报业务（117 号通知），谨防「内部渠道」「包过」收费" }
         ]
       }
     ],
@@ -3132,12 +3375,14 @@ const POLICIES = [
       "上年度营业收入 ≥5000 万元——2026 年新标准新增经营规模门槛",
       "主营业务收入占营收 ≥90%——由旧办法的 70% 提高",
       "研发费用：近两年合计 ≥1200 万元且每年占比 ≥3%——2026 年新标准统一口径",
-      "拥有 4 项以上Ⅰ类知识产权——新增量化要求",
+      "拥有 4 项以上Ⅰ类知识产权——新增量化要求（近三年国家级科技奖励排名前三可豁免）",
       "上年末资产负债率 ≤75%——新增财务健康指标",
-      "专精特新发展评价得分 ≥60 分——新增，依据《中小企业专精特新发展评价指标体系（试行）》",
-      "材料简化：无需第三方市占率证明与发明专利证书（2026 年起）"
+      "专精特新发展评价得分 ≥60 分——新增，培育平台自动计算（75 号文指标体系）",
+      "从事细分市场 3 年不再有「补短板/填空白可放宽至 2 年」例外——2 号文已删除该条款",
+      "质量管理体系认证、自主品牌、自建研发机构等不再是认定硬条件——2 号文七项指标不含；2026 年度复核仍按 63 号文标准把握（117 号通知）",
+      "材料简化：无需第三方市占率证明与国内发明专利证书（2026 年起）"
     ],
-    tips: "小巨人评审最看重专业化程度和细分市场地位。申报完全免费，工信部不委托任何机构办理申报业务，谨防不良中介以「内部渠道」「包过」名义收费（117 号通知明确提醒）。2026 年起材料简化：无需第三方市场占有率证明和发明专利证书，如实说明市占率并填报发明专利数量即可，专利数据以国家知识产权局数据为准。财务数据须依据会计师事务所审计报告，并上传财政部注册会计师行业统一监管平台（acc.mof.gov.cn）已赋码电子原件。建议重点准备：营收与研发费用的审计数据口径（研发费用须近两年合计 ≥1200 万元）、专精特新发展评价自评材料。复核安排：2023 年认定的第五批及复核通过的第二批企业须参加 2026 年度复核（复核按 2022 年办法标准把握）。"
+    tips: "小巨人评审最看重专业化程度和细分市场地位。认定条件按 2 号文附件 2 七项指标逐项核对（营收/主营占比/增长率/负债率/研发/市占率/六基/评价得分）；注意：①「专精特新发展评价得分」由培育平台自动计算，登录 zjtx.miit.gov.cn 查询即可，无需自行测算；②Ⅰ类知识产权不含转入、权利人须排名前三，近三年国家级科技奖励（前三）可豁免本项；③质量认证、自主品牌、研发机构等已不是认定硬条件（复核企业按 63 号文标准仍会考查）；④从事细分市场 3 年无放宽例外。申报完全免费，工信部不委托任何机构办理申报业务，谨防不良中介以「内部渠道」「包过」名义收费（117 号通知明确提醒）。2026 年起材料简化：无需第三方市场占有率证明和国内发明专利证书，如实说明市占率并填报发明专利数量即可，专利数据以国家知识产权局数据为准。财务数据须依据会计师事务所审计报告，并上传财政部注册会计师行业统一监管平台（acc.mof.gov.cn）已赋码电子原件。建议重点准备：营收与研发费用的审计数据口径（研发费用须近两年合计 ≥1200 万元且每年占比 ≥3%）。复核安排：2023 年认定的第五批及复核通过的第二批企业须参加 2026 年度复核，复核按 2022 年 63 号文标准把握（117 号通知）。"
   },
   {
     id: "greenfactory",
@@ -3306,6 +3551,9 @@ const POLICIES = [
     deadline: "广东省每年 1 批（2025 年：各地 7.15 前报送推荐）",
     updated: "2026-08-01",
     source: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" },
+    basis: [
+      { name: "《优质中小企业梯度培育管理暂行办法》（工信部企业〔2022〕63 号）附件 1 创新型中小企业评价标准——现行评价细则（2 号文第三十条：合并新标准发布前沿用本标准）", url: "http://www.fugou.gov.cn/sitesources/fgx/upload/e993ee5bb9db00399e2d13cc4193f965/1700817874037.pdf" }
+    ],
     notice: { name: "《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4459/mpost_4459794.html", timeline: "2024-08-20 实施、有效期 5 年；广东省评价（复核）每年 1 批：2025 年各地 7 月 15 日前报送推荐（粤工信融资函〔2025〕4 号）" },
     summary: "专精特新梯度培育的第一层（基础层），入库是申报省级专精特新、小巨人的起点。2026 年起新口径将科技型中小企业一并纳入。谁能报：广东省注册、符合中小企业划型、合规经营的企业。怎么过（二选一）：① 满足 4 项直通条件之一（近三年国家级/省级科技奖励、高企等有效期内荣誉、省部级研发机构、新增股权融资 ≥500 万元）；② 评价得分 ≥60 分（创新能力 40 分 + 成长性 30 分 + 专业化 30 分，且创新能力 ≥20 分、成长性及专业化均 ≥15 分）。广东省按《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）组织实施：每年 1 批、线上自评（培育平台 zjtx.miit.gov.cn）、市级审核公示后省厅公告；深圳市自行组织评价并报省厅备案。资质有效期 3 年，到期需重新评价。无中央统一资金奖补。",
     subsidy: "无中央统一资金奖补；部分省市对首次入库有奖励（以属地政策为准）",
@@ -3321,10 +3569,62 @@ const POLICIES = [
         ]
       },
       {
-        category: "评价路径（二选一，满足其一即过）",
+        // 二选一路径结构（paths）：直通条件 或 评分路径，满足其一即过
+        // 依据：工信部企业〔2022〕63 号附件 1《创新型中小企业评价标准》+ 粤工信规字〔2024〕5 号
+        // 2026 年 2 号文第三十条：科技和创新型合并新标准发布前，沿用本评价标准
+        category: "评价路径（二选一：直通条件 或 评分 ≥60 分）",
+        anyOf: true,
+        paths: [
+          {
+            name: "直通条件（满足 4 项中任意 1 项）",
+            anyOf: true,
+            autoMatch: "direct",
+            items: [
+              { name: "近三年内获得国家级或省级科技奖励", required: true, weight: 5, description: "以获奖证书落款时间为准（近三年内）" },
+              { name: "高企/国家级技术创新示范企业/知识产权优势(示范)企业等荣誉（有效期内）", required: true, weight: 5, description: "高新技术企业、国家级技术创新示范企业、知识产权优势企业和知识产权示范企业等，均须处于有效期内" },
+              { name: "拥有经认定的省部级以上研发机构", required: true, weight: 5, description: "如重点实验室、工程技术研究中心、企业技术中心等，以认定文件为准" },
+              { name: "近三年新增股权融资（合格机构投资者实缴）≥500 万元", required: true, weight: 5, description: "合格机构投资者的实缴出资额，需验资/审计佐证" }
+            ]
+          },
+          {
+            name: "评分路径（综合评价 ≥60 分，且创新能力 ≥20、成长性及专业化均 ≥15）",
+            scoreBased: true,
+            minScore: 60,
+            minParts: { "创新能力": 20, "成长性": 15, "专业化": 15 },
+            items: [
+              { name: "① 有效知识产权数量（与主导产品相关）", part: "创新能力", scoreOptions: [
+                  { label: "A Ⅰ类高价值 ≥1 项", score: 20 }, { label: "B 自主研发Ⅰ类 ≥1 项", score: 15 },
+                  { label: "C Ⅰ类 ≥1 项", score: 10 }, { label: "D Ⅱ类 ≥1 项", score: 5 }, { label: "E 无", score: 0 }],
+                description: "Ⅰ类=发明(含国防专利)/植物新品种/国家级农作物品种/国家新药/国家一级中药保护品种/集成电路布图设计专有权；转让未满 1 年不计入；Ⅰ类高价值=海外同族专利(G20 成员、新加坡、欧专局经实质审查授权)或维持超 10 年或高额质押融资或获国家科技奖/中国专利奖；Ⅱ类=软著(不含商标)、授权后维持超 2 年的实用新型/外观" },
+              { name: "② 上年度研发费用占营收比重", part: "创新能力", scoreOptions: [
+                  { label: "A ≥5%", score: 20 }, { label: "B 3%-5%", score: 15 }, { label: "C 2%-3%", score: 10 },
+                  { label: "D 1%-2%", score: 5 }, { label: "E <1%", score: 0 }],
+                description: "边界值按高分档计分（如恰好 3% 按 B 档 15 分；「以上/以下」含本数）" },
+              { name: "③ 上年度主营业务收入增长率", part: "成长性", scoreOptions: [
+                  { label: "A ≥15%", score: 20 }, { label: "B 10%-15%", score: 15 }, { label: "C 5%-10%", score: 10 },
+                  { label: "D 0%-5%", score: 5 }, { label: "E <0%", score: 0 }],
+                description: "=（上年主营收入−上上年主营收入）÷上上年主营收入×100%；边界值按高分档计分" },
+              { name: "④ 上年度资产负债率", part: "成长性", scoreOptions: [
+                  { label: "A ≤55%", score: 10 }, { label: "B 55%-75%", score: 5 }, { label: "C >75%", score: 0 }],
+                description: "边界值按高分档计分（恰好 55% 按 A 档 10 分）" },
+              { name: "⑤ 主导产品所属领域", part: "专业化", scoreOptions: [
+                  { label: "A 属《战略性新兴产业分类》", score: 10 }, { label: "B 其他领域", score: 5 }],
+                description: "以《战略性新兴产业分类》目录为准" },
+              { name: "⑥ 上年度主营收入占总营收比重", part: "专业化", scoreOptions: [
+                  { label: "A ≥70%", score: 20 }, { label: "B 60%-70%", score: 15 }, { label: "C 55%-60%", score: 10 },
+                  { label: "D 50%-55%", score: 5 }, { label: "E <50%", score: 0 }],
+                description: "边界值按高分档计分；主导产品=核心技术发挥重要作用且产品收入合计占营收 >50%" }
+            ]
+          }
+        ]
+      },
+      {
+        // 已入库企业复核/维护自检（粤工信规字〔2024〕5 号 13-15 条）；初次申报企业可跳过
+        category: "资质维护（已入库/复核适用）",
         items: [
-          { name: "直通条件：4 项中满足任意 1 项", required: true, weight: 5, description: "①近三年获国家级或省级科技奖励；②高新技术企业、国家级技术创新示范企业、知识产权优势/示范企业等且处于有效期；③拥有经认定的省部级及以上研发机构；④近三年新增股权融资（合格机构投资者实缴）≥500 万元", autoMatch: "direct", rule: v => v === "是" ? true : v === "否" ? false : undefined },
-          { name: "评分路径：综合评价 ≥60 分", required: true, weight: 5, description: "创新能力 40 分（Ⅰ类知识产权数量、研发费用占营收比重）+ 成长性 30 分（营收增长率、资产负债率）+ 专业化 30 分（主导产品领域、主营收入占比）" }
+          { name: "资质在 3 年有效期内（到期前重新评价/复核，复核通过再延 3 年）", required: false, weight: 1, description: "创新型中小企业有效期 3 年（粤工信规字〔2024〕5 号第十三条）；复核期间原名单继续有效" },
+          { name: "每年 4 月 30 日前已在培育平台更新企业信息", required: false, weight: 1, description: "未及时更新的取消复核资格（第十四条）" },
+          { name: "重大变化（更名/合并/重组/跨省迁移等）3 个月内已在平台报告", required: false, weight: 1, description: "未及时报告的取消复核资格或直接取消公告/认定（第十五条）" }
         ]
       }
     ],
@@ -3336,11 +3636,21 @@ const POLICIES = [
     name: "专精特新中小企业认定（广东省）",
     issuingBody: "广东省工业和信息化厅",
     level: "省级",
-    deadline: "每年 1 批（2025 年：广佛莞 10.15 前、其他地市 9.25 前报送推荐）",
-    updated: "2026-08-01",
+    deadline: "以省厅年度认定通知为准（2025 年为粤工信融资函〔2025〕4 号；2026 年度通知待发布）",
+    updated: "2026-08-02",
     source: { name: "《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4459/mpost_4459794.html" },
-    notice: { name: "《广东省工业和信息化厅关于组织开展 2025 年创新型中小企业评价（复核）和专精特新中小企业认定（复核）工作的通知》（粤工信融资函〔2025〕4 号）", url: "http://gdii.gd.gov.cn/gkmlpt/content/4/4681/mpost_4681999.html", timeline: "每年 1 批；2025 年：广州/佛山/东莞 10 月 15 日前、其他地市 9 月 25 日前报送推荐文；申报全程线上（培育平台 zjtx.miit.gov.cn）、无需纸质材料" },
-    summary: "广东省专精特新梯度培育的中间层：省级认定，申报前提为已入库创新型中小企业（3 年有效期内）。认定条件（须同时满足，粤工信规字〔2024〕5 号）：①从事特定细分市场 ≥2 年；②上年度研发费用 ≥100 万元且占营收 ≥3%；③上年度营收 ≥1000 万元（不足 1000 万但近 2 年新增股权融资 ≥2000 万元的除外）；④专精特新发展评价得分 ≥70 分，或满足省级科技奖励、研发费用均值 ≥1000 万、新增股权融资 ≥6000 万、「创客中国」全国 500 强等直通条件之一。评价指标满分 100 分：专业化 25 + 精细化 25 + 特色化 15（广东自主设定）+ 创新能力 35。认定有效期 3 年，每年 4 月 30 日前在培育平台更新企业信息，否则取消复核资格。广东省培育目标：到 2027 年累计培育约 2 万家专精特新中小企业。",
+    alert: {
+      level: "danger",
+      text: "2026-04-01 起按《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）执行：专精特新认定条件全面更新——细分市场 ≥3 年、营收 ≥1500 万（或股权投资 ≥2000 万）、主营占比 ≥80%、资产负债率 ≤80%、Ⅰ类知识产权 ≥1 项（可豁免）、评价得分 ≥50 分（培育平台自动计算）；原 63 号文认定标准、直通条件与广东特色化 15 分已废止",
+      link: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html",
+      linkLabel: "查看 2 号文全文"
+    },
+    notice: { name: "《广东省工业和信息化厅关于组织开展 2025 年创新型中小企业评价（复核）和专精特新中小企业认定（复核）工作的通知》（粤工信融资函〔2025〕4 号）", url: "http://gdii.gd.gov.cn/gkmlpt/content/4/4681/mpost_4681999.html", timeline: "每年 1 批；2026 年度省级认定通知尚未发布，以省厅官网通知为准；申报全程线上（培育平台 zjtx.miit.gov.cn）、无需纸质材料" },
+    summary: "广东省专精特新梯度培育的中间层：省级认定，申报前提为已入库科技和创新型中小企业（3 年有效期内）。2026-04-01 起按工信部企业〔2026〕2 号新办法执行（原 63 号文认定标准废止）。认定条件（须同时满足）：①已获科技和创新型中小企业称号且截至上年末从事细分市场 ≥3 年；②上年度营收 ≥1500 万元（不足 1500 万但近两年新增股权投资 ≥2000 万元的除外），主营占比 ≥80%、上年末资产负债率 ≤80%；③近两年研发费用均 ≥100 万元且每年占营收比重 ≥3%；④拥有 ≥1 项与主导产品相关的Ⅰ类知识产权且实际应用产生经济效益（近三年省部级以上科技奖励排名前三或省部级以上研发机构可豁免）；⑤主导产品市场占有率较为靠前；⑥本年度专精特新发展评价得分 ≥50 分（培育平台自动计算，登录 zjtx.miit.gov.cn 查询）。认定有效期 3 年，每年 5 月 31 日前在培育平台更新企业信息。广东省培育目标：到 2027 年累计培育约 2 万家专精特新中小企业。",
+    basis: [
+      { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" },
+      { name: "《中小企业专精特新发展评价指标体系》（工信厅企业〔2024〕75 号）", url: "http://gxj.xinxiang.gov.cn/zwgk/public/6638681/9530434.html" }
+    ],
     subsidy: "无统一现金奖补；省制造业当家重点任务保障等专项资金对符合条件的专精特新企业项目予以支持；部分地市有一次性奖励，以属地政策为准",
     applicableIndustries: ["制造业（通用）","电子信息","生物与新医药","航空航天","新材料","新能源与节能","资源与环境","先进制造与自动化","汽车","化工","消费品"],
     conditions: [
@@ -3353,23 +3663,51 @@ const POLICIES = [
         ]
       },
       {
-        category: "认定条件（须同时满足，粤工信规字〔2024〕5 号）",
+        category: "认定条件（须同时满足，工信部企业〔2026〕2 号）",
         items: [
-          { name: "从事特定细分市场 2 年以上", required: true, weight: 3, autoMatch: "years", rule: v => v === ">5年" || v === "3-5年" ? true : v === "<1年" ? false : undefined, description: "表单「1-3 年」档无法区分是否满 2 年，需人工核验" },
-          { name: "上年度研发费用 ≥100 万元且占营收 ≥3%", required: true, weight: 3, autoMatch: "rd", rule: v => v !== "<3%", description: "占比表单可判；≥100 万元金额需人工核验（以审计报告为准）" },
-          { name: "上年度营业收入 ≥1000 万元", required: true, weight: 3, autoMatch: "revenue", rule: v => v === "<500万" ? false : v === "500万-2000万" ? undefined : true, description: "不足 1000 万但近 2 年新增股权融资（合格机构投资者实缴）≥2000 万元的除外，需人工核验" },
-          { name: "专精特新发展评价得分 ≥70 分，或满足直通条件之一", required: true, weight: 5, description: "评价指标 100 分：专业化 25 + 精细化 25 + 特色化 15（广东自主）+ 创新能力 35；直通条件：省级以上科技奖励、近两年研发费用均值 ≥1000 万元、新增股权融资 ≥6000 万元、「创客中国」全国 500 强等" }
+          { name: "已获科技和创新型中小企业称号（3 年有效期内）", required: true, weight: 3, autoMatch: "level", rule: v => v >= 1, description: "2 号文第一层「科技和创新型中小企业」；合并新标准未发布前，已按原标准认定的创新型中小企业在有效期内继续有效" },
+          { name: "截至上年末从事特定细分市场 ≥3 年", required: true, weight: 3, autoMatch: "segYears", rule: v => v === "3-5年" || v === "5-10年" || v === ">10年", description: "2 号文由原「2 年以上」提高至 3 年；以从事细分市场的实际年限计，非成立年限" },
+          { name: "上年度营业收入 ≥1500 万元，或近两年新增股权投资 ≥2000 万元", required: true, weight: 3, autoMatch: "revenue", rule: (v, profile) => { if (v === "2000万-5000万" || v === "5000万-1亿" || v === "1亿-4亿" || v === ">4亿") return true; if (profile.equity === "≥2000万") return true; if (v === "<500万" || profile.equity === "<2000万") return false; return undefined; }, description: "不足 1500 万但近两年新增股权投资（合格机构投资者实缴额）总额 ≥2000 万元的除外；「500万-2000万」档跨 1500 万线，选该档且无股权融资豁免时从严按未达标计" },
+          { name: "主营业务收入占比 ≥80%", required: true, weight: 2, autoMatch: "mainRatio", rule: v => v === "≥90%" ? true : v === "80%-90%" ? true : v === "<80%" ? false : undefined, description: "上年度主营业务收入总额占营业收入总额比重，2 号文新增硬条件" },
+          { name: "上年末资产负债率 ≤80%", required: true, weight: 2, autoMatch: "debt", rule: v => v === "≤55%" || v === "55%-75%" || v === "75%-80%", description: "2 号文新增硬条件" },
+          { name: "近两年研发费用均 ≥100 万元且每年占营收比重 ≥3%", required: true, weight: 3, autoMatch: "rd", rule: (v, profile) => v === "<3%" ? false : (profile.rdTotal === "≥1200万" || profile.rdTotal === "100万-1200万") ? true : profile.rdTotal === "<100万" ? false : undefined, description: "两年每年均须达标（原标准仅查上年度）；金额与占比双重要求，以审计报告为准" },
+          { name: "主导产品市场占有率较为靠前", required: true, weight: 2, autoMatch: "marketShare", rule: v => v === "全球前3" || v === "国内前三或≥10%" || v === "较为靠前", description: "在国内或国际细分市场占有率较为靠前，享有一定知名度、影响力；无统一量化标准，以评审认定为准，需如实说明并提供佐证" },
+          { name: "专精特新发展评价得分 ≥50 分", required: true, weight: 3, autoMatch: "eval", rule: v => v === "≥60分" || v === "50-60分", description: "由培育平台按《中小企业专精特新发展评价指标体系》（工信厅企业〔2024〕75 号）自动计算，登录 zjtx.miit.gov.cn 查询本年度得分，无需自行测算；未查询前此项无法核验" }
+        ]
+      },
+      {
+        category: "Ⅰ类知识产权 ≥1 项（或满足豁免条件）",
+        anyOf: true,
+        paths: [
+          {
+            name: "知识产权条件（正常路径）",
+            anyOf: true,
+            autoMatch: "ipr",
+            rule: v => v === "1-5" || v === "6-15" || v === ">15",
+            items: [
+              { name: "拥有 ≥1 项与主导产品相关的Ⅰ类知识产权且实际应用产生经济效益", required: true, weight: 3, description: "Ⅰ类=发明专利（含国防专利）、植物新品种、国家级农作物品种、国家新药、国家一级中药保护品种、集成电路布图设计专有权" }
+            ]
+          },
+          {
+            name: "豁免条件（满足 2 项中任意 1 项）",
+            anyOf: true,
+            hint: "满足以下 2 项中任意 1 项即可豁免知识产权条件",
+            items: [
+              { name: "近三年获得省部级以上科学技术奖励（获奖单位排名前三）", required: true, weight: 2, description: "以获奖证书落款时间为准（近三年内）" },
+              { name: "拥有经认定的省部级以上研发机构", required: true, weight: 2, description: "如重点实验室、工程技术研究中心、企业技术中心等，以认定文件为准" }
+            ]
+          }
         ]
       },
       {
         category: "申报要求",
         items: [
-          { name: "须先入库创新型中小企业", required: true, weight: 2, description: "申报专精特新必须具备创新型中小企业资质（3 年有效期内）；深圳企业由深圳市自行组织评价" },
-          { name: "线上填报 + 上传佐证 PDF", required: true, weight: 1, description: "登录优质中小企业梯度培育平台（zjtx.miit.gov.cn）填报，无需纸质材料；审计报告须在监管平台报备赋码" }
+          { name: "线上填报 + 上传佐证 PDF", required: true, weight: 1, description: "登录优质中小企业梯度培育平台（zjtx.miit.gov.cn）填报；审计报告须在财政部注册会计师行业统一监管平台报备赋码" },
+          { name: "申报批次以省厅年度通知为准", required: true, weight: 1, description: "2026 年度广东省专精特新认定通知尚未发布；2026 年小巨人认定已按 2 号文新标准执行（粤工信融资函〔2026〕9 号）" }
         ]
       }
     ],
-    tips: "广东特色：评价指标中「特色化 15 分」为广东省自主设定，企业可对照细则自查加分项；广州/佛山/东莞由市级审核公示后报省厅，其他地市市级初审后报省厅审核公示认定；申报须以当年通知为准（2025 年为粤工信融资函〔2025〕4 号），建议提前准备上一年度审计报告（须报备赋码）与研发费用归集台账。"
+    tips: "广东特色：2026-04-01 起认定条件按 2 号文全面更新，申报前务必确认以新标准为准（旧「70 分 + 直通条件 + 特色化 15 分」已废止）。「专精特新发展评价得分」由培育平台按大数据自动计算，登录培育平台（zjtx.miit.gov.cn）即可查询本年度得分，无需自行测算；Ⅰ类知识产权是硬条件，但近三年省部级以上科技奖励（排名前三）或省部级以上研发机构可豁免。2026 年度广东省认定通知尚未发布，建议提前准备上一年度审计报告（须报备赋码）与研发费用归集台账。"
   },
   {
     id: "champion",
@@ -3396,9 +3734,9 @@ const POLICIES = [
       {
         category: "认定标准（138 号文）",
         items: [
-          { name: "从事细分领域 ≥10 年（新产品 ≥5 年）", required: true, weight: 3, description: "截至上年末从事相关领域时间，体现「十年磨一剑」导向" },
+          { name: "从事细分领域 ≥10 年（新产品 ≥5 年）", required: true, weight: 3, autoMatch: "segYears", rule: v => v === ">10年" ? true : v === "5-10年" ? undefined : false, description: "截至上年末从事相关领域时间，体现「十年磨一剑」导向；选「5-10 年」档时无法区分新产品 ≥5 年场景，需人工核实" },
           { name: "近 3 年平均主营收入 ≥4 亿元", required: true, weight: 3, autoMatch: "revenue", rule: v => v === ">4亿", description: "省级以上专精特新企业可降至 ≥2 亿元（表单按 >4亿 档从严判定）" },
-          { name: "申请产品市占率全球前 3 位", required: true, weight: 3, description: "按《统计用产品分类目录》8 位或 10 位代码界定，需权威佐证（行业协会/海关数据等）", autoMatch: "globalShare", rule: v => v === "是" ? true : v === "否" ? false : undefined },
+          { name: "申请产品市占率全球前 3 位", required: true, weight: 3, description: "按《统计用产品分类目录》8 位或 10 位代码界定，需权威佐证（行业协会/海关数据等）", autoMatch: "marketShare", rule: v => v === "全球前3" ? true : v === "国内前三或≥10%" || v === "较为靠前" || v === "一般" ? false : undefined },
           { name: "生产技术或工艺国际先进", required: true, weight: 2, description: "关键性能指标国际同类领先，主导产品能耗达行业能耗限额先进值" },
           { name: "拥有高水平研发机构与核心自主知识产权", required: true, weight: 2, description: "研发投入强度行业领先，国际/国内专利数量行业领先" },
           { name: "主导或参与制定国际/国家/行业标准", required: false, weight: 2, description: "加分项：参与国家重大创新平台、强链补链行动、卡脖子技术攻关等" }
@@ -3413,37 +3751,50 @@ const POLICIES = [
     name: "重点「小巨人」企业（中央财政支持专精特新中小企业）",
     issuingBody: "财政部 · 工业和信息化部",
     level: "国家级",
-    deadline: "2024-2026 三年分三批次；2026 年度各地预申报已启动（正式申报预计年中）",
-    updated: "2026-08-01",
+    deadline: "2024-2026 三年分三批次；第三批（2026 年度）遴选推荐已于 2026 年上半年完成（广东 2026-02-09 启动、3 月上旬省级评审），本批次申报窗口已结束、入选企业进入三年实施期；后续支持以工信部最新通知为准",
+    updated: "2026-08-02",
     source: { name: "《财政部 工业和信息化部关于进一步支持专精特新中小企业高质量发展的通知》（财建〔2024〕148 号）", url: "https://www.miit.gov.cn/jgsj/qyj/bszn/art/2024/art_afa307276f6e40e58b8bc651b1d4cf32.html" },
-    notice: { name: "《广州市工业和信息化局关于开展 2026 年度重点「小巨人」、专精特新「小巨人」预申报的通知》", url: "https://gxj.gz.gov.cn/yw/tzgg/content/post_10609188.html", timeline: "2026 年度预申报（地方摸底，非正式申报）：广州市企业 2026-01-25 前报送区工信部门；正式申报以上级部门通知为准，预计 2026 年年中" },
-    summary: "从有效期内「小巨人」企业中择优支持：聚焦重点产业链、工业「六基」、战略性新兴产业与未来产业领域，由地方工信部门按名额评审推荐（推荐制，企业不能直接申报）。申报要件（财建〔2024〕148 号）：提出「三新一强」推进计划（打造新动能、攻坚新技术、开发新产品、强化产业链配套），推进计划投资总额超过 2000 万元（设备购置、研发投入、产学研建设、人才引育等；土地购置与厂房建设费用不计入）。中央财政奖补：每家企业连续支持三年、合计最高 600 万元（实施期初下达 50%，实施期末按绩效评价情况下达剩余 50%），95% 以上直达企业；投资未达 2000 万元收回资金。政策周期 2024-2026 年、分三批次开展。",
+    notice: { name: "《广州市工业和信息化局关于做好新一轮第三批重点「小巨人」企业遴选推荐工作的通知》（2026-02-12）", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html", timeline: "第三批遴选推荐：广东 2026-02-09 发文（粤工信融资函〔2026〕5 号），广州 2026-02-12 发文，各区 2026-03-06 前报送，工信部 3 月上旬完成省级评审；预申报（摸底）为 2026-01-25 前（广州 gxj.gz.gov.cn/content/post_10609188）。本批次已结束，下一轮以工信部最新通知为准" },
+    summary: "从有效期内「小巨人」企业中择优支持：聚焦重点产业链、工业「六基」、战略性新兴产业与未来产业领域，由地方工信部门按名额评审推荐（推荐制，企业不能直接申报）。申报要件（财建〔2024〕148 号）：提出「三新一强」推进计划（打造新动能、攻坚新技术、开发新产品、强化产业链配套），推进计划投资总额超过 2000 万元（设备购置、研发投入、产学研建设、人才引育等；土地购置与厂房建设费用不计入）。中央财政奖补：每家企业连续支持三年、合计最高 600 万元（实施期初下达 50%，实施期末按绩效评价情况下达剩余 50%），95% 以上直达企业；投资未达 2000 万元收回资金。政策周期 2024-2026 年、分三批次开展；第三批（2026 年度）遴选推荐已于 2026 年上半年完成。",
     subsidy: "中央财政综合奖补：600 万元/家·三年（分两次下达、绩效挂钩），95% 以上直达企业",
     applicableIndustries: ["制造业（通用）","电子信息","生物与新医药","航空航天","新材料","新能源与节能","资源与环境","先进制造与自动化","汽车","化工"],
     conditions: [
       {
-        category: "申报资格（须全部满足，148 号文）",
+        category: "申报资格（须全部满足，148 号文 + 2026 第三批要求）",
         items: [
-          { name: "工信部认定的有效期内专精特新「小巨人」企业", required: true, weight: 3, description: "已获「小巨人」认定且证书在有效期内" },
-          { name: "未在境内外公开发行股票", required: true, weight: 2, description: "不含已在上交所、深交所、北交所或境外上市的企业" },
-          { name: "未获过前轮支持", required: true, weight: 2, description: "财建〔2021〕2 号文（上一轮）及本轮已获支持的企业不再推荐申报" }
+          { name: "工信部认定的有效期内专精特新「小巨人」企业", required: true, weight: 3, autoMatch: "level", rule: v => v >= 3, description: "已获「小巨人」认定且证书在有效期内" },
+          { name: "未在境内外公开发行股票", required: true, weight: 2, autoMatch: "listed", rule: v => v === "未上市" ? true : v === "已上市" ? false : undefined, description: "不含已在上交所、深交所、北交所或境外上市的企业" },
+          { name: "未获过前轮支持", required: true, weight: 2, description: "财建〔2021〕2 号文（上一轮）及新一轮第一、二批已获支持的「小巨人」不再重复支持（2026 第三批口径）" },
+          { name: "未列入经营异常名录、严重失信主体名单，近三年无重大违法违规行为", required: true, weight: 2, autoMatch: "accident", rule: v => v === "无", description: "2026 年第三批遴选明确要求；以信用中国、国家企业信用信息公示系统查询结果为准" }
         ]
       },
       {
-        category: "申报要件（财建〔2024〕148 号）",
+        category: "申报要件——「三新一强」推进计划（财建〔2024〕148 号）",
         items: [
-          { name: "提出「三新一强」推进计划", required: true, weight: 5, description: "打造新动能、攻坚新技术、开发新产品、强化产业链配套；可覆盖单个或多个方面，分别提出绩效目标" },
-          { name: "推进计划投资总额超过 2000 万元", required: true, weight: 5, description: "用于设备购置、研发投入、产学研建设、人才引育等；土地购置与厂房建设费用不能计入" }
+          { name: "提出「三新」「一强」推进计划", required: true, weight: 5, autoMatch: "invest", rule: v => v === "已编制且>2000万" ? true : v === "未编制或不足" ? false : undefined, description: "打造新动能、攻坚新技术、开发新产品、强化产业链配套；可覆盖单个或多个方面，分别提出绩效目标" },
+          { name: "主导产品/业务聚焦重点领域", required: true, weight: 3, description: "重点产业链、工业「六基」及战略性新兴产业、未来产业领域（148 号文称「重点领域」）；与培育规划六基筛选项口径略有差异，需人工确认" },
+          { name: "推进计划投资总额超过 2000 万元", required: true, weight: 5, autoMatch: "invest", rule: v => v === "已编制且>2000万" ? true : v === "未编制或不足" ? false : undefined, description: "土地购置与厂房建设费用不计入；投资未达 2000 万元将被收回奖补资金" },
+          { name: "投资方向合规且计划可实施", required: true, weight: 3, description: "投资用于设备购置、研发投入、产学研建设、人才引育等；计划须具体可行、有操作性，年度投资安排合理有序" }
         ]
       },
       {
-        category: "地方实施（以属地为准）",
+        category: "属地遴选与申报材料（2026 第三批：企业填报→市级初审→省级推荐）",
         items: [
-          { name: "地方工信部门按名额评审推荐", required: true, weight: 3, description: "企业先向属地工信部门报送预申报/摸底材料，由地方按分配名额组织评审推荐（部分地市附加：有效发明专利 ≥5 项、近 2 年研发费用占营收比重均值 ≥4%、营收正增长等，以属地通知为准）" }
+          { name: "按属地流程参加遴选推荐", required: true, weight: 3, description: "先参加地方预申报/摸底，再由地方按分配名额评审推荐；省级环节为决定性（材料初审、专家评审答辩、实地核查）；部分地市预申报另加属地筛选要求（如发明专利、研发投入、营收成长性等），以属地通知为准" },
+          { name: "申报材料齐全", required: true, weight: 2, description: "广东第三批要求：企业信息表（含「三新一强」推进计划）、营业执照、2023-2025 年审计报告、2023-2025 年 12 月底社保缴纳人数证明、已实际应用的有效发明专利清单、主持（参与）制修订标准情况、管理体系认证情况、产品国际认证情况、主导产品「补短板」「填空白」情况、产业链配套情况等，以属地通知为准" }
+        ]
+      },
+      {
+        category: "加分项（非硬性门槛，省级评审佐证材料）",
+        items: [
+          { name: "主持（参与）制修订标准", required: false, weight: 1, description: "国家标准、行业标准、团体标准等，佐证行业话语权" },
+          { name: "通过管理体系认证", required: false, weight: 1, description: "如 ISO9001 质量管理体系、ISO14001 环境管理体系等" },
+          { name: "产品通过国际认证", required: false, weight: 1, description: "如 CE、UL、FCC 等国际权威认证" },
+          { name: "已实际应用的有效发明专利（含「补短板」「填空白」成果）", required: false, weight: 1, description: "专利须实际应用并产生效益；主导产品「补短板」「填空白」情况是省级评审重要佐证" }
         ]
       }
     ],
-    tips: "这是推荐制专项，不是公开申报：先参加地方预申报摸底（2026 年度广州市企业 1 月 25 日前报送），再由地方按名额评审推荐。奖补绩效挂钩：推进计划投资未达 2000 万元会被收回资金，投资计划务必可兑现——不要为拿奖补虚报投资。申报全程免费，不得委托第三方中介机构代理申报。"
+    tips: "这是推荐制专项，不是公开申报：先参加地方预申报摸底，再由地方按名额评审推荐（2026 第三批流程：企业填报 → 市级初审 → 省级评审，省级环节含材料初审、专家评审答辩、实地核查）。奖补绩效挂钩：推进计划投资未达 2000 万元会被收回资金，投资计划务必可兑现——不要为拿奖补虚报投资。申报全程免费，不得委托第三方中介机构代理申报。2024-2026 三年三批次申报已全部结束，入选企业正在三年实施期；下一轮支持以工信部最新通知为准，谨防不良中介借新批次名义行骗。"
   }
 ];
 
@@ -3517,16 +3868,29 @@ function policyCardHtml(p) {
         ${p.conditions.map(cat => `
           <div class="condition-category">
             <div class="condition-cat-title">${cat.category}</div>
-            ${cat.items.map(item => `
-              <div class="condition-item">
-                <span class="dot ${item.required ? 'required' : 'optional'}" title="${item.required ? '必选条件' : '可选条件'}"></span>
-                <div>
-                  <span style="font-weight:500;">${item.name}</span>
-                  ${item.required ? '<span style="font-size:11px;color:var(--danger);margin-left:4px;">[必选]</span>' : '<span style="font-size:11px;color:var(--warning);margin-left:4px;">[可选]</span>'}
-                  <div class="desc">${item.description}</div>
-                </div>
-              </div>
-            `).join('')}
+            ${cat.paths
+              ? cat.paths.map(path => `
+                  <div style="font-size:12.5px;font-weight:600;color:#1e3a5f;margin:6px 0 2px;">${path.name}</div>
+                  ${path.items.map(item => `
+                    <div class="condition-item">
+                      <span class="dot ${item.required ? 'required' : 'optional'}" title="${item.required ? '必选条件' : '可选条件'}"></span>
+                      <div>
+                        <span style="font-weight:500;">${item.name}</span>
+                        ${item.required ? '<span style="font-size:11px;color:var(--danger);margin-left:4px;">[必选]</span>' : '<span style="font-size:11px;color:var(--warning);margin-left:4px;">[可选]</span>'}
+                        <div class="desc">${item.description}</div>
+                      </div>
+                    </div>`).join('')}
+                `).join('')
+              : cat.items.map(item => `
+                  <div class="condition-item">
+                    <span class="dot ${item.required ? 'required' : 'optional'}" title="${item.required ? '必选条件' : '可选条件'}"></span>
+                    <div>
+                      <span style="font-weight:500;">${item.name}</span>
+                      ${item.required ? '<span style="font-size:11px;color:var(--danger);margin-left:4px;">[必选]</span>' : '<span style="font-size:11px;color:var(--warning);margin-left:4px;">[可选]</span>'}
+                      <div class="desc">${item.description}</div>
+                    </div>
+                  </div>
+                `).join('')}
           </div>
         `).join('')}
         <div class="policy-tips">
@@ -3588,10 +3952,10 @@ function togglePolicy(id) {
 // 财建〔2024〕148 号（重点小巨人）/ 工信部政法〔2023〕138 号（单项冠军）
 // ============================================================
 const GRADIENT_CHAIN = [
-  { level: "第一层 · 评价入库", name: "创新型中小企业", org: "工信部定标准 · 广东省工信厅组织评价（深圳自行组织）", doc: "《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）+ 工信部企业〔2026〕2 号", std: "直通条件 4 项任一，或评价 ≥60 分（创新能力 ≥20 分、成长性及专业化均 ≥15 分）", window: "广东省每年 1 批（2025 年：各地 7.15 前报送推荐）", value: "入库是申报省级专精特新前提；资质有效期 3 年", policyId: "innovative" },
-  { level: "第二层 · 认定", name: "省级专精特新中小企业", org: "广东省工业和信息化厅认定", doc: "粤工信规字〔2024〕5 号细则 + 粤工信融资函〔2025〕4 号年度通知", std: "细分 ≥2 年、研发 ≥100 万且占比 ≥3%、营收 ≥1000 万（或融资 ≥2000 万）、评价 ≥70 分或直通", window: "每年 1 批（2025 年：广佛莞 10.15 前、其他地市 9.25 前报送推荐）", value: "省级荣誉 + 省专项资金项目支持；是小巨人前提；有效期 3 年", policyId: "prov" },
+  { level: "第一层 · 评价入库", name: "科技和创新型中小企业", org: "工信部定标准 · 广东省工信厅组织评价（深圳自行组织）", doc: "《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）+ 工信部企业〔2026〕2 号（新标准未发布前沿用 63 号文）", std: "直通条件 4 项任一，或评价 ≥60 分（创新能力 ≥20 分、成长性及专业化均 ≥15 分）", window: "广东省每年 1 批（2025 年：各地 7.15 前报送推荐）", value: "入库是申报省级专精特新前提；资质有效期 3 年", policyId: "innovative" },
+  { level: "第二层 · 认定", name: "省级专精特新中小企业", org: "广东省工业和信息化厅认定", doc: "工信部企业〔2026〕2 号（2026-04-01 起实施，替代 63 号文认定标准）+ 粤工信规字〔2024〕5 号细则（冲突条款按 2 号文）", std: "细分 ≥3 年、营收 ≥1500 万（或股权投资 ≥2000 万）、主营占比 ≥80%、研发近两年均 ≥100 万且占比 ≥3%、Ⅰ类知产 ≥1 项（可豁免）、评价 ≥50 分", window: "以省厅年度认定通知为准（2025 年批次：广佛莞 10.15 前、其他地市 9.25 前报送推荐）", value: "省级荣誉 + 省专项资金项目支持；是小巨人前提；有效期 3 年", policyId: "prov" },
   { level: "第三层 · 认定", name: "专精特新「小巨人」", org: "工信部认定（广东省组织推荐）", doc: "工信部企业〔2026〕2 号办法 + 工信厅企业函〔2026〕117 号年度通知", std: "营收 ≥5000 万、主营占比 ≥90%、研发两年合计 ≥1200 万、Ⅰ类知产 ≥4 项、评价 ≥60 分", window: "每年 1 批（2026 第八批 4.25-5.25 填报）", value: "国家级最高层级称号，是重点小巨人/单项冠军的前提", policyId: "xjr" },
-  { level: "方向一 · 中央财政专项", name: "重点「小巨人」", org: "财政部 + 工信部（地方按名额评审推荐）", doc: "财建〔2024〕148 号（2024-2026 三年、分三批次）", std: "有效期内小巨人 + 「三新一强」推进计划 + 投资 >2000 万（不含土地厂房）", window: "2026 年度预申报已启动（广州市 1.25 前）；正式申报预计年中", value: "中央奖补 600 万/家·三年（绩效挂钩）", policyId: "keygiant", branch: true },
+  { level: "方向一 · 中央财政专项", name: "重点「小巨人」", org: "财政部 + 工信部（地方按名额评审推荐）", doc: "财建〔2024〕148 号（2024-2026 三年、分三批次）", std: "有效期内小巨人 + 「三新一强」推进计划 + 投资 >2000 万（不含土地厂房）", window: "2024-2026 三年三批次；第三批（2026 年度）遴选推荐已于上半年完成，本批次申报窗口已结束", value: "中央奖补 600 万/家·三年（绩效挂钩）", policyId: "keygiant", branch: true },
   { level: "方向二 · 最高荣誉", name: "制造业单项冠军", org: "工信部认定（小巨人优先推荐）", doc: "工信部政法〔2023〕138 号办法 + 工信厅政法函〔2024〕328 号遴选通知", std: "细分 ≥10 年（新产品 ≥5 年）、近 3 年平均主营 ≥4 亿（省级以上专精特新 2 亿）、市占率全球前 3", window: "原则上每年 1 次；国家级遴选 2025 起暂无新通知（以公告为准）", value: "细分领域天花板名片；省级有对应奖励", policyId: "champion", branch: true }
 ];
 
@@ -3650,12 +4014,26 @@ function getMatchProfile() {
   return {
     industry: $('#mIndustry').value,
     type: $('#mType').value,
+    // level 未选时返回 undefined 而非 0：数字 0 会被「已获称号」条件误判为未通过（用户只是没填，不是明确否）
+    level: $('#mLevel').value === '' ? undefined : Number($('#mLevel').value),
     revenue: $('#mRevenue').value,
     years: $('#mYears').value,
     rd: $('#mRD').value,
     ipr: $('#mIPR').value,
     accident: $('#mAccident').value,
     emission: $('#mEmission').value,
+    segYears: $('#mSegYears').value,
+    mainRatio: $('#mMainRatio').value,
+    growth: $('#mGrowth').value,
+    debt: $('#mDebt').value,
+    equity: $('#mEquity').value,
+    rdTotal: $('#mRDTotal').value,
+    eval: $('#mEval').value,
+    marketShare: $('#mMarketShare').value,
+    sixBase: $('#mSixBase').value,
+    listed: $('#mListed').value,
+    invest: $('#mInvest').value,
+    direct: $('#mDirect').value,
     certs: Array.from($$('.mCert:checked')).map(cb => cb.value)
   };
 }
@@ -3675,6 +4053,44 @@ function evaluatePolicyConditions(policy, profile) {
   const items = []; // 逐条明细
 
   policy.conditions.forEach(cat => {
+    // 二选一路径结构（如创新型「评价路径」）：整类按子路径合成输出，
+    // 避免匹配/规划页差距清单出现直通 4 项 + 评分 6 项共 10 条噪音（2026-08-02 自诊断拆细）
+    if (cat.paths) {
+      cat.paths.forEach(path => {
+        const label = path.name;
+        const pathWeight = path.items.reduce((s, i) => s + i.weight, 0);
+        totalWeight += pathWeight;
+        if (path.scoreBased) {
+          // 评分路径需逐档自评（自诊断标签），表单无法自动算分 → 恒未核验，引导去自诊断核实
+          unverifiedRequired.push(label);
+          items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: false, unverified: true });
+          return;
+        }
+        const canAutoCheck = !!path.autoMatch && profile[path.autoMatch] !== undefined && profile[path.autoMatch] !== '';
+        if (canAutoCheck) {
+          verifiedWeight += pathWeight;
+          // 2026-08-02 拆细：paths 类支持 path.rule（档位/组合判定，如知产数量档、层级前提 level），无 rule 时保持「是/否」三态语义
+          const verdict = path.rule ? path.rule(profile[path.autoMatch], profile) :
+            (profile[path.autoMatch] === "是" ? true : profile[path.autoMatch] === "否" ? false : undefined);
+          if (verdict === true) {
+            matchedWeight += pathWeight;
+            matchedItems.push(label);
+            items.push({ name: label, category: cat.category, required: true, veto: false, matched: true, auto: true, unverified: false });
+          } else if (verdict === undefined) {
+            // 「不清楚」三态：归未核验而非未通过
+            unverifiedRequired.push(label);
+            items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: true, unverified: true });
+          } else {
+            failedRequired.push(label);
+            items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: true, unverified: false });
+          }
+        } else {
+          unverifiedRequired.push(label);
+          items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: false, unverified: true });
+        }
+      });
+      return; // 该类别的子项由自诊断逐条渲染，匹配/规划页不展开
+    }
     cat.items.forEach(item => {
       totalWeight += item.weight;
       let matched = false;
@@ -3853,6 +4269,56 @@ function populateDiagSelect() {
     POLICIES.map(p => `<option value="${p.id}">${p.name} — ${p.issuingBody}</option>`).join('');
 }
 
+// 渲染二选一路径类（2026-08-02 自诊断拆细）：
+// 直通路径 = checkbox 组（任一勾选即满足）；评分路径 = 档位 radio 组（选档计分，合计达 minScore 且分项达底线）
+// 双计数器：inputIdx 每个 input（含每个 radio 档位）独立序号，供持久化精确恢复；itemIdx 条件项序号，供报告按项映射
+function renderPathCategory(cat, policy, nextInput, nextItem) {
+  return cat.paths.map(path => {
+    const head = `<div style="font-weight:600;font-size:13.5px;color:#1e3a5f;padding:10px 14px 2px;margin-top:4px;">${path.name}</div>`;
+    if (path.scoreBased) {
+      const minInfo = path.minParts ? `分项底线：${Object.entries(path.minParts).map(([k, v]) => `${k} ≥${v} 分`).join('、')}` : '';
+      return head +
+        `<div style="font-size:12px;color:var(--text-secondary);padding:0 14px 6px;">选档计分，合计需 ≥${path.minScore} 分 · ${minInfo}；未选档位按 0 分计</div>` +
+        path.items.map(item => {
+          const iIdx = nextItem();
+          const maxScore = item.scoreOptions.reduce((s, o) => s + o.score, 0);
+          return `
+            <div class="checklist-item" style="display:block;">
+              <div class="cond-label">
+                <strong>${item.name}</strong>（满分 ${maxScore} 分）
+                <span class="cond-tag required-tag">计分项</span>
+                <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
+              </div>
+              <div style="margin-top:6px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:4px;">
+                ${item.scoreOptions.map((opt, oi) => `
+                  <label style="display:flex;align-items:center;gap:6px;font-size:13px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;">
+                    <input type="radio" name="diag-score-${policy.id}-${iIdx}" class="diag-score" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="${oi}">
+                    ${opt.label}（${opt.score} 分）
+                  </label>
+                `).join('')}
+              </div>
+            </div>`;
+        }).join('');
+    }
+    // 多选一路径：n 项中任意 1 项勾选即满足（hint 可自定义，如创新型「直通」、专精特新「豁免」）
+    const pathHint = path.hint || (path.items.length > 1 ? `满足以下 ${path.items.length} 项中任意 1 项即可直通` : '');
+    return head +
+      (pathHint ? `<div style="font-size:12px;color:var(--text-secondary);padding:0 14px 6px;">${pathHint}</div>` : '') +
+      path.items.map(item => {
+        const iIdx = nextItem();
+        return `
+          <label class="checklist-item">
+            <input type="checkbox" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}">
+            <span class="cond-label">
+              ${item.name}
+              <span class="cond-tag required-tag">必选</span>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
+            </span>
+          </label>`;
+      }).join('');
+  }).join('');
+}
+
 function loadDiagnosis() {
   const id = $('#diagPolicySelect').value;
   $('#diagnosisReport').innerHTML = '';
@@ -3863,7 +4329,9 @@ function loadDiagnosis() {
   }
 
   const policy = POLICIES.find(p => p.id === id);
-  let itemIndex = 0;
+  let inputIndex = 0, itemIndex = 0;
+  const nextInput = () => inputIndex++;
+  const nextItem = () => itemIndex++;
 
   $('#diagnosisChecklist').innerHTML = `
     <div style="margin-top:12px;">
@@ -3873,13 +4341,13 @@ function loadDiagnosis() {
       ${policy.alert ? `<div class="policy-alert ${policy.alert.level}"><strong>⚠️ 政策重要变更</strong>：${policy.alert.text} <a href="${policy.alert.link}" target="_blank" rel="noopener">${policy.alert.linkLabel}</a></div>` : ''}
     </div>
     <div class="diagnosis-checklist">
-      ${policy.conditions.map(cat => `
-        <div style="font-weight:600;font-size:14px;color:var(--primary);padding:10px 14px 4px;margin-top:6px;border-left:3px solid var(--primary-light);">${cat.category}</div>
+      ${policy.conditions.map(cat => cat.paths ? renderPathCategory(cat, policy, nextInput, nextItem) : `
+        <div style="font-weight:600;font-size:14px;color:var(--primary);padding:10px 14px 4px;margin-top:6px;border-left:3px solid var(--primary-light);">${cat.category}${cat.anyOf ? '（满足其中 1 项即可）' : ''}</div>
         ${cat.items.map(item => {
-          const idx = itemIndex++;
+          const iIdx = nextItem();
           return `
             <label class="checklist-item">
-              <input type="checkbox" class="diag-check" data-idx="${idx}" data-policy="${policy.id}">
+              <input type="checkbox" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}">
               <span class="cond-label">
                 ${item.name}
                 ${item.veto ? '<span class="cond-tag" style="background:var(--bg-danger);color:var(--danger);border:1px solid var(--danger);">一票否决</span>' : ''}
@@ -3894,43 +4362,121 @@ function loadDiagnosis() {
     <button class="btn btn-primary" onclick="generateReport('${policy.id}')" style="margin-top:16px;">生成诊断报告</button>
   `;
 
-  // 恢复该政策已保存的勾选状态（P0-1.4 持久化：页面刷新或切换政策回来时生效）
+  // 恢复该政策已保存的勾选状态（P0-1.4 持久化：checkbox 与评分档位 radio 共用索引，页面刷新或切换政策回来时生效）
   const savedDiag = getDiagState();
   (savedDiag.checked[id] || []).forEach(idx => {
-    const cb = document.querySelector(`.diag-check[data-policy="${id}"][data-idx="${idx}"]`);
-    if (cb) cb.checked = true;
+    const el = document.querySelector(`.diag-check[data-policy="${id}"][data-idx="${idx}"], .diag-score[data-policy="${id}"][data-idx="${idx}"]`);
+    if (el) el.checked = true;
   });
 }
 
 function generateReport(policyId) {
   const policy = POLICIES.find(p => p.id === policyId);
-  const checks = $$(`.diag-check[data-policy="${policyId}"]`);
   let totalRequired = 0, metRequired = 0;
   let totalOptional = 0, metOptional = 0;
   let totalWeight = 0, metWeight = 0;
   const gaps = [];
-  // 展平条件列表，与 loadDiagnosis 渲染顺序一致，按 DOM 索引直接取用（替代原双重循环逐项查找）
+  // 展平条件列表（含二选一路径类的子项，带路径上下文）；路径类整体判定，子项不计入逐项统计
   const flatItems = [];
-  policy.conditions.forEach(cat => cat.items.forEach(item => flatItems.push({ ...item, category: cat.category })));
+  policy.conditions.forEach(cat => {
+    if (cat.paths) cat.paths.forEach(path => path.items.forEach(item => flatItems.push({ ...item, category: cat.category, pathName: path.name })));
+    else cat.items.forEach(item => flatItems.push({ ...item, category: cat.category }));
+  });
+  // 采集 checkbox 与评分档位 radio，按 data-item 映射到条件项（2026-08-02 拆细：同一项可对应多个 radio 档位）
+  const selState = {}; // itemIndex -> { checked, opt, score }
+  $$(`[data-policy="${policyId}"].diag-check, [data-policy="${policyId}"].diag-score`).forEach(el => {
+    // data-item 优先；旧结构（无 data-item）按 data-idx 兜底，保证其他政策回归
+    const itemIdx = el.dataset.item !== undefined ? Number(el.dataset.item) : Number(el.dataset.idx);
+    const item = flatItems[itemIdx];
+    if (!item) return;
+    if (el.checked) {
+      if (item.scoreOptions) {
+        const opt = item.scoreOptions[Number(el.value)];
+        selState[itemIdx] = { checked: true, opt, score: opt ? opt.score : 0 };
+      } else {
+        selState[itemIdx] = { checked: true };
+      }
+    } else if (!selState[itemIdx]) {
+      selState[itemIdx] = item.scoreOptions ? { checked: false, score: 0 } : { checked: false };
+    }
+  });
 
-  checks.forEach((cb, i) => {
-    const foundItem = flatItems[i];
-    if (!foundItem) return;
+  const pathCats = policy.conditions.filter(c => c.paths);
+  const pathCatNames = new Set(pathCats.map(c => c.category));
 
-    totalWeight += foundItem.weight;
-    if (cb.checked) {
-      metWeight += foundItem.weight;
-      if (foundItem.required) metRequired++;
+  // 逐项统计（路径类整体判定，跳过）
+  flatItems.forEach((item, idx) => {
+    if (pathCatNames.has(item.category)) return;
+    const st = selState[idx] || { checked: false };
+    totalWeight += item.weight;
+    if (st.checked) {
+      metWeight += item.weight;
+      if (item.required) metRequired++;
       else metOptional++;
     } else {
-      gaps.push(foundItem);
+      gaps.push(item);
     }
-    if (foundItem.required) totalRequired++;
+    if (item.required) totalRequired++;
     else totalOptional++;
+  });
+
+  // 二选一路径类判定（2026-08-02 拆细）：类内任一路径满足 → 整类满足（创新型：直通/评分；专精特新：知识产权/豁免）
+  let pathScoreInfo = null; // 评分路径明细（报告区块用）
+  let pathMetCount = 0; // 已满足的路径类数量（用于基础合规必选通过率独立计算）
+  const pathCatResults = []; // 每类的判定结果 { cat, subMet, met }
+  const pathReasons = [];
+  pathCats.forEach(cat => {
+    totalRequired++; // 路径类整体计 1 条必选
+    totalWeight += cat.paths.reduce((s, p) => s + p.items.reduce((t, i) => t + i.weight, 0), 0);
+    const subMet = [];
+    cat.paths.forEach(path => {
+      const pathIdx = [];
+      flatItems.forEach((it, i) => { if (it.pathName === path.name) pathIdx.push(i); });
+      if (path.scoreBased) {
+        let sum = 0;
+        const parts = {};
+        const partMax = {}; // 各分项满分（最高档，非档位分值和——2026-08-02 修复）
+        const rows = [];
+        const pathMax = pathIdx.reduce((s, i) => s + Math.max(...flatItems[i].scoreOptions.map(o => o.score)), 0);
+        pathIdx.forEach(i => {
+          const it = flatItems[i];
+          const st = selState[i] || { checked: false, score: 0 };
+          const s = st.score || 0;
+          sum += s;
+          parts[it.part] = (parts[it.part] || 0) + s;
+          partMax[it.part] = (partMax[it.part] || 0) + Math.max(...it.scoreOptions.map(o => o.score));
+          rows.push({ item: it, opt: st.opt || null, score: s });
+        });
+        pathScoreInfo = { name: path.name, sum, parts, partMax, pathMax, rows, minScore: path.minScore, minParts: path.minParts };
+        const partFails = Object.entries(path.minParts || {}).filter(([k, v]) => (parts[k] || 0) < v);
+        const ok = sum >= path.minScore && partFails.length === 0;
+        subMet.push(ok);
+        if (!ok) pathReasons.push(`评分路径：预估 ${sum}/${pathMax} 分${partFails.length ? `（${partFails.map(([k, v]) => `${k} ${parts[k] || 0} 分 < 底线 ${v} 分`).join('、')}）` : `（未达 ${path.minScore} 分）`}`);
+      } else {
+        const anyMet = pathIdx.some(i => (selState[i] || {}).checked);
+        subMet.push(anyMet);
+        if (!anyMet) pathReasons.push(`${path.name}：${path.items.length} 项均未勾选`);
+      }
+    });
+    const catMet = subMet.some(Boolean);
+    pathCatResults.push({ cat, subMet, met: catMet });
+    if (catMet) {
+      metRequired++;
+      pathMetCount++;
+      // 已满足的路径按自身权重计入（创新型直通 4×5=20、评分按实际得分；专精特新豁免按子项权重）
+      cat.paths.forEach((p, pIdx) => {
+        if (subMet[pIdx]) metWeight += p.scoreBased ? (pathScoreInfo ? pathScoreInfo.sum : 0) : p.items.reduce((s, i) => s + i.weight, 0);
+      });
+    } else {
+      gaps.push({ name: cat.category, required: true, weight: 0, category: cat.category, description: pathReasons.join('；') });
+    }
   });
 
   const score = totalWeight > 0 ? Math.round((metWeight / totalWeight) * 100) : 0;
   const reqScore = totalRequired > 0 ? Math.round((metRequired / totalRequired) * 100) : 100;
+  // 基础合规必选通过率（不含二选一路径类，路径类由路径判定独立负责，避免 reqScore 分支截胡路径结论）
+  const baseReqScore = (totalRequired - pathCats.length) > 0
+    ? Math.round(((metRequired - pathMetCount) / (totalRequired - pathCats.length)) * 100) : 100;
 
   const vetoGaps = gaps.filter(g => g.veto);
   const hasVetoGap = vetoGaps.length > 0;
@@ -3940,10 +4486,21 @@ function generateReport(policyId) {
     tier = '存在一票否决条件不满足';
     tierColor = 'var(--danger)';
     suggestion = '以下条件为独立否决项，任一不满足即不具备申报资格。其他条件无论完成度如何，当前均不建议申报。请优先攻克以下一票否决条件。';
-  } else if (reqScore < 100) {
+  } else if (baseReqScore < 100) {
     tier = '暂不具备申报条件';
     tierColor = 'var(--danger)';
     suggestion = '存在必选条件未满足，建议优先补齐以下标注为"关键缺口"的条件后再申报。';
+  } else if (pathCatResults.some(r => !r.met)) {
+    // 路径类未达标（创新型：直通/评分均未满足；专精特新：知识产权/豁免均未满足）
+    const unmetNames = pathCatResults.filter(r => !r.met).map(r => r.cat.category.replace(/（.*/, '')).join('、');
+    tier = `暂不具备申报资格（${unmetNames}未达标）`;
+    tierColor = 'var(--danger)';
+    suggestion = `基础合规已满足，但 ${unmetNames} 未达标。建议：该类为「满足任意 1 条路径即可」结构——${pathCatResults.flatMap(r => r.cat.paths.map(p => p.name)).join('；')}，请对照逐一核实，优先补齐最容易达成的一条。`;
+  } else if (pathCatResults.length > 0) {
+    // 路径已满足：综合匹配度受未选评分档位影响而偏低，结论直接按路径达标给成熟档
+    tier = '申报条件成熟';
+    tierColor = 'var(--success)';
+    suggestion = '基础合规通过且认定条件全部满足，建议启动申报材料准备。注意留存研发费用归集台账与审计报告等佐证。';
   } else if (score >= 85) {
     tier = '申报条件成熟';
     tierColor = 'var(--success)';
@@ -3980,6 +4537,8 @@ function generateReport(policyId) {
       </div>
       <div style="text-align:center;color:var(--text-secondary);font-size:14px;margin-bottom:16px;">${suggestion}</div>
 
+      ${pathCatResults.length > 0 ? `<div style="text-align:center;color:var(--text-secondary);font-size:14px;margin-bottom:16px;">${pathCatResults.map(r => `${r.cat.category}：${r.met ? '✅ 已满足' : '❌ 未满足'}`).join(' · ')}</div>` : ''}
+
       ${policy.alert ? `<div class="policy-alert ${policy.alert.level}" style="margin-bottom:16px;"><strong>⚠️ 政策重要变更</strong>：${policy.alert.text} <a href="${policy.alert.link}" target="_blank" rel="noopener">${policy.alert.linkLabel}</a></div>` : ''}
 
       ${vetoGaps.length > 0 ? `
@@ -3991,6 +4550,30 @@ function generateReport(policyId) {
         </ul>
       </div>
       ` : ''}
+
+      ${pathCatResults.length > 0 ? pathCatResults.map(r => `
+      <div class="report-section">
+        <h4>${r.cat.category.replace(/（.*/, '')}判定</h4>
+        <div style="font-size:13px;margin-bottom:6px;line-height:1.8;">
+          ${r.cat.paths.map((p, i) => {
+            const met = r.subMet[i];
+            let s = `${p.name}：${met ? '✅ 已满足' : '❌ 未满足'}`;
+            if (p.items.length > 1) s += met ? `（${p.items.length} 项中勾选至少 1 项）` : `（${p.items.length} 项均未勾选）`;
+            if (p.scoreBased && pathScoreInfo && pathScoreInfo.name === p.name) {
+              s += met ? `，✅ 预估 ${pathScoreInfo.sum}/${pathScoreInfo.pathMax} 分，达标` : `，❌ 预估 ${pathScoreInfo.sum}/${pathScoreInfo.pathMax} 分，未达标`;
+              if (pathScoreInfo.minParts) s += `（${Object.entries(pathScoreInfo.minParts).map(([k, v]) => `${k} ${pathScoreInfo.parts[k] || 0}/${pathScoreInfo.partMax[k] || 0} 底线 ${v} ${(pathScoreInfo.parts[k] || 0) >= v ? '✓' : '✗'}`).join(' · ')}）`;
+            }
+            return s;
+          }).join('<br>')}
+        </div>
+        ${pathScoreInfo ? `
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">评分明细（未选档位按 0 分计）：</div>
+        <ul style="font-size:13px;">
+          ${pathScoreInfo.rows.map(rr => `<li>${rr.item.name} — ${rr.opt ? `已选 ${rr.opt.label}（${rr.score} 分）` : '<span style="color:var(--text-secondary);">未选择（0 分）</span>'}</li>`).join('')}
+        </ul>` : ''}
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">该类别满足其中任意 1 条路径即视为满足；已满足路径的资格结论不受未达标路径影响。</div>
+      </div>
+      `).join('') : ''}
 
       ${criticalGaps.length > 0 ? `
       <div class="report-section">
@@ -4029,6 +4612,7 @@ function generateReport(policyId) {
       <div class="report-section" style="margin-top:12px;font-size:13px;color:var(--text-secondary);">
         <h4>政策依据</h4>
         <div>申报依据文件：<a href="${policy.source.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${policy.source.name}</a>（点击查看政府官网原文）</div>
+        ${(policy.basis || []).map(b => `<div style="margin-top:4px;">评价细则依据：<a href="${b.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${b.name}</a></div>`).join('')}
       </div>
 
       <!-- 打印专用尾部 -->
@@ -4068,20 +4652,23 @@ document.addEventListener('keydown', e => {
 // ============================================================
 const PLAN_LAYERS = [
   { id: 0, label: '尚未入库（链条外）', next: { badge: '第 1 层', name: '创新型中小企业评价入库（广东省）', policyId: 'innovative', window: '广东省每年 1 批（2025 年：各地 7 月 15 日前报送推荐；珠海等市企业 6 月初前完成自评）', step: '先自查直通条件——高企/国家级技术创新示范企业等有效期内荣誉、省级以上科技奖励、省部级研发机构、新增股权融资 ≥500 万，满足任一项直接入库；无直通则走评分路径（评价 ≥60 分：创新能力 ≥20 分、成长性及专业化均 ≥15 分），建议从现在起留存研发费用归集台账——评分路径中研发占比与Ⅰ类知识产权分值最大。申报全程线上（培育平台 zjtx.miit.gov.cn），无需纸质材料' } },
-  { id: 1, label: '创新型中小企业', next: { badge: '第 2 层', name: '专精特新中小企业认定（广东省）', policyId: 'prov', window: '广东省每年 1 批（2025 年：广佛莞 10 月 15 日前、其他地市 9 月 25 日前报送推荐）', step: '广东认定四条件须同时满足：从事细分市场 ≥2 年、上年度研发费用 ≥100 万且占营收 ≥3%、营收 ≥1000 万（或近 2 年新增股权融资 ≥2000 万）、评价得分 ≥70 分或直通条件之一（省级科技奖励/研发均值 ≥1000 万/股权融资 ≥6000 万/「创客中国」全国 500 强）。评价指标 100 分：专业化 25 + 精细化 25 + 特色化 15（广东自主）+ 创新 35。创新型入库资质有效期 3 年，注意在有效期内申报' } },
-  { id: 2, label: '省级专精特新中小企业', next: { badge: '第 3 层', name: '专精特新「小巨人」企业认定', policyId: 'xjr', window: '每年 1 批（2026 第八批 4.25-5.25 线上填报 → 6.30 材料寄送截止）', step: '小巨人每年 1 批，材料建议提前半年准备：营收与研发费用的审计数据口径（近两年研发合计 ≥1200 万且每年占比 ≥3%）、Ⅰ类知识产权 ≥4 项、专精特新发展评价自评 ≥60 分' } },
+  { id: 1, label: '创新型中小企业', next: { badge: '第 2 层', name: '专精特新中小企业认定（广东省）', policyId: 'prov', window: '以省厅年度认定通知为准（2025 年批次：广佛莞 10 月 15 日前、其他地市 9 月 25 日前报送推荐）', step: '2026-04-01 起按工信部企业〔2026〕2 号新标准执行（原 63 号文口径废止），六项条件须同时满足：①已获科技和创新型中小企业称号且细分市场 ≥3 年；②营收 ≥1500 万（或近两年新增股权投资 ≥2000 万）+ 主营占比 ≥80% + 资产负债率 ≤80%；③近两年研发费用均 ≥100 万且每年占比 ≥3%；④Ⅰ类知识产权 ≥1 项且实际应用产生经济效益（近三年省部级以上科技奖励排名前三或省部级以上研发机构可豁免）；⑤主导产品市场占有率较为靠前；⑥专精特新发展评价得分 ≥50 分（培育平台自动算分，登录 zjtx.miit.gov.cn 查询）。科技和创新型中小企业资质有效期 3 年，注意在有效期内申报' } },
+  { id: 2, label: '省级专精特新中小企业', next: { badge: '第 3 层', name: '专精特新「小巨人」企业认定', policyId: 'xjr', window: '每年 1 批（2026 第八批 4.25-5.25 线上填报 → 6.30 材料寄送截止）', step: '小巨人每年 1 批，材料建议提前半年准备：营收与研发费用的审计数据口径（近两年研发合计 ≥1200 万且每年占比 ≥3%）、Ⅰ类知识产权 ≥4 项、专精特新发展评价得分 ≥60 分（培育平台自动计算，登录 zjtx.miit.gov.cn 查询）' } },
   { id: 3, label: '专精特新「小巨人」', next: [
-    { badge: '第 4 层 · 方向一', name: '重点「小巨人」（中央财政专项）', policyId: 'keygiant', window: '2024-2026 三年分三批次；2026 年度预申报已启动（广州市 1 月 25 日前报送），正式申报预计年中', step: '推荐制专项：先参加地方预申报摸底，由地方工信部门按名额评审推荐（非公开申报）。核心要件：「三新一强」推进计划 + 投资总额 >2000 万元（设备购置/研发投入/产学研/人才引育，土地厂房不计入）。奖补 600 万/家·三年（期初 50% + 期末绩效 50%），投资未达 2000 万收回资金——计划务必可兑现' },
+    { badge: '第 4 层 · 方向一', name: '重点「小巨人」（中央财政专项）', policyId: 'keygiant', window: '2024-2026 三年分三批次；第三批（2026 年度）遴选推荐已于上半年完成（广东 2 月 9 日启动、3 月上旬省级评审），本批次申报窗口已结束', step: '推荐制专项：先参加地方预申报摸底，由地方工信部门按名额评审推荐（非公开申报）。核心要件：「三新一强」推进计划 + 投资总额 >2000 万元（设备购置/研发投入/产学研/人才引育，土地厂房不计入）。奖补 600 万/家·三年（期初 50% + 期末绩效 50%），投资未达 2000 万收回资金——计划务必可兑现' },
     { badge: '第 5 层 · 方向二', name: '制造业单项冠军（最高荣誉方向）', policyId: 'champion', window: '原则上每年 1 次；国家级遴选 2025 起暂无新通知（以工信部公告为准）', step: '小巨人可优先推荐。硬门槛：从事细分领域 ≥10 年（新产品 ≥5 年）、近 3 年平均主营收入 ≥4 亿元（省级以上专精特新可降至 2 亿）、申请产品市占率全球前 3（需权威第三方佐证）、生产技术或工艺国际先进。市占率佐证要严谨，不要凭感觉填报' }
   ] },
   { id: 4, label: '重点「小巨人」', next: null, top: '你已进入中央财政支持专项：财建〔2024〕148 号支持周期三年、分两次下达（期初 50% + 期末绩效 50%），按申报书承诺推进「三新一强」计划并配合年度绩效评价；投资未达 2000 万元将被收回资金。另一并列方向：制造业单项冠军（近 3 年平均主营 ≥4 亿、市占率全球前 3），如符合可关注国家级遴选批次。' },
   { id: 5, label: '制造业单项冠军', next: null, top: '你已到梯度链条顶层：单项冠军证书有效期 3 年，有效期内每年 5 月 31 日前在培育平台更新企业信息，关注复核评价安排。另一并列方向：重点「小巨人」专项（中央奖补 600 万/家·三年），如未申报可关注批次预申报。' }
 ];
 
-const LS_PLAN = 'zct_v1_plan';
+const LS_PLAN = 'zct_v1_plan2'; // 2026-08-02 筛选项拆细：字段集增删（pGlobalShare→pMarketShare、mainRatio 档位变）+ 新增 10 字段，升键一次性清旧值
 const PLAN_FIELD_IDS = {
   level: 'pLevel', revenue: 'pRevenue', years: 'pYears', rd: 'pRD',
-  ipr: 'pIPR', accident: 'pAccident', mainRatio: 'pMainRatio', direct: 'pDirect', globalShare: 'pGlobalShare'
+  ipr: 'pIPR', accident: 'pAccident', mainRatio: 'pMainRatio', direct: 'pDirect',
+  segYears: 'pSegYears', growth: 'pGrowth', debt: 'pDebt', equity: 'pEquity',
+  rdTotal: 'pRDTotal', eval: 'pEval', marketShare: 'pMarketShare', sixBase: 'pSixBase',
+  listed: 'pListed', invest: 'pInvest'
 };
 
 function savePlanState() {
@@ -4110,7 +4697,16 @@ function getPlanProfile() {
     accident: $('#pAccident').value,
     mainRatio: $('#pMainRatio').value,
     direct: $('#pDirect').value,
-    globalShare: $('#pGlobalShare').value
+    segYears: $('#pSegYears').value,
+    growth: $('#pGrowth').value,
+    debt: $('#pDebt').value,
+    equity: $('#pEquity').value,
+    rdTotal: $('#pRDTotal').value,
+    eval: $('#pEval').value,
+    marketShare: $('#pMarketShare').value,
+    sixBase: $('#pSixBase').value,
+    listed: $('#pListed').value,
+    invest: $('#pInvest').value
   };
 }
 
@@ -4129,7 +4725,9 @@ function runPlan() {
   const cur = PLAN_LAYERS[Number(levelSel.value)];
   const targets = Array.isArray(cur.next) ? cur.next : (cur.next ? [cur.next] : null);
   const itemDesc = (target, name) => {
-    const item = target.conditions.flatMap(c => c.items).find(i => i.name === name);
+    // 2026-08-02 拆细：paths 类（无 items）子项在 c.paths 下，统一展平
+    const items = target.conditions.flatMap(c => c.paths ? c.paths.flatMap(p => p.items) : (c.items || []));
+    const item = items.find(i => i.name === name);
     return item ? item.description : '';
   };
 
@@ -4150,7 +4748,8 @@ function runPlan() {
       const target = POLICIES.find(p => p.id === next.policyId);
       let gapsHtml;
       if (target) {
-        const ev = evaluatePolicyConditions(target, getPlanProfile());
+        // 注入 level：目标政策中的「已获 xxx 称号」前提条件按当前层位自动判定（如 prov 需已获创新型、xjr 需已获省级）
+        const ev = evaluatePolicyConditions(target, Object.assign(getPlanProfile(), { level: cur.id }));
         const noCount = ev.items.filter(i => i.auto && !i.unverified && !i.matched).length;
         const maybeCount = ev.items.filter(i => i.unverified).length;
         gapsHtml = ev.items.map(it => {
@@ -4186,8 +4785,9 @@ function resetPlan() {
 // 状态持久化（P0-1.4）：匹配表单 + 诊断勾选，关闭浏览器不丢失
 // 存储不可用时（隐私模式/测试环境）静默降级，不影响页面功能
 // ============================================================
-const LS_MATCH = 'zct_v1_matchForm';
-const LS_DIAG = 'zct_v1_diag';
+const LS_MATCH = 'zct_v1_matchForm2'; // 2026-08-02 匹配页字段拆细：新增 13 字段（level/segYears/mainRatio/growth/debt/equity/rdTotal/eval/marketShare/sixBase/listed/invest/direct），升键一次性清旧值
+// 2026-08-02 自诊断拆细：索引语义由「条件项序号」变为「input 序号」，升键 v2 一次性清掉旧索引，避免旧 0-5 错勾到新渲染项；xjr 拆细再次改变 xjr 索引映射，升键 v3 一次性清旧勾选；keygiant 拆细 6→14 项改变索引映射，升键 v4 一次性清旧勾选
+const LS_DIAG = 'zct_v1_diag4';
 
 function storageGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
 function storageSet(key, val) { try { localStorage.setItem(key, val); } catch (e) { /* 存储不可用时静默降级 */ } }
@@ -4195,8 +4795,11 @@ function storageRemove(key) { try { localStorage.removeItem(key); } catch (e) { 
 
 // 匹配表单：字段 key → 元素 id 映射（key 与 getMatchProfile 返回值对应）
 const MATCH_FIELD_IDS = {
-  industry: 'mIndustry', type: 'mType', revenue: 'mRevenue', years: 'mYears',
-  rd: 'mRD', ipr: 'mIPR', accident: 'mAccident', emission: 'mEmission'
+  industry: 'mIndustry', type: 'mType', level: 'mLevel', revenue: 'mRevenue', years: 'mYears',
+  rd: 'mRD', ipr: 'mIPR', accident: 'mAccident', emission: 'mEmission',
+  segYears: 'mSegYears', mainRatio: 'mMainRatio', growth: 'mGrowth', debt: 'mDebt',
+  equity: 'mEquity', rdTotal: 'mRDTotal', eval: 'mEval', marketShare: 'mMarketShare',
+  sixBase: 'mSixBase', listed: 'mListed', invest: 'mInvest', direct: 'mDirect'
 };
 
 function saveMatchState() {
@@ -4227,8 +4830,9 @@ function getDiagState() {
 
 function saveDiagCheck(policyId) {
   const st = getDiagState();
-  st.checked[policyId] = Array.from(document.querySelectorAll(`.diag-check[data-policy="${policyId}"]:checked`))
-    .map(cb => Number(cb.dataset.idx));
+  // 2026-08-02 拆细：诊断清单含 checkbox（diag-check）与评分档位 radio（diag-score），统一按已选中的 data-idx 保存
+  st.checked[policyId] = Array.from(document.querySelectorAll(`[data-policy="${policyId}"]:checked`))
+    .map(el => Number(el.dataset.idx));
   storageSet(LS_DIAG, JSON.stringify(st));
 }
 
