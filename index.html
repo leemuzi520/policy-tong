@@ -46,12 +46,12 @@ body {
   min-height: 100vh;
 }
 
-/* ===== 风格切换器（固定浮层，全部主题共用） ===== */
+/* ===== 风格切换器（嵌入页头，随页面滚动，全部主题共用） ===== */
 .style-switcher {
-  position: fixed;
-  top: 12px;
-  right: 12px;
-  z-index: 999;
+  position: static;
+  margin-left: auto;
+  align-self: center;
+  width: fit-content;
   display: flex;
   gap: 2px;
   padding: 3px;
@@ -565,7 +565,7 @@ body {
   .diagnosis-report { padding: 14px; }
   .methodology-banner { flex-direction: column; padding: 14px 16px; gap: 10px; text-align: left; }
   .methodology-banner .step-row { font-size: 13px; line-height: 1.7; gap: 6px; }
-  .style-switcher { top: auto; bottom: 12px; right: 12px; }
+  .style-switcher { margin-left: 0; align-self: flex-start; }
 }
 @media (max-width: 480px) {
   body { font-size: 14px; }
@@ -1102,7 +1102,7 @@ body {
   [data-style="b"] .report-score { font-size: 28px; }
   [data-style="b"] .diagnosis-report { padding: 14px; }
   [data-style="b"] .methodology-banner { flex-direction: column; padding: 14px 16px; gap: 10px; text-align: left; }
-  .style-switcher { top: auto; bottom: 12px; right: 12px; }
+  .style-switcher { margin-left: 0; align-self: flex-start; }
 }
 
 
@@ -1610,7 +1610,7 @@ body {
   [data-style="c"] .report-score { font-size: 30px; }
   [data-style="c"] .diagnosis-report { padding: 16px; }
   [data-style="c"] .methodology-banner { flex-direction: column; padding: 14px 16px; gap: 10px; text-align: left; }
-  .style-switcher { top: auto; bottom: 12px; right: 12px; }
+  .style-switcher { margin-left: 0; align-self: flex-start; }
 }
 @media (max-width: 480px) {
   [data-style="c"] body { font-size: 14px; }
@@ -2130,7 +2130,7 @@ body {
   [data-style="d"] .report-score { font-size: 32px; }
   [data-style="d"] .diagnosis-report { padding: 16px; }
   [data-style="d"] .methodology-banner { flex-direction: column; padding: 16px; gap: 10px; text-align: left; }
-  .style-switcher { top: auto; bottom: 12px; right: 12px; }
+  .style-switcher { margin-left: 0; align-self: flex-start; }
 }
 @media (max-width: 480px) {
   [data-style="d"] body { font-size: 14px; }
@@ -2698,7 +2698,7 @@ body {
   [data-style="e"] .report-score { font-size: 32px; }
   [data-style="e"] .diagnosis-report { padding: 16px; }
   [data-style="e"] .methodology-banner { flex-direction: column; padding: 16px; gap: 10px; text-align: left; }
-  .style-switcher { top: auto; bottom: 92px; right: 12px; }
+  .style-switcher { margin-left: 0; align-self: flex-start; }
 }
 @media (max-width: 480px) {
   [data-style="e"] body { font-size: 14px; }
@@ -2733,6 +2733,13 @@ body {
   </div>
   <div class="header-subtitle">
     核心理念：政策不是玄学，是可拆解的逻辑树。每一份政策文件都可以被拆成结构化的申报条件矩阵 —— 可检查、可量化、可补齐。
+  </div>
+  <div class="style-switcher" id="styleSwitcher" role="group" aria-label="风格切换">
+    <button class="sw-btn" data-style="a" title="A 政务金蓝">A</button>
+    <button class="sw-btn" data-style="b" title="B 深空科技">B</button>
+    <button class="sw-btn" data-style="c" title="C 新中式水墨">C</button>
+    <button class="sw-btn" data-style="d" title="D 杂志编辑">D</button>
+    <button class="sw-btn" data-style="e" title="E 玻璃轻灵">E</button>
   </div>
 </header>
 
@@ -4281,15 +4288,6 @@ document.addEventListener('change', e => {
 
 </script>
 
-
-<!-- ===== 风格切换器（5 套独立设计） ===== -->
-<div class="style-switcher" id="styleSwitcher" role="group" aria-label="风格切换">
-  <button class="sw-btn" data-style="a" title="A 政务金蓝">A</button>
-  <button class="sw-btn" data-style="b" title="B 深空科技">B</button>
-  <button class="sw-btn" data-style="c" title="C 新中式水墨">C</button>
-  <button class="sw-btn" data-style="d" title="D 杂志编辑">D</button>
-  <button class="sw-btn" data-style="e" title="E 玻璃轻灵">E</button>
-</div>
 
 </body>
 </html>
