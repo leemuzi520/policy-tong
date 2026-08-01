@@ -1,0 +1,4290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>政策通 — 企业政策申报智能诊断平台</title>
+<style>
+/* ============================================================
+   政策通 · 五套独立风格
+   body[data-style] = a 政务金蓝（默认）| b 深空科技 | c 新中式水墨 | d 杂志编辑 | e 玻璃轻灵
+   :root 变量为 A 套默认值；B-E 各自以 [data-style] 作用域重定义变量并重写组件形态。
+   每套在字体体系 / 导航形态 / 卡片形态 / 色彩明暗 / 装饰语言上独立设计，非换皮。
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ---------- 默认变量（A 政务金蓝） ---------- */
+:root {
+  --primary: #14305c;
+  --primary-light: #1d4e89;
+  --accent: #c9a227;
+  --success: #1f7a4d;
+  --warning: #b7791f;
+  --danger: #b3382c;
+  --bg: #f4f1ea;
+  --card: #ffffff;
+  --text: #22262e;
+  --text-secondary: #6a7280;
+  --border: #e2dccb;
+  --radius: 3px;
+  --shadow: 0 1px 2px rgba(20,48,92,0.05);
+  --shadow-md: 0 4px 12px rgba(20,48,92,0.08);
+  /* 语义浅底（供 JS 内联警示条引用） */
+  --bg-success: #e8f5ee;
+  --bg-warning: #fbf3e0;
+  --bg-danger: #fbe9e7;
+  --bg-info: #eaf1f8;
+  --font-head: "Songti SC", "STSong", "SimSun", serif;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ===== 风格切换器（固定浮层，全部主题共用） ===== */
+.style-switcher {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 999;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+.sw-btn {
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  color: #fff;
+  opacity: 0.75;
+  transition: all 0.15s;
+}
+.sw-btn:hover { opacity: 1; transform: scale(1.1); }
+.sw-btn.active { opacity: 1; box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--accent, #14305c); }
+.sw-btn[data-style="a"] { background: #14305c; }
+.sw-btn[data-style="b"] { background: linear-gradient(135deg, #38bdf8, #8b5cf6); }
+.sw-btn[data-style="c"] { background: #b03a2e; }
+.sw-btn[data-style="d"] { background: #111; }
+.sw-btn[data-style="e"] { background: linear-gradient(135deg, #f472b6, #38bdf8); }
+
+/* ===== 打印（统一黑白，不受主题影响） ===== */
+@media print {
+  @page { margin: 12mm; size: A4; }
+  body { background: #fff !important; font-size: 12px; color: #000; }
+  .tab-nav, .header, .filter-bar, .methodology-banner, .no-print, .style-switcher { display: none !important; }
+  .tab-panel.active { display: block !important; }
+  .main { max-width: 100%; padding: 0; }
+  .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; margin-bottom: 8px; }
+  .diagnosis-report { box-shadow: none; border: 1px solid #ccc; padding: 16px; }
+  .report-score { font-size: 20px; }
+  .match-item { break-inside: avoid; }
+  .print-only { display: block !important; }
+  .gap-critical { color: #b71c1c !important; }
+  .gap-important { color: #92400e !important; }
+  .match-score.high { color: #059669 !important; }
+  .match-score.medium { color: #d97706 !important; }
+  .match-score.low { color: #dc2626 !important; }
+  .match-score.veto { color: #b71c1c !important; }
+  a { color: #1e3a5f; text-decoration: underline; }
+  [data-style="b"] body,
+  [data-style="b"] .main,
+  [data-style="b"] .policy-column,
+  [data-style="b"] .card { color: #000 !important; }
+}
+
+
+/* ===== A 政务金蓝（默认）：藏蓝 × 金 · 宋体标题 · 方正平面感 ===== */
+
+/* ---- 顶部横幅：藏蓝 + 金色底线 ---- */
+.header {
+  background: linear-gradient(180deg, #16355f 0%, #14305c 100%);
+  color: #fff;
+  padding: 18px 24px 16px;
+  border-bottom: 3px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.header-brand {
+  font-family: var(--font-head);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  color: #f5e7b8;
+}
+.header-brand::after {
+  content: "政通 · 人和 · 业兴";
+  font-family: var(--font-head);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-left: 14px;
+}
+.header > div > div[style] { display: none; }
+.header-subtitle { font-size: 13px; opacity: 0.75; max-width: 500px; line-height: 1.6; letter-spacing: 0.5px; }
+
+/* ---- 导航：白底横条，active 金线下压 ---- */
+.tab-nav {
+  display: flex;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 1px 0 rgba(20, 48, 92, 0.04);
+}
+.tab-btn {
+  padding: 13px 22px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 1px;
+  transition: all 0.15s;
+}
+.tab-btn:hover { color: var(--primary); }
+.tab-btn.active { color: var(--primary); border-bottom-color: var(--accent); }
+
+.main { max-width: 1100px; margin: 0 auto; padding: 26px 24px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ---- 卡片：白底细边框，平面政务 ---- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+.card-header {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 12px;
+  padding-left: 10px;
+  border-left: 4px solid var(--accent);
+  line-height: 1.3;
+}
+
+/* ---- 筛选栏 ---- */
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 12px 14px;
+  border-radius: var(--radius);
+}
+.filter-bar input,
+.filter-bar select {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fcfbf7;
+}
+.filter-bar input:focus,
+.filter-bar select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.15);
+}
+.filter-bar input { flex: 1; min-width: 200px; }
+.filter-bar select { min-width: 140px; }
+
+/* ---- 专栏 ---- */
+.policy-column { margin-bottom: 28px; }
+.policy-column:last-child { margin-bottom: 0; }
+.column-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--primary);
+}
+.column-title {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--primary);
+  letter-spacing: 2px;
+}
+.column-title::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 16px;
+  background: var(--accent);
+  margin-right: 8px;
+  vertical-align: -2px;
+}
+.column-desc { flex: 1; min-width: 220px; font-size: 12.5px; color: var(--text-secondary); }
+.column-count {
+  font-size: 12px;
+  color: var(--primary);
+  background: #eef2f9;
+  padding: 2px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.empty-tip { padding: 40px 20px; text-align: center; color: var(--text-secondary); font-size: 14px; border: 1px dashed var(--border); border-radius: var(--radius); background: var(--card); }
+
+/* ---- 政策卡片 ---- */
+.policy-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.policy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 13px 18px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.policy-card-header:hover { background: #faf8f1; }
+.policy-name { font-family: var(--font-head); font-weight: 700; font-size: 16px; color: var(--primary); }
+.policy-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.policy-meta .tag { font-size: 11.5px; padding: 2px 9px; border-radius: 2px; font-weight: 600; letter-spacing: 0.5px; }
+.tag-level { background: #f0e6c8; color: #7a5c00; border: 1px solid #e3cf9a; }
+.tag-body { background: #efece2; color: #55503f; border: 1px solid #ddd6c2; }
+.tag-deadline { background: #fbe9e7; color: #a03a30; border: 1px solid #f0c9c4; }
+.policy-card-body { padding: 0 18px 16px; display: none; }
+.policy-card.open .policy-card-body { display: block; }
+.policy-card.open .policy-card-header { background: #faf8f1; border-bottom: 1px solid var(--border); }
+
+.condition-category { margin-top: 14px; }
+.condition-cat-title {
+  font-family: var(--font-head);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #eee5cf;
+}
+.condition-item { display: flex; gap: 8px; padding: 5px 0 5px 8px; font-size: 13.5px; border-bottom: 1px dotted #ece6d8; }
+.condition-item .dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+.dot.required { background: var(--danger); }
+.dot.optional { background: var(--accent); }
+.condition-item .desc { flex: 1; color: var(--text-secondary); font-size: 12.5px; margin-top: 1px; }
+
+.policy-tips {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #f6f3ea;
+  border-left: 3px solid var(--accent);
+  font-size: 13px;
+  color: #4a463a;
+}
+.policy-alert {
+  margin-top: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  border-radius: 2px;
+}
+.policy-alert.danger { background: var(--bg-danger); border-left: 3px solid var(--danger); color: #7a2d25; }
+.policy-alert a { color: var(--danger); font-weight: 600; text-decoration: underline; word-break: break-all; }
+.policy-summary {
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: #f0f5fb;
+  border: 1px solid #dbe6f2;
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+.policy-summary strong { color: var(--primary); }
+.policy-source { margin-top: 12px; font-size: 13px; }
+.policy-source a { color: var(--primary-light); text-decoration: underline; word-break: break-all; }
+.policy-source .src-tag {
+  display: inline-block;
+  font-size: 11px;
+  background: var(--primary);
+  color: #fff;
+  padding: 1px 8px;
+  border-radius: 2px;
+  margin-right: 6px;
+}
+.policy-changes { margin-top: 12px; padding: 10px 14px; background: var(--bg-warning); border-left: 3px solid var(--warning); font-size: 13px; }
+.policy-changes strong { color: #7a5c00; }
+.policy-changes ul { margin: 6px 0 0; padding-left: 18px; }
+.policy-changes li { margin-bottom: 4px; }
+.src-docs { display: inline-block; vertical-align: top; }
+.src-doc { margin-bottom: 4px; }
+.src-note { color: var(--text-secondary); font-size: 12px; }
+
+/* ---- 梯度链条 ---- */
+.gradient-chain {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+}
+.chain-title { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 14px; letter-spacing: 1px; }
+.chain-node {
+  background: #fcfbf7;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 2px;
+  padding: 10px 14px;
+}
+.chain-node-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.chain-badge {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--primary); color: #f5e7b8; font-size: 12px;
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  font-weight: 700;
+}
+.chain-name { font-family: var(--font-head); font-weight: 700; font-size: 14px; color: var(--text); }
+.chain-level { font-size: 11px; color: #7a5c00; background: #f0e6c8; padding: 1px 8px; border-radius: 2px; border: 1px solid #e3cf9a; }
+.chain-row { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; line-height: 1.6; }
+.chain-k { display: inline-block; min-width: 64px; color: var(--primary); font-weight: 700; font-size: 11px; letter-spacing: 1px; }
+.chain-arrow { text-align: center; color: var(--accent); font-size: 13px; line-height: 1.8; font-weight: 600; }
+.chain-arrow.branch { color: var(--text-secondary); font-size: 12px; }
+.chain-no-card { font-size: 12px; color: var(--warning); margin-top: 4px; }
+
+/* ---- 表单 ---- */
+.form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-group label { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+.form-group select,
+.form-group input {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fcfbf7;
+}
+.form-group select:focus,
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.15);
+}
+.btn {
+  padding: 10px 24px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  letter-spacing: 1px;
+}
+.btn-primary { background: var(--primary); color: #f5e7b8; }
+.btn-primary:hover { background: #1d4e89; }
+.btn-secondary { background: var(--card); color: var(--primary); border-color: var(--primary); }
+.btn-secondary:hover { background: #f0f5fb; }
+
+/* ---- 匹配结果 ---- */
+.match-result { margin-top: 20px; }
+.match-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 10px;
+  border-left: 4px solid var(--border);
+}
+.match-item.high { border-left-color: var(--success); }
+.match-item.medium { border-left-color: var(--warning); }
+.match-item.low { border-left-color: var(--danger); }
+.match-item.veto { border-left-color: var(--danger); background: var(--bg-danger); }
+.match-score {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: 26px;
+  font-weight: 700;
+  margin-right: 8px;
+}
+.match-score.high { color: var(--success); }
+.match-score.medium { color: var(--warning); }
+.match-score.low { color: var(--danger); }
+.match-score.veto { color: var(--danger); }
+.match-detail { margin-top: 8px; font-size: 13px; color: var(--text-secondary); }
+
+/* ---- 自诊断 ---- */
+.diagnosis-policy-select { margin-bottom: 20px; }
+.diagnosis-policy-select select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fcfbf7;
+}
+.diagnosis-checklist { margin-top: 16px; }
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  gap: 10px;
+  font-size: 14px;
+}
+.checklist-item:last-child { border-bottom: none; }
+.checklist-item input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--primary); }
+.checklist-item .cond-label { flex: 1; }
+.checklist-item .cond-tag { font-size: 11px; padding: 1px 6px; border-radius: 2px; font-weight: 600; flex-shrink: 0; }
+.cond-tag.required-tag { background: var(--bg-danger); color: var(--danger); border: 1px solid #eec9c4; }
+.cond-tag.optional-tag { background: var(--bg-warning); color: var(--warning); border: 1px solid #ecd9ae; }
+.diagnosis-report {
+  margin-top: 20px;
+  padding: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+.report-score { font-family: var(--font-head); font-size: 38px; font-weight: 700; text-align: center; margin-bottom: 16px; }
+.report-section { margin-top: 16px; }
+.report-section h4 { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 8px; padding-left: 8px; border-left: 3px solid var(--accent); }
+.report-section ul { padding-left: 20px; font-size: 14px; }
+.report-section li { margin-bottom: 4px; color: var(--text-secondary); }
+.gap-critical { color: var(--danger); font-weight: 500; }
+.gap-important { color: var(--warning); font-weight: 500; }
+
+/* ---- 培育规划 ---- */
+.plan-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 12px;
+}
+.plan-card h4 { font-family: var(--font-head); font-size: 16px; margin-bottom: 10px; color: var(--primary); }
+.plan-tier-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: var(--primary);
+  color: #f5e7b8;
+  padding: 2px 10px;
+  border-radius: 2px;
+  margin-bottom: 8px;
+}
+.plan-window { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+.plan-pace { font-size: 13px; margin-top: 8px; padding: 8px 12px; background: var(--bg-info); border-left: 3px solid var(--primary-light); }
+.plan-gap { display: flex; gap: 8px; padding: 6px 0; border-bottom: 1px dotted var(--border); align-items: baseline; font-size: 13.5px; }
+.plan-gap .plan-mark { flex-shrink: 0; font-weight: 700; width: 22px; text-align: center; }
+.plan-gap.ok .plan-mark { color: var(--success); }
+.plan-gap.no .plan-mark { color: var(--danger); }
+.plan-gap.maybe .plan-mark { color: var(--warning); }
+.plan-gap-name { font-weight: 600; }
+.plan-gap-desc { color: var(--text-secondary); font-size: 12.5px; }
+
+/* ---- 方法论横幅 ---- */
+.methodology-banner {
+  background: linear-gradient(135deg, #14305c 0%, #1d4e89 100%);
+  color: #fff;
+  padding: 18px 22px;
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+  border-left: 5px solid var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.methodology-banner .icon { font-size: 26px; color: var(--accent); flex-shrink: 0; }
+.methodology-banner .text { font-size: 14px; line-height: 1.8; }
+.methodology-banner .text strong { font-size: 15px; font-family: var(--font-head); letter-spacing: 2px; }
+.methodology-banner .step {
+  display: inline-block;
+  margin: 3px 2px 3px 0;
+  padding: 1px 10px;
+  background: rgba(245, 231, 184, 0.16);
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  border-radius: 2px;
+  font-weight: 600;
+  color: #f5e7b8;
+}
+.methodology-banner .core { display: block; margin-top: 6px; font-size: 12px; opacity: 0.8; }
+
+/* ---- 移动端 A ---- */
+@media (max-width: 768px) {
+  .header { padding: 14px 16px; flex-direction: column; align-items: flex-start; }
+  .header-brand { font-size: 20px; letter-spacing: 4px; }
+  .header-brand::after { display: none; }
+  .header-subtitle { font-size: 12px; max-width: 100%; }
+  .tab-nav { padding: 0 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tab-btn { padding: 12px 16px; font-size: 13px; white-space: nowrap; }
+  .main { padding: 16px 14px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .filter-bar { flex-direction: column; }
+  .card { padding: 14px 16px; }
+  .policy-card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .policy-meta { gap: 4px; }
+  .policy-name { font-size: 14px; }
+  .match-score { font-size: 22px; }
+  .match-item { padding: 12px 14px; }
+  .report-score { font-size: 26px; }
+  .diagnosis-report { padding: 14px; }
+  .methodology-banner { flex-direction: column; padding: 14px 16px; gap: 10px; text-align: center; }
+  .style-switcher { top: auto; bottom: 12px; right: 12px; }
+}
+@media (max-width: 480px) {
+  body { font-size: 14px; }
+  .header { padding: 12px; }
+  .header-brand { font-size: 18px; }
+  .tab-btn { padding: 10px 12px; font-size: 12px; }
+  .main { padding: 10px; }
+  .card { padding: 12px; }
+  .btn { width: 100%; padding: 12px 16px; margin-left: 0 !important; margin-top: 8px; }
+  .form-group select, .form-group input { padding: 10px 12px; font-size: 16px; }
+  .filter-bar input, .filter-bar select { padding: 10px 12px; font-size: 16px; width: 100%; }
+  .policy-card-header { padding: 12px 14px; }
+  .policy-name { font-size: 13px; }
+  .condition-cat-title { font-size: 13px; }
+  .condition-item { font-size: 13px; padding: 4px 0 4px 8px; }
+  .policy-meta .tag { font-size: 11px; padding: 1px 6px; }
+  .match-score { font-size: 20px; }
+  .checklist-item { padding: 10px 8px; gap: 8px; }
+  .checklist-item input[type="checkbox"] { width: 22px; height: 22px; }
+  .report-score { font-size: 22px; }
+  .diagnosis-report { padding: 12px; }
+  .form-group label input[type="checkbox"] { width: 16px; height: 16px; }
+}
+
+
+/* ===== B 深空科技：暗色 · 青紫光晕 · 左侧固定导航 · 发光组件 ===== */
+
+[data-style="b"] {
+  --primary: #38bdf8;
+  --primary-light: #7dd3fc;
+  --accent: #8b5cf6;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --bg: #0a0f1e;
+  --card: #111a30;
+  --text: #e2e8f0;
+  --text-secondary: #8fa3bf;
+  --border: #233052;
+  --radius: 10px;
+  --shadow: 0 0 0 1px rgba(56, 189, 248, 0.12), 0 4px 20px rgba(2, 6, 23, 0.5);
+  --shadow-md: 0 0 0 1px rgba(139, 92, 246, 0.18), 0 8px 30px rgba(2, 6, 23, 0.6);
+  --bg-success: rgba(52, 211, 153, 0.12);
+  --bg-warning: rgba(251, 191, 36, 0.12);
+  --bg-danger: rgba(248, 113, 113, 0.14);
+  --bg-info: rgba(56, 189, 248, 0.12);
+}
+
+[data-style="b"] body {
+  background:
+    radial-gradient(700px at 85% -10%, rgba(139, 92, 246, 0.22), transparent 60%),
+    radial-gradient(600px at 8% 12%, rgba(56, 189, 248, 0.16), transparent 55%),
+    linear-gradient(rgba(148, 163, 184, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.045) 1px, transparent 1px),
+    #0a0f1e;
+  background-size: auto, auto, 32px 32px, 32px 32px, auto;
+  background-attachment: fixed;
+}
+
+/* ---- 顶部：暗色玻璃 + 发光底线 ---- */
+[data-style="b"] .header {
+  background: rgba(13, 20, 38, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+  box-shadow: 0 1px 0 rgba(56, 189, 248, 0.15);
+  color: #e2e8f0;
+  padding: 18px 24px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+[data-style="b"] .header-brand {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #7dd3fc, #c4b5fd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+[data-style="b"] .header > div > div[style] { display: none; }
+[data-style="b"] .header-subtitle { font-size: 13px; opacity: 0.6; max-width: 480px; line-height: 1.5; }
+
+/* ---- 导航：桌面左侧固定栏（布局重排） ---- */
+[data-style="b"] .tab-nav {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 172px;
+  flex-direction: column;
+  background: rgba(11, 17, 32, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-right: 1px solid rgba(56, 189, 248, 0.18);
+  padding: 96px 12px 24px;
+  gap: 4px;
+  z-index: 20;
+}
+[data-style="b"] .tab-btn {
+  padding: 12px 14px;
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  letter-spacing: 1px;
+  transition: all 0.15s;
+}
+[data-style="b"] .tab-btn:hover { color: var(--text); background: rgba(56, 189, 248, 0.06); }
+[data-style="b"] .tab-btn.active {
+  color: var(--primary);
+  background: rgba(56, 189, 248, 0.1);
+  border-left-color: var(--primary);
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+}
+[data-style="b"] .main { max-width: 1100px; margin-left: 196px; padding: 26px 24px; }
+[data-style="b"] .tab-panel { display: none; }
+[data-style="b"] .tab-panel.active { display: block; }
+
+/* ---- 卡片：深蓝 + 顶部渐变发光条 ---- */
+[data-style="b"] .card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(23, 34, 58, 0.9), rgba(15, 24, 44, 0.9));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+[data-style="b"] .card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), var(--accent), transparent);
+}
+[data-style="b"] .card-header {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+/* ---- 筛选栏 ---- */
+[data-style="b"] .filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+  background: rgba(15, 24, 44, 0.8);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+[data-style="b"] .filter-bar input,
+[data-style="b"] .filter-bar select {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: #0c1428;
+}
+[data-style="b"] .filter-bar input:focus,
+[data-style="b"] .filter-bar select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2), 0 0 14px rgba(56, 189, 248, 0.25);
+}
+[data-style="b"] .filter-bar input { flex: 1; min-width: 200px; }
+[data-style="b"] .filter-bar select { min-width: 140px; }
+
+/* ---- 专栏 ---- */
+[data-style="b"] .policy-column { margin-bottom: 28px; }
+[data-style="b"] .policy-column:last-child { margin-bottom: 0; }
+[data-style="b"] .column-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 0 0 10px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+[data-style="b"] .column-head::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 96px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+[data-style="b"] .column-title { font-weight: 700; font-size: 16px; color: var(--text); letter-spacing: 2px; }
+[data-style="b"] .column-title::before {
+  content: "▮";
+  color: var(--primary);
+  margin-right: 8px;
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+}
+[data-style="b"] .column-desc { flex: 1; min-width: 220px; font-size: 12.5px; color: var(--text-secondary); }
+[data-style="b"] .column-count {
+  font-size: 12px;
+  color: var(--primary);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 2px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+[data-style="b"] .empty-tip { padding: 40px 20px; text-align: center; color: var(--text-secondary); font-size: 14px; border: 1px dashed var(--border); border-radius: var(--radius); background: rgba(15, 24, 44, 0.6); }
+
+/* ---- 政策卡片 ---- */
+[data-style="b"] .policy-card {
+  background: linear-gradient(180deg, rgba(23, 34, 58, 0.85), rgba(15, 24, 44, 0.85));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: all 0.15s;
+}
+[data-style="b"] .policy-card:hover { border-color: rgba(56, 189, 248, 0.4); box-shadow: 0 0 18px rgba(56, 189, 248, 0.12); }
+[data-style="b"] .policy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 13px 18px;
+  cursor: pointer;
+}
+[data-style="b"] .policy-card-header:hover { background: rgba(56, 189, 248, 0.05); }
+[data-style="b"] .policy-name { font-weight: 700; font-size: 15px; color: var(--text); }
+[data-style="b"] .policy-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+[data-style="b"] .policy-meta .tag { font-size: 11.5px; padding: 2px 9px; border-radius: 999px; font-weight: 600; letter-spacing: 0.5px; }
+[data-style="b"] .tag-level { background: rgba(56, 189, 248, 0.14); color: var(--primary); border: 1px solid rgba(56, 189, 248, 0.3); }
+[data-style="b"] .tag-body { background: rgba(139, 92, 246, 0.14); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.3); }
+[data-style="b"] .tag-deadline { background: rgba(248, 113, 113, 0.14); color: var(--danger); border: 1px solid rgba(248, 113, 113, 0.3); }
+[data-style="b"] .policy-card-body { padding: 0 18px 16px; display: none; }
+[data-style="b"] .policy-card.open .policy-card-body { display: block; }
+[data-style="b"] .policy-card.open .policy-card-header { background: rgba(56, 189, 248, 0.05); border-bottom: 1px solid var(--border); }
+
+[data-style="b"] .condition-category { margin-top: 14px; }
+[data-style="b"] .condition-cat-title { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+[data-style="b"] .condition-item { display: flex; gap: 8px; padding: 5px 0 5px 8px; font-size: 13.5px; border-bottom: 1px dotted rgba(148, 163, 184, 0.2); }
+[data-style="b"] .condition-item .dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+[data-style="b"] .dot.required { background: var(--danger); box-shadow: 0 0 8px rgba(248, 113, 113, 0.6); }
+[data-style="b"] .dot.optional { background: var(--primary); box-shadow: 0 0 8px rgba(56, 189, 248, 0.6); }
+[data-style="b"] .condition-item .desc { flex: 1; color: var(--text-secondary); font-size: 12.5px; margin-top: 1px; }
+
+[data-style="b"] .policy-tips {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(56, 189, 248, 0.08);
+  border-left: 3px solid var(--primary);
+  font-size: 13px;
+  color: var(--text-secondary);
+  border-radius: 0 6px 6px 0;
+}
+[data-style="b"] .policy-alert { margin-top: 12px; padding: 10px 14px; font-size: 13px; border-radius: 8px; }
+[data-style="b"] .policy-alert.danger { background: var(--bg-danger); border: 1px solid rgba(248, 113, 113, 0.3); color: #fca5a5; }
+[data-style="b"] .policy-alert a { color: var(--danger); font-weight: 600; text-decoration: underline; word-break: break-all; }
+[data-style="b"] .policy-summary {
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: rgba(56, 189, 248, 0.07);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 8px;
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+[data-style="b"] .policy-summary strong { color: var(--primary); }
+[data-style="b"] .policy-source { margin-top: 12px; font-size: 13px; }
+[data-style="b"] .policy-source a { color: var(--primary-light); text-decoration: underline; word-break: break-all; }
+[data-style="b"] .policy-source .src-tag {
+  display: inline-block;
+  font-size: 11px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #08111f;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 999px;
+  margin-right: 6px;
+}
+[data-style="b"] .policy-changes { margin-top: 12px; padding: 10px 14px; background: var(--bg-warning); border: 1px solid rgba(251, 191, 36, 0.25); border-radius: 8px; font-size: 13px; }
+[data-style="b"] .policy-changes strong { color: var(--warning); }
+[data-style="b"] .policy-changes ul { margin: 6px 0 0; padding-left: 18px; }
+[data-style="b"] .policy-changes li { margin-bottom: 4px; }
+[data-style="b"] .src-docs { display: inline-block; vertical-align: top; }
+[data-style="b"] .src-doc { margin-bottom: 4px; }
+[data-style="b"] .src-note { color: var(--text-secondary); font-size: 12px; }
+
+/* ---- 梯度链条 ---- */
+[data-style="b"] .gradient-chain {
+  background: linear-gradient(180deg, rgba(23, 34, 58, 0.85), rgba(15, 24, 44, 0.85));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+}
+[data-style="b"] .chain-title { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 14px; letter-spacing: 1px; }
+[data-style="b"] .chain-node {
+  background: rgba(10, 18, 34, 0.7);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.08);
+}
+[data-style="b"] .chain-node-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+[data-style="b"] .chain-badge {
+  width: 24px; height: 24px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #08111f; font-size: 12px; font-weight: 800;
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+[data-style="b"] .chain-name { font-weight: 700; font-size: 14px; color: var(--text); }
+[data-style="b"] .chain-level { font-size: 11px; color: var(--primary); background: rgba(56, 189, 248, 0.1); padding: 1px 8px; border-radius: 999px; border: 1px solid rgba(56, 189, 248, 0.3); }
+[data-style="b"] .chain-row { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; line-height: 1.6; }
+[data-style="b"] .chain-k { display: inline-block; min-width: 64px; color: var(--primary); font-weight: 700; font-size: 11px; }
+[data-style="b"] .chain-arrow { text-align: center; color: var(--primary); font-size: 14px; line-height: 1.8; text-shadow: 0 0 8px rgba(56, 189, 248, 0.5); }
+[data-style="b"] .chain-arrow.branch { color: var(--text-secondary); font-size: 12px; text-shadow: none; }
+[data-style="b"] .chain-no-card { font-size: 12px; color: var(--warning); margin-top: 4px; }
+
+/* ---- 表单 ---- */
+[data-style="b"] .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+[data-style="b"] .form-group { display: flex; flex-direction: column; gap: 4px; }
+[data-style="b"] .form-group label { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+[data-style="b"] .form-group select,
+[data-style="b"] .form-group input {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: #0c1428;
+}
+[data-style="b"] .form-group select:focus,
+[data-style="b"] .form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2), 0 0 14px rgba(56, 189, 248, 0.25);
+}
+[data-style="b"] .btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  letter-spacing: 1px;
+}
+[data-style="b"] .btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #08111f;
+  box-shadow: 0 4px 18px rgba(56, 189, 248, 0.3);
+}
+[data-style="b"] .btn-primary:hover { filter: brightness(1.15); box-shadow: 0 4px 24px rgba(56, 189, 248, 0.5); }
+[data-style="b"] .btn-secondary { background: rgba(15, 24, 44, 0.8); color: var(--text); border: 1px solid var(--border); }
+[data-style="b"] .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+
+/* ---- 匹配结果 ---- */
+[data-style="b"] .match-result { margin-top: 20px; }
+[data-style="b"] .match-item {
+  background: linear-gradient(180deg, rgba(23, 34, 58, 0.85), rgba(15, 24, 44, 0.85));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 10px;
+  border-left: 4px solid var(--border);
+}
+[data-style="b"] .match-item.high { border-left-color: var(--success); }
+[data-style="b"] .match-item.medium { border-left-color: var(--warning); }
+[data-style="b"] .match-item.low { border-left-color: var(--danger); }
+[data-style="b"] .match-item.veto { border-left-color: var(--danger); background: var(--bg-danger); }
+[data-style="b"] .match-score {
+  display: inline-block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 26px;
+  font-weight: 800;
+  margin-right: 8px;
+}
+[data-style="b"] .match-score.high { color: var(--success); text-shadow: 0 0 12px rgba(52, 211, 153, 0.5); }
+[data-style="b"] .match-score.medium { color: var(--warning); text-shadow: 0 0 12px rgba(251, 191, 36, 0.5); }
+[data-style="b"] .match-score.low { color: var(--danger); }
+[data-style="b"] .match-score.veto { color: var(--danger); }
+[data-style="b"] .match-detail { margin-top: 8px; font-size: 13px; color: var(--text-secondary); }
+
+/* ---- 自诊断 ---- */
+[data-style="b"] .diagnosis-policy-select { margin-bottom: 20px; }
+[data-style="b"] .diagnosis-policy-select select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--text);
+  background: #0c1428;
+}
+[data-style="b"] .diagnosis-checklist { margin-top: 16px; }
+[data-style="b"] .checklist-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  gap: 10px;
+  font-size: 14px;
+}
+[data-style="b"] .checklist-item:last-child { border-bottom: none; }
+[data-style="b"] .checklist-item input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--primary); }
+[data-style="b"] .checklist-item .cond-label { flex: 1; }
+[data-style="b"] .checklist-item .cond-tag { font-size: 11px; padding: 1px 6px; border-radius: 999px; font-weight: 600; flex-shrink: 0; }
+[data-style="b"] .cond-tag.required-tag { background: var(--bg-danger); color: var(--danger); border: 1px solid rgba(248, 113, 113, 0.3); }
+[data-style="b"] .cond-tag.optional-tag { background: var(--bg-warning); color: var(--warning); border: 1px solid rgba(251, 191, 36, 0.3); }
+[data-style="b"] .diagnosis-report {
+  margin-top: 20px;
+  padding: 20px;
+  background: linear-gradient(180deg, rgba(23, 34, 58, 0.9), rgba(15, 24, 44, 0.9));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+[data-style="b"] .report-score { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 40px; font-weight: 800; text-align: center; margin-bottom: 16px; color: var(--primary); text-shadow: 0 0 18px rgba(56, 189, 248, 0.4); }
+[data-style="b"] .report-section { margin-top: 16px; }
+[data-style="b"] .report-section h4 { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+[data-style="b"] .report-section ul { padding-left: 20px; font-size: 14px; }
+[data-style="b"] .report-section li { margin-bottom: 4px; color: var(--text-secondary); }
+[data-style="b"] .gap-critical { color: var(--danger); font-weight: 600; }
+[data-style="b"] .gap-important { color: var(--warning); font-weight: 600; }
+
+/* ---- 培育规划 ---- */
+[data-style="b"] .plan-card {
+  background: linear-gradient(180deg, rgba(23, 34, 58, 0.85), rgba(15, 24, 44, 0.85));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--primary);
+}
+[data-style="b"] .plan-card h4 { font-size: 15px; margin-bottom: 10px; color: var(--text); }
+[data-style="b"] .plan-tier-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #08111f;
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+[data-style="b"] .plan-window { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+[data-style="b"] .plan-pace { font-size: 13px; margin-top: 8px; padding: 8px 12px; background: var(--bg-info); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px; }
+[data-style="b"] .plan-gap { display: flex; gap: 8px; padding: 6px 0; border-bottom: 1px dotted rgba(148, 163, 184, 0.2); align-items: baseline; font-size: 13.5px; }
+[data-style="b"] .plan-gap .plan-mark { flex-shrink: 0; font-weight: 700; width: 22px; text-align: center; }
+[data-style="b"] .plan-gap.ok .plan-mark { color: var(--success); }
+[data-style="b"] .plan-gap.no .plan-mark { color: var(--danger); }
+[data-style="b"] .plan-gap.maybe .plan-mark { color: var(--warning); }
+[data-style="b"] .plan-gap-name { font-weight: 600; }
+[data-style="b"] .plan-gap-desc { color: var(--text-secondary); font-size: 12.5px; }
+
+/* ---- 方法论横幅 ---- */
+[data-style="b"] .methodology-banner {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(139, 92, 246, 0.12));
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: var(--text);
+  padding: 18px 22px;
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.08);
+}
+[data-style="b"] .methodology-banner .icon { font-size: 26px; color: var(--primary); flex-shrink: 0; text-shadow: 0 0 12px rgba(56, 189, 248, 0.7); }
+[data-style="b"] .methodology-banner .text { font-size: 14px; line-height: 1.8; }
+[data-style="b"] .methodology-banner .text strong { font-size: 15px; color: var(--primary); }
+[data-style="b"] .methodology-banner .step {
+  display: inline-block;
+  margin: 3px 2px 3px 0;
+  padding: 1px 10px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 999px;
+  font-weight: 600;
+  color: var(--primary);
+}
+[data-style="b"] .methodology-banner .core { display: block; margin-top: 6px; font-size: 12px; opacity: 0.7; }
+
+/* ---- 移动端 B：侧栏还原为顶部横滚条 ---- */
+@media (max-width: 768px) {
+  [data-style="b"] .tab-nav {
+    position: static;
+    width: auto;
+    flex-direction: row;
+    padding: 0 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.18);
+    border-right: none;
+  }
+  [data-style="b"] .tab-btn { padding: 12px 16px; font-size: 13px; white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; border-radius: 0; text-align: center; }
+  [data-style="b"] .tab-btn.active { border-bottom-color: var(--primary); background: rgba(56, 189, 248, 0.1); }
+  [data-style="b"] .main { margin-left: 0; padding: 16px 14px; }
+  [data-style="b"] .header { padding: 14px 16px; flex-direction: column; align-items: flex-start; }
+  [data-style="b"] .header-brand { font-size: 20px; }
+  [data-style="b"] .header-subtitle { font-size: 12px; max-width: 100%; }
+  [data-style="b"] .form-grid { grid-template-columns: 1fr; }
+  [data-style="b"] .filter-bar { flex-direction: column; }
+  [data-style="b"] .card { padding: 14px 16px; }
+  [data-style="b"] .policy-card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  [data-style="b"] .policy-name { font-size: 14px; }
+  [data-style="b"] .match-score { font-size: 22px; }
+  [data-style="b"] .match-item { padding: 12px 14px; }
+  [data-style="b"] .report-score { font-size: 28px; }
+  [data-style="b"] .diagnosis-report { padding: 14px; }
+  [data-style="b"] .methodology-banner { flex-direction: column; padding: 14px 16px; gap: 10px; text-align: center; }
+  .style-switcher { top: auto; bottom: 12px; right: 12px; }
+}
+
+
+/* ===== C 新中式水墨：宣纸 · 墨色 · 朱砂印章 · 楷体标题 · 留白 ===== */
+
+[data-style="c"] {
+  --primary: #3a3a3a;
+  --primary-light: #5b5b5b;
+  --accent: #b03a2e;
+  --success: #4a7c59;
+  --warning: #9a7b2f;
+  --danger: #b03a2e;
+  --bg: #f6f1e5;
+  --card: #fcfaf3;
+  --text: #2e2a24;
+  --text-secondary: #7a7367;
+  --border: #d6cdb7;
+  --radius: 1px;
+  --shadow: 0 1px 3px rgba(58, 58, 58, 0.06);
+  --shadow-md: 0 4px 14px rgba(58, 58, 58, 0.1);
+  --bg-success: #ecf3ed;
+  --bg-warning: #f6efdc;
+  --bg-danger: #f8ecea;
+  --bg-info: #eef0f6;
+  --font-head: "Kaiti SC", "STKaiti", "KaiTi", "FangSong", serif;
+}
+
+[data-style="c"] body {
+  font-family: "Songti SC", "STSong", "SimSun", serif;
+  background:
+    radial-gradient(circle at 15% 25%, rgba(58, 58, 58, 0.035) 1px, transparent 1.6px),
+    radial-gradient(circle at 70% 60%, rgba(176, 58, 46, 0.02) 1px, transparent 1.6px),
+    #f6f1e5;
+  background-size: 22px 22px, 34px 34px, auto;
+}
+
+/* ---- 顶部：白纸 + 墨色双线 + 朱砂印 ---- */
+[data-style="c"] .header {
+  background: var(--card);
+  border-bottom: 3px solid var(--primary);
+  box-shadow: inset 0 -5px 0 -4px var(--border);
+  color: var(--text);
+  padding: 20px 24px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+[data-style="c"] .header-brand {
+  font-family: var(--font-head);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 8px;
+  color: var(--primary);
+  position: relative;
+}
+[data-style="c"] .header-brand::after {
+  content: "政";
+  font-family: var(--font-head);
+  font-size: 13px;
+  color: #fff;
+  background: var(--accent);
+  padding: 3px 5px;
+  margin-left: 10px;
+  vertical-align: 6px;
+  letter-spacing: 0;
+  border-radius: 1px;
+  box-shadow: 0 0 0 1px #8e2f25;
+}
+[data-style="c"] .header > div > div[style] { display: none; }
+[data-style="c"] .header-subtitle { font-size: 13px; opacity: 0.65; max-width: 480px; line-height: 1.6; letter-spacing: 1px; }
+
+/* ---- 导航：顶部居中 · 竖线分隔 · 朱砂下线 ---- */
+[data-style="c"] .tab-nav {
+  display: flex;
+  justify-content: center;
+  background: transparent;
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(6px);
+  background: rgba(246, 241, 229, 0.9);
+}
+[data-style="c"] .tab-btn {
+  padding: 14px 26px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 14.5px;
+  font-weight: 600;
+  font-family: var(--font-head);
+  color: var(--text-secondary);
+  cursor: pointer;
+  letter-spacing: 3px;
+  transition: all 0.15s;
+}
+[data-style="c"] .tab-btn + .tab-btn { border-left: 1px solid var(--border); }
+[data-style="c"] .tab-btn:hover { color: var(--primary); }
+[data-style="c"] .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+[data-style="c"] .main { max-width: 1000px; margin: 0 auto; padding: 30px 24px 40px; }
+[data-style="c"] .tab-panel { display: none; }
+[data-style="c"] .tab-panel.active { display: block; }
+
+/* ---- 卡片：细线墨框 · 直角 · 大留白 ---- */
+[data-style="c"] .card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+[data-style="c"] .card-header {
+  font-family: var(--font-head);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 14px;
+  letter-spacing: 2px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+[data-style="c"] .card-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 42px;
+  height: 2px;
+  background: var(--accent);
+}
+
+/* ---- 筛选栏 ---- */
+[data-style="c"] .filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 12px 14px;
+  border-radius: var(--radius);
+}
+[data-style="c"] .filter-bar input,
+[data-style="c"] .filter-bar select {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fdfcf7;
+}
+[data-style="c"] .filter-bar input:focus,
+[data-style="c"] .filter-bar select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(176, 58, 46, 0.25);
+}
+[data-style="c"] .filter-bar input { flex: 1; min-width: 200px; }
+[data-style="c"] .filter-bar select { min-width: 140px; }
+
+/* ---- 专栏 ---- */
+[data-style="c"] .policy-column { margin-bottom: 30px; }
+[data-style="c"] .policy-column:last-child { margin-bottom: 0; }
+[data-style="c"] .column-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--primary);
+  position: relative;
+}
+[data-style="c"] .column-head::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 8px;
+  height: 5px;
+  background: var(--accent);
+}
+[data-style="c"] .column-title {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 19px;
+  color: var(--primary);
+  letter-spacing: 4px;
+}
+[data-style="c"] .column-desc { flex: 1; min-width: 220px; font-size: 12.5px; color: var(--text-secondary); }
+[data-style="c"] .column-count {
+  font-size: 12px;
+  color: #fff;
+  background: var(--accent);
+  padding: 2px 10px;
+  border-radius: 1px;
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+[data-style="c"] .empty-tip { padding: 40px 20px; text-align: center; color: var(--text-secondary); font-size: 14px; border: 1px dashed var(--border); border-radius: var(--radius); background: var(--card); }
+
+/* ---- 政策卡片：细线框，hover 墨色加深 ---- */
+[data-style="c"] .policy-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+[data-style="c"] .policy-card:hover { border-color: var(--primary); }
+[data-style="c"] .policy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  cursor: pointer;
+}
+[data-style="c"] .policy-card-header:hover { background: #f9f6ec; }
+[data-style="c"] .policy-name { font-family: var(--font-head); font-weight: 700; font-size: 16.5px; color: var(--text); letter-spacing: 1px; }
+[data-style="c"] .policy-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+[data-style="c"] .policy-meta .tag { font-size: 11.5px; padding: 2px 9px; border-radius: 1px; font-weight: 600; letter-spacing: 1px; }
+[data-style="c"] .tag-level { background: var(--accent); color: #fff; box-shadow: inset 0 0 0 1px #8e2f25; }
+[data-style="c"] .tag-body { background: #fff; color: var(--primary); border: 1px solid var(--primary); }
+[data-style="c"] .tag-deadline { background: #fff; color: var(--danger); border: 1px solid var(--danger); }
+[data-style="c"] .policy-card-body { padding: 0 18px 16px; display: none; }
+[data-style="c"] .policy-card.open .policy-card-body { display: block; }
+[data-style="c"] .policy-card.open .policy-card-header { background: #f9f6ec; border-bottom: 1px solid var(--border); }
+
+[data-style="c"] .condition-category { margin-top: 16px; }
+[data-style="c"] .condition-cat-title {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+[data-style="c"] .condition-item { display: flex; gap: 8px; padding: 6px 0 6px 4px; font-size: 13.5px; border-bottom: 1px dotted #e2dbc8; }
+[data-style="c"] .condition-item .dot { width: 6px; height: 6px; margin-top: 8px; flex-shrink: 0; transform: rotate(45deg); }
+[data-style="c"] .dot.required { background: var(--accent); }
+[data-style="c"] .dot.optional { background: var(--border); border: 1px solid var(--text-secondary); }
+[data-style="c"] .condition-item .desc { flex: 1; color: var(--text-secondary); font-size: 12.5px; margin-top: 1px; }
+
+[data-style="c"] .policy-tips {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #f7f3e8;
+  border-left: 3px solid var(--accent);
+  font-size: 13px;
+  color: #4a463a;
+}
+[data-style="c"] .policy-alert { margin-top: 12px; padding: 10px 14px; font-size: 13px; border-radius: 1px; }
+[data-style="c"] .policy-alert.danger { background: var(--bg-danger); border-left: 3px solid var(--danger); color: #7d2a20; }
+[data-style="c"] .policy-alert a { color: var(--danger); font-weight: 600; text-decoration: underline; word-break: break-all; }
+[data-style="c"] .policy-summary {
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: #f4f0e2;
+  border: 1px solid var(--border);
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+[data-style="c"] .policy-summary strong { color: var(--accent); }
+[data-style="c"] .policy-source { margin-top: 12px; font-size: 13px; }
+[data-style="c"] .policy-source a { color: var(--primary-light); text-decoration: underline; word-break: break-all; }
+[data-style="c"] .policy-source .src-tag {
+  display: inline-block;
+  font-size: 11px;
+  background: var(--primary);
+  color: #fff;
+  padding: 1px 8px;
+  border-radius: 1px;
+  margin-right: 6px;
+  letter-spacing: 1px;
+}
+[data-style="c"] .policy-changes { margin-top: 12px; padding: 10px 14px; background: var(--bg-warning); border-left: 3px solid var(--warning); font-size: 13px; }
+[data-style="c"] .policy-changes strong { color: var(--warning); }
+[data-style="c"] .policy-changes ul { margin: 6px 0 0; padding-left: 18px; }
+[data-style="c"] .policy-changes li { margin-bottom: 4px; }
+[data-style="c"] .src-docs { display: inline-block; vertical-align: top; }
+[data-style="c"] .src-doc { margin-bottom: 4px; }
+[data-style="c"] .src-note { color: var(--text-secondary); font-size: 12px; }
+
+/* ---- 梯度链条 ---- */
+[data-style="c"] .gradient-chain {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+[data-style="c"] .chain-title { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 16px; letter-spacing: 2px; }
+[data-style="c"] .chain-node {
+  background: #fdfcf7;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+}
+[data-style="c"] .chain-node-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+[data-style="c"] .chain-badge {
+  width: 24px; height: 24px; border-radius: 1px;
+  background: var(--accent); color: #fff; font-size: 13px;
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  font-weight: 700; font-family: var(--font-head);
+  box-shadow: inset 0 0 0 1px #8e2f25;
+}
+[data-style="c"] .chain-name { font-family: var(--font-head); font-weight: 700; font-size: 15px; color: var(--text); letter-spacing: 1px; }
+[data-style="c"] .chain-level { font-size: 11px; color: var(--accent); background: #f8ecea; padding: 1px 8px; border-radius: 1px; border: 1px solid #e6c4bf; letter-spacing: 1px; }
+[data-style="c"] .chain-row { font-size: 12.5px; color: var(--text-secondary); margin-bottom: 4px; line-height: 1.7; }
+[data-style="c"] .chain-k { display: inline-block; min-width: 64px; color: var(--accent); font-weight: 700; font-size: 11px; letter-spacing: 1px; }
+[data-style="c"] .chain-arrow { text-align: center; color: var(--accent); font-size: 14px; line-height: 2; }
+[data-style="c"] .chain-arrow.branch { color: var(--text-secondary); font-size: 12px; }
+[data-style="c"] .chain-no-card { font-size: 12px; color: var(--warning); margin-top: 4px; }
+
+/* ---- 表单 ---- */
+[data-style="c"] .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+[data-style="c"] .form-group { display: flex; flex-direction: column; gap: 4px; }
+[data-style="c"] .form-group label { font-size: 13px; font-weight: 600; color: var(--text-secondary); letter-spacing: 1px; }
+[data-style="c"] .form-group select,
+[data-style="c"] .form-group input {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fdfcf7;
+}
+[data-style="c"] .form-group select:focus,
+[data-style="c"] .form-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(176, 58, 46, 0.25);
+}
+[data-style="c"] .btn {
+  padding: 10px 26px;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-head);
+  transition: all 0.15s;
+  letter-spacing: 2px;
+}
+[data-style="c"] .btn-primary { background: var(--primary); color: #f6f1e5; }
+[data-style="c"] .btn-primary:hover { background: var(--accent); border-color: var(--accent); }
+[data-style="c"] .btn-secondary { background: transparent; color: var(--primary); }
+[data-style="c"] .btn-secondary:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ---- 匹配结果 ---- */
+[data-style="c"] .match-result { margin-top: 20px; }
+[data-style="c"] .match-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--border);
+}
+[data-style="c"] .match-item.high { border-left-color: var(--success); }
+[data-style="c"] .match-item.medium { border-left-color: var(--warning); }
+[data-style="c"] .match-item.low { border-left-color: var(--danger); }
+[data-style="c"] .match-item.veto { border-left-color: var(--danger); background: var(--bg-danger); }
+[data-style="c"] .match-score {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: 28px;
+  font-weight: 700;
+  margin-right: 8px;
+}
+[data-style="c"] .match-score.high { color: var(--success); }
+[data-style="c"] .match-score.medium { color: var(--warning); }
+[data-style="c"] .match-score.low { color: var(--danger); }
+[data-style="c"] .match-score.veto { color: var(--danger); }
+[data-style="c"] .match-detail { margin-top: 8px; font-size: 13px; color: var(--text-secondary); }
+
+/* ---- 自诊断 ---- */
+[data-style="c"] .diagnosis-policy-select { margin-bottom: 20px; }
+[data-style="c"] .diagnosis-policy-select select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fdfcf7;
+}
+[data-style="c"] .diagnosis-checklist { margin-top: 16px; }
+[data-style="c"] .checklist-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  gap: 10px;
+  font-size: 14px;
+}
+[data-style="c"] .checklist-item:last-child { border-bottom: none; }
+[data-style="c"] .checklist-item input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--accent); }
+[data-style="c"] .checklist-item .cond-label { flex: 1; }
+[data-style="c"] .checklist-item .cond-tag { font-size: 11px; padding: 1px 6px; border-radius: 1px; font-weight: 600; flex-shrink: 0; letter-spacing: 1px; }
+[data-style="c"] .cond-tag.required-tag { background: var(--bg-danger); color: var(--danger); border: 1px solid #e6c4bf; }
+[data-style="c"] .cond-tag.optional-tag { background: var(--bg-warning); color: var(--warning); border: 1px solid #e0cf9f; }
+[data-style="c"] .diagnosis-report {
+  margin-top: 20px;
+  padding: 22px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+[data-style="c"] .report-score { font-family: var(--font-head); font-size: 40px; font-weight: 700; text-align: center; margin-bottom: 16px; }
+[data-style="c"] .report-section { margin-top: 16px; }
+[data-style="c"] .report-section h4 { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--accent); margin-bottom: 8px; letter-spacing: 1px; }
+[data-style="c"] .report-section ul { padding-left: 20px; font-size: 14px; }
+[data-style="c"] .report-section li { margin-bottom: 4px; color: var(--text-secondary); }
+[data-style="c"] .gap-critical { color: var(--danger); font-weight: 600; }
+[data-style="c"] .gap-important { color: var(--warning); font-weight: 600; }
+
+/* ---- 培育规划 ---- */
+[data-style="c"] .plan-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 14px;
+}
+[data-style="c"] .plan-card h4 { font-family: var(--font-head); font-size: 17px; margin-bottom: 10px; color: var(--text); letter-spacing: 1px; }
+[data-style="c"] .plan-tier-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  background: var(--accent);
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 1px;
+  margin-bottom: 8px;
+  box-shadow: inset 0 0 0 1px #8e2f25;
+}
+[data-style="c"] .plan-window { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+[data-style="c"] .plan-pace { font-size: 13px; margin-top: 8px; padding: 8px 12px; background: var(--bg-info); border-left: 3px solid var(--primary); }
+[data-style="c"] .plan-gap { display: flex; gap: 8px; padding: 7px 0; border-bottom: 1px dotted #e2dbc8; align-items: baseline; font-size: 13.5px; }
+[data-style="c"] .plan-gap .plan-mark { flex-shrink: 0; font-weight: 700; width: 22px; text-align: center; }
+[data-style="c"] .plan-gap.ok .plan-mark { color: var(--success); }
+[data-style="c"] .plan-gap.no .plan-mark { color: var(--danger); }
+[data-style="c"] .plan-gap.maybe .plan-mark { color: var(--warning); }
+[data-style="c"] .plan-gap-name { font-weight: 600; }
+[data-style="c"] .plan-gap-desc { color: var(--text-secondary); font-size: 12.5px; }
+
+/* ---- 方法论横幅：浅墨底 + 朱砂竖线 ---- */
+[data-style="c"] .methodology-banner {
+  background: #efe9d8;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  color: var(--text);
+  padding: 18px 22px;
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+[data-style="c"] .methodology-banner .icon { font-size: 26px; color: var(--accent); flex-shrink: 0; }
+[data-style="c"] .methodology-banner .text { font-size: 14px; line-height: 1.8; }
+[data-style="c"] .methodology-banner .text strong { font-size: 15px; font-family: var(--font-head); letter-spacing: 2px; color: var(--primary); }
+[data-style="c"] .methodology-banner .step {
+  display: inline-block;
+  margin: 3px 2px 3px 0;
+  padding: 1px 10px;
+  background: rgba(176, 58, 46, 0.08);
+  border: 1px solid rgba(176, 58, 46, 0.3);
+  border-radius: 1px;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: var(--font-head);
+}
+[data-style="c"] .methodology-banner .core { display: block; margin-top: 6px; font-size: 12px; opacity: 0.65; }
+
+/* ---- 移动端 C ---- */
+@media (max-width: 768px) {
+  [data-style="c"] .header { padding: 16px 16px 14px; flex-direction: column; align-items: flex-start; }
+  [data-style="c"] .header-brand { font-size: 22px; letter-spacing: 6px; }
+  [data-style="c"] .header-subtitle { font-size: 12px; max-width: 100%; }
+  [data-style="c"] .tab-nav { padding: 0 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; justify-content: flex-start; }
+  [data-style="c"] .tab-btn { padding: 12px 18px; font-size: 13.5px; white-space: nowrap; letter-spacing: 2px; }
+  [data-style="c"] .tab-btn + .tab-btn { border-left: none; }
+  [data-style="c"] .main { padding: 20px 14px 30px; }
+  [data-style="c"] .form-grid { grid-template-columns: 1fr; }
+  [data-style="c"] .filter-bar { flex-direction: column; }
+  [data-style="c"] .card { padding: 16px; }
+  [data-style="c"] .policy-card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  [data-style="c"] .policy-name { font-size: 15px; }
+  [data-style="c"] .match-score { font-size: 24px; }
+  [data-style="c"] .match-item { padding: 12px 14px; }
+  [data-style="c"] .report-score { font-size: 30px; }
+  [data-style="c"] .diagnosis-report { padding: 16px; }
+  [data-style="c"] .methodology-banner { flex-direction: column; padding: 14px 16px; gap: 10px; text-align: center; }
+  .style-switcher { top: auto; bottom: 12px; right: 12px; }
+}
+@media (max-width: 480px) {
+  [data-style="c"] body { font-size: 14px; }
+  [data-style="c"] .header { padding: 12px; }
+  [data-style="c"] .header-brand { font-size: 19px; }
+  [data-style="c"] .tab-btn { padding: 10px 14px; font-size: 12.5px; }
+  [data-style="c"] .main { padding: 12px 10px; }
+  [data-style="c"] .btn { width: 100%; padding: 12px 16px; margin-left: 0 !important; margin-top: 8px; }
+  [data-style="c"] .form-group select, [data-style="c"] .form-group input { padding: 10px 12px; font-size: 16px; }
+  [data-style="c"] .filter-bar input, [data-style="c"] .filter-bar select { padding: 10px 12px; font-size: 16px; width: 100%; }
+  [data-style="c"] .policy-card-header { padding: 12px 14px; }
+  [data-style="c"] .policy-name { font-size: 14px; }
+  [data-style="c"] .policy-meta .tag { font-size: 11px; padding: 1px 6px; }
+  [data-style="c"] .checklist-item input[type="checkbox"] { width: 22px; height: 22px; }
+  [data-style="c"] .form-group label input[type="checkbox"] { width: 16px; height: 16px; }
+}
+
+
+/* ===== D 杂志编辑：黑白高对比 · 衬线大标题 · 无框横线 · 专栏序号 ===== */
+
+[data-style="d"] {
+  --primary: #111111;
+  --primary-light: #1f3b8c;
+  --accent: #e4572e;
+  --success: #1f7a4d;
+  --warning: #9a6a1a;
+  --danger: #b3382c;
+  --bg: #ffffff;
+  --card: #ffffff;
+  --text: #131313;
+  --text-secondary: #565656;
+  --border: #e0e0e0;
+  --radius: 0;
+  --shadow: none;
+  --shadow-md: none;
+  --bg-success: #eef6f1;
+  --bg-warning: #faf3e4;
+  --bg-danger: #faf0ee;
+  --bg-info: #eef1f8;
+  --font-head: Georgia, "Times New Roman", "Songti SC", "STSong", serif;
+}
+
+[data-style="d"] body { background: #ffffff; }
+
+/* ---- 顶部：极简白，品牌大衬线 + 通栏黑线 ---- */
+[data-style="d"] .header {
+  background: #fff;
+  border: none;
+  padding: 28px 24px 14px;
+  display: block;
+}
+[data-style="d"] .header > div:first-child { display: flex; align-items: baseline; gap: 16px; }
+[data-style="d"] .header-brand {
+  font-family: var(--font-head);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--primary);
+}
+[data-style="d"] .header > div > div[style] { display: none; }
+[data-style="d"] .header-subtitle {
+  font-size: 13px;
+  opacity: 0.6;
+  max-width: 520px;
+  line-height: 1.6;
+  margin: 8px 0 16px;
+  font-family: var(--font-head);
+  font-style: italic;
+}
+[data-style="d"] .header::after {
+  content: "";
+  display: block;
+  border-top: 3px solid var(--primary);
+  margin-top: 12px;
+}
+
+/* ---- 导航：分段式小标 ---- */
+[data-style="d"] .tab-nav {
+  display: flex;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+[data-style="d"] .tab-btn {
+  padding: 13px 22px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 3px;
+  transition: all 0.15s;
+}
+[data-style="d"] .tab-btn:hover { color: var(--primary); }
+[data-style="d"] .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+[data-style="d"] .main { max-width: 1080px; margin: 0 auto; padding: 30px 24px 50px; }
+[data-style="d"] .tab-panel { display: none; }
+[data-style="d"] .tab-panel.active { display: block; }
+
+/* ---- 卡片：无框无阴影，下细线分隔 ---- */
+[data-style="d"] .card {
+  background: #fff;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  padding: 20px 4px;
+  margin-bottom: 16px;
+  box-shadow: none;
+}
+[data-style="d"] .card-header {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 14px;
+  letter-spacing: 0.5px;
+}
+[data-style="d"] .card-header::before {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 3px;
+  background: var(--accent);
+  margin-right: 10px;
+  vertical-align: 6px;
+}
+
+/* ---- 筛选栏 ---- */
+[data-style="d"] .filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+  padding: 0 0 14px;
+  border-bottom: 1px solid var(--border);
+}
+[data-style="d"] .filter-bar input,
+[data-style="d"] .filter-bar select {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fff;
+}
+[data-style="d"] .filter-bar input:focus,
+[data-style="d"] .filter-bar select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: none;
+}
+[data-style="d"] .filter-bar input { flex: 1; min-width: 200px; }
+[data-style="d"] .filter-bar select { min-width: 140px; }
+
+/* ---- 专栏：序号 + 粗黑线眉题 ---- */
+[data-style="d"] .policy-column { margin-bottom: 34px; counter-increment: col; }
+[data-style="d"] .policy-column:last-child { margin-bottom: 0; }
+[data-style="d"] .column-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid var(--primary);
+  position: relative;
+}
+[data-style="d"] .column-head::before {
+  content: "专栏 " counter(col, decimal-leading-zero);
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 2px;
+  align-self: flex-end;
+  padding-bottom: 2px;
+}
+[data-style="d"] .column-title {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--primary);
+  letter-spacing: 1px;
+}
+[data-style="d"] .column-desc { flex: 1; min-width: 220px; font-size: 12.5px; color: var(--text-secondary); }
+[data-style="d"] .column-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  font-family: var(--font-head);
+  letter-spacing: 1px;
+}
+[data-style="d"] .empty-tip { padding: 40px 20px; text-align: center; color: var(--text-secondary); font-size: 14px; border: 1px solid var(--border); background: #fff; }
+
+/* ---- 政策卡片：无框条目，标题下细线 ---- */
+[data-style="d"] .policy-card {
+  background: #fff;
+  border: none;
+  border-top: 1px solid var(--border);
+  margin-bottom: 0;
+}
+[data-style="d"] .policy-card:last-of-type { border-bottom: 1px solid var(--border); }
+[data-style="d"] .policy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 15px 8px;
+  cursor: pointer;
+}
+[data-style="d"] .policy-card-header:hover { background: #fafafa; }
+[data-style="d"] .policy-name { font-family: var(--font-head); font-weight: 700; font-size: 18px; color: var(--primary); letter-spacing: 0.5px; }
+[data-style="d"] .policy-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+[data-style="d"] .policy-meta .tag { font-size: 11px; padding: 2px 9px; border-radius: 0; font-weight: 700; letter-spacing: 1px; }
+[data-style="d"] .tag-level { background: #fff; color: var(--primary); border: 1px solid var(--primary); }
+[data-style="d"] .tag-body { background: #fff; color: var(--text-secondary); border: 1px solid var(--border); }
+[data-style="d"] .tag-deadline { background: #fff; color: var(--accent); border: 1px solid var(--accent); }
+[data-style="d"] .policy-card-body { padding: 0 8px 18px; display: none; }
+[data-style="d"] .policy-card.open .policy-card-body { display: block; }
+[data-style="d"] .policy-card.open .policy-card-header { background: #fafafa; }
+
+[data-style="d"] .condition-category { margin-top: 16px; }
+[data-style="d"] .condition-cat-title {
+  font-family: var(--font-head);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+[data-style="d"] .condition-item { display: flex; gap: 8px; padding: 6px 0; font-size: 13.5px; border-bottom: 1px dotted #dcdcdc; }
+[data-style="d"] .condition-item .dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 8px; flex-shrink: 0; }
+[data-style="d"] .dot.required { background: var(--primary); }
+[data-style="d"] .dot.optional { background: var(--border); }
+[data-style="d"] .condition-item .desc { flex: 1; color: var(--text-secondary); font-size: 12.5px; margin-top: 1px; }
+
+[data-style="d"] .policy-tips {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: #f6f6f6;
+  border: none;
+  border-left: 3px solid var(--primary);
+  font-size: 13px;
+  color: var(--text);
+}
+[data-style="d"] .policy-alert { margin-top: 12px; padding: 10px 14px; font-size: 13px; border-radius: 0; border: 1px solid var(--danger); }
+[data-style="d"] .policy-alert.danger { background: var(--bg-danger); color: #7d2a20; }
+[data-style="d"] .policy-alert a { color: var(--danger); font-weight: 600; text-decoration: underline; word-break: break-all; }
+[data-style="d"] .policy-summary {
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: var(--bg-info);
+  border: 1px solid #d5dcef;
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+[data-style="d"] .policy-summary strong { color: var(--primary); }
+[data-style="d"] .policy-source { margin-top: 12px; font-size: 13px; }
+[data-style="d"] .policy-source a { color: var(--primary-light); text-decoration: underline; word-break: break-all; }
+[data-style="d"] .policy-source .src-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--primary);
+  color: #fff;
+  padding: 1px 8px;
+  border-radius: 0;
+  margin-right: 6px;
+  letter-spacing: 1px;
+}
+[data-style="d"] .policy-changes { margin-top: 12px; padding: 10px 14px; background: var(--bg-warning); border-left: 3px solid var(--warning); font-size: 13px; }
+[data-style="d"] .policy-changes strong { color: var(--warning); }
+[data-style="d"] .policy-changes ul { margin: 6px 0 0; padding-left: 18px; }
+[data-style="d"] .policy-changes li { margin-bottom: 4px; }
+[data-style="d"] .src-docs { display: inline-block; vertical-align: top; }
+[data-style="d"] .src-doc { margin-bottom: 4px; }
+[data-style="d"] .src-note { color: var(--text-secondary); font-size: 12px; }
+
+/* ---- 梯度链条：时间轴式左侧黑线 ---- */
+[data-style="d"] .gradient-chain {
+  background: #fff;
+  border: none;
+  padding: 16px 8px;
+}
+[data-style="d"] .chain-title {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+[data-style="d"] .chain-node {
+  background: #fff;
+  border: none;
+  border-left: 3px solid var(--primary);
+  padding: 12px 16px;
+}
+[data-style="d"] .chain-node-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+[data-style="d"] .chain-badge {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--primary); color: #fff; font-size: 12px;
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  font-weight: 700; font-family: var(--font-head);
+}
+[data-style="d"] .chain-name { font-family: var(--font-head); font-weight: 700; font-size: 16px; color: var(--primary); letter-spacing: 0.5px; }
+[data-style="d"] .chain-level { font-size: 11px; color: var(--text-secondary); background: #f2f2f2; padding: 1px 8px; border-radius: 0; font-weight: 600; letter-spacing: 1px; }
+[data-style="d"] .chain-row { font-size: 12.5px; color: var(--text-secondary); margin-bottom: 4px; line-height: 1.7; }
+[data-style="d"] .chain-k { display: inline-block; min-width: 64px; color: var(--primary); font-weight: 700; font-size: 11px; letter-spacing: 1px; }
+[data-style="d"] .chain-arrow { text-align: center; color: var(--primary); font-size: 14px; line-height: 2; }
+[data-style="d"] .chain-arrow.branch { color: var(--text-secondary); font-size: 12px; }
+[data-style="d"] .chain-no-card { font-size: 12px; color: var(--warning); margin-top: 4px; }
+
+/* ---- 表单 ---- */
+[data-style="d"] .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+[data-style="d"] .form-group { display: flex; flex-direction: column; gap: 4px; }
+[data-style="d"] .form-group label { font-size: 12.5px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px; }
+[data-style="d"] .form-group select,
+[data-style="d"] .form-group input {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fff;
+}
+[data-style="d"] .form-group select:focus,
+[data-style="d"] .form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: none;
+}
+[data-style="d"] .btn {
+  padding: 10px 26px;
+  border: 2px solid var(--primary);
+  border-radius: 0;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  letter-spacing: 2px;
+}
+[data-style="d"] .btn-primary { background: var(--primary); color: #fff; }
+[data-style="d"] .btn-primary:hover { background: var(--primary-light); border-color: var(--primary-light); }
+[data-style="d"] .btn-secondary { background: #fff; color: var(--primary); }
+[data-style="d"] .btn-secondary:hover { background: #f2f2f2; }
+
+/* ---- 匹配结果 ---- */
+[data-style="d"] .match-result { margin-top: 22px; }
+[data-style="d"] .match-item {
+  background: #fff;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  padding: 18px 8px;
+  margin-bottom: 0;
+}
+[data-style="d"] .match-item:first-of-type { border-top: 3px solid var(--primary); }
+[data-style="d"] .match-item.high .match-score { color: var(--success); }
+[data-style="d"] .match-item.medium .match-score { color: var(--warning); }
+[data-style="d"] .match-item.low .match-score { color: var(--danger); }
+[data-style="d"] .match-item.veto .match-score { color: var(--danger); }
+[data-style="d"] .match-score {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: 30px;
+  font-weight: 700;
+  margin-right: 10px;
+}
+[data-style="d"] .match-detail { margin-top: 8px; font-size: 13px; color: var(--text-secondary); }
+
+/* ---- 自诊断 ---- */
+[data-style="d"] .diagnosis-policy-select { margin-bottom: 20px; }
+[data-style="d"] .diagnosis-policy-select select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fff;
+}
+[data-style="d"] .diagnosis-checklist { margin-top: 16px; }
+[data-style="d"] .checklist-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 11px 8px;
+  border-bottom: 1px solid var(--border);
+  gap: 10px;
+  font-size: 14px;
+}
+[data-style="d"] .checklist-item:last-child { border-bottom: none; }
+[data-style="d"] .checklist-item input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--primary); }
+[data-style="d"] .checklist-item .cond-label { flex: 1; }
+[data-style="d"] .checklist-item .cond-tag { font-size: 11px; padding: 1px 6px; border-radius: 0; font-weight: 700; flex-shrink: 0; letter-spacing: 1px; }
+[data-style="d"] .cond-tag.required-tag { background: var(--bg-danger); color: var(--danger); border: 1px solid #e5c5c0; }
+[data-style="d"] .cond-tag.optional-tag { background: var(--bg-warning); color: var(--warning); border: 1px solid #e3cf9f; }
+[data-style="d"] .diagnosis-report {
+  margin-top: 20px;
+  padding: 22px;
+  background: #fff;
+  border: 3px solid var(--primary);
+  border-radius: 0;
+  box-shadow: none;
+}
+[data-style="d"] .report-score { font-family: var(--font-head); font-size: 44px; font-weight: 700; text-align: center; margin-bottom: 16px; }
+[data-style="d"] .report-section { margin-top: 16px; }
+[data-style="d"] .report-section h4 {
+  font-family: var(--font-head);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+  text-transform: none;
+}
+[data-style="d"] .report-section ul { padding-left: 20px; font-size: 14px; }
+[data-style="d"] .report-section li { margin-bottom: 4px; color: var(--text-secondary); }
+[data-style="d"] .gap-critical { color: var(--danger); font-weight: 700; }
+[data-style="d"] .gap-important { color: var(--warning); font-weight: 700; }
+
+/* ---- 培育规划 ---- */
+[data-style="d"] .plan-card {
+  background: #fff;
+  border: none;
+  border-left: 3px solid var(--accent);
+  border-radius: 0;
+  padding: 18px 8px 18px 18px;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--border);
+}
+[data-style="d"] .plan-card h4 { font-family: var(--font-head); font-size: 18px; margin-bottom: 10px; color: var(--primary); }
+[data-style="d"] .plan-tier-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  background: var(--accent);
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 0;
+  margin-bottom: 8px;
+}
+[data-style="d"] .plan-window { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+[data-style="d"] .plan-pace { font-size: 13px; margin-top: 8px; padding: 8px 12px; background: var(--bg-info); border-left: 3px solid var(--primary); }
+[data-style="d"] .plan-gap { display: flex; gap: 8px; padding: 7px 0; border-bottom: 1px dotted #dcdcdc; align-items: baseline; font-size: 13.5px; }
+[data-style="d"] .plan-gap .plan-mark { flex-shrink: 0; font-weight: 700; width: 22px; text-align: center; }
+[data-style="d"] .plan-gap.ok .plan-mark { color: var(--success); }
+[data-style="d"] .plan-gap.no .plan-mark { color: var(--danger); }
+[data-style="d"] .plan-gap.maybe .plan-mark { color: var(--warning); }
+[data-style="d"] .plan-gap-name { font-weight: 600; }
+[data-style="d"] .plan-gap-desc { color: var(--text-secondary); font-size: 12.5px; }
+
+/* ---- 方法论横幅：黑底白字横贯条 ---- */
+[data-style="d"] .methodology-banner {
+  background: var(--primary);
+  color: #fff;
+  padding: 20px 22px;
+  border-radius: 0;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+[data-style="d"] .methodology-banner::before {
+  content: "❝";
+  font-family: var(--font-head);
+  font-size: 34px;
+  color: var(--accent);
+  position: absolute;
+  top: 6px;
+  right: 16px;
+}
+[data-style="d"] .methodology-banner .icon { font-size: 26px; color: var(--accent); flex-shrink: 0; }
+[data-style="d"] .methodology-banner .text { font-size: 14px; line-height: 1.8; }
+[data-style="d"] .methodology-banner .text strong { font-size: 16px; font-family: var(--font-head); letter-spacing: 1px; }
+[data-style="d"] .methodology-banner .step {
+  display: inline-block;
+  margin: 3px 2px 3px 0;
+  padding: 1px 10px;
+  background: rgba(255, 255, 255, 0.14);
+  border: none;
+  border-bottom: 2px solid var(--accent);
+  font-weight: 700;
+  color: #fff;
+}
+[data-style="d"] .methodology-banner .core { display: block; margin-top: 6px; font-size: 12px; opacity: 0.75; }
+
+/* ---- 移动端 D ---- */
+@media (max-width: 768px) {
+  [data-style="d"] .header { padding: 20px 16px 12px; }
+  [data-style="d"] .header-brand { font-size: 26px; }
+  [data-style="d"] .header-subtitle { font-size: 12px; max-width: 100%; }
+  [data-style="d"] .tab-nav { padding: 0 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  [data-style="d"] .tab-btn { padding: 12px 16px; font-size: 12.5px; white-space: nowrap; letter-spacing: 2px; }
+  [data-style="d"] .main { padding: 20px 14px 40px; }
+  [data-style="d"] .form-grid { grid-template-columns: 1fr; }
+  [data-style="d"] .filter-bar { flex-direction: column; }
+  [data-style="d"] .card { padding: 16px 4px; }
+  [data-style="d"] .policy-card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  [data-style="d"] .policy-name { font-size: 16px; }
+  [data-style="d"] .column-title { font-size: 20px; }
+  [data-style="d"] .match-score { font-size: 26px; }
+  [data-style="d"] .match-item { padding: 14px 8px; }
+  [data-style="d"] .report-score { font-size: 32px; }
+  [data-style="d"] .diagnosis-report { padding: 16px; }
+  [data-style="d"] .methodology-banner { flex-direction: column; padding: 16px; gap: 10px; text-align: center; }
+  .style-switcher { top: auto; bottom: 12px; right: 12px; }
+}
+@media (max-width: 480px) {
+  [data-style="d"] body { font-size: 14px; }
+  [data-style="d"] .header { padding: 16px 12px 10px; }
+  [data-style="d"] .header-brand { font-size: 22px; }
+  [data-style="d"] .tab-btn { padding: 10px 12px; font-size: 12px; }
+  [data-style="d"] .main { padding: 14px 10px; }
+  [data-style="d"] .btn { width: 100%; padding: 12px 16px; margin-left: 0 !important; margin-top: 8px; }
+  [data-style="d"] .form-group select, [data-style="d"] .form-group input { padding: 10px 12px; font-size: 16px; }
+  [data-style="d"] .filter-bar input, [data-style="d"] .filter-bar select { padding: 10px 12px; font-size: 16px; width: 100%; }
+  [data-style="d"] .policy-card-header { padding: 12px 4px; }
+  [data-style="d"] .policy-name { font-size: 15px; }
+  [data-style="d"] .policy-meta .tag { font-size: 11px; padding: 1px 6px; }
+  [data-style="d"] .checklist-item input[type="checkbox"] { width: 22px; height: 22px; }
+  [data-style="d"] .form-group label input[type="checkbox"] { width: 16px; height: 16px; }
+}
+
+
+/* ===== E 玻璃轻灵：渐变漂浮色块 · 毛玻璃 · 大圆角 · 胶囊导航 ===== */
+
+[data-style="e"] {
+  --primary: #0ea5e9;
+  --primary-light: #38bdf8;
+  --accent: #f97316;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg: #eef2ff;
+  --card: rgba(255, 255, 255, 0.68);
+  --text: #334155;
+  --text-secondary: #64748b;
+  --border: rgba(255, 255, 255, 0.85);
+  --radius: 18px;
+  --shadow: 0 6px 20px rgba(100, 116, 139, 0.14);
+  --shadow-md: 0 10px 34px rgba(100, 116, 139, 0.2);
+  --bg-success: rgba(16, 185, 129, 0.13);
+  --bg-warning: rgba(245, 158, 11, 0.13);
+  --bg-danger: rgba(239, 68, 68, 0.12);
+  --bg-info: rgba(14, 165, 233, 0.12);
+}
+
+[data-style="e"] body {
+  background:
+    radial-gradient(720px at 88% 4%, #fbcfe8 0%, transparent 62%),
+    radial-gradient(620px at 6% 88%, #bae6fd 0%, transparent 60%),
+    radial-gradient(540px at 52% 42%, #fef3c7 0%, transparent 58%),
+    radial-gradient(480px at 92% 80%, #ddd6fe 0%, transparent 60%),
+    #eef2ff;
+  background-attachment: fixed;
+}
+
+/* ---- 顶部：透明，胶囊品牌 ---- */
+[data-style="e"] .header {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  padding: 22px 24px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+[data-style="e"] .header-brand {
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  padding: 8px 20px;
+  box-shadow: var(--shadow);
+}
+[data-style="e"] .header > div > div[style] { display: none; }
+[data-style="e"] .header-subtitle { font-size: 13px; opacity: 0.75; max-width: 480px; line-height: 1.6; }
+
+/* ---- 导航：桌面顶部居中胶囊 ---- */
+[data-style="e"] .tab-nav {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 999px;
+  padding: 6px;
+  margin: 8px auto 0;
+  max-width: 640px;
+  position: sticky;
+  top: 12px;
+  z-index: 20;
+  box-shadow: var(--shadow);
+}
+[data-style="e"] .tab-btn {
+  flex: 1;
+  padding: 10px 18px;
+  background: none;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  transition: all 0.18s;
+}
+[data-style="e"] .tab-btn:hover { color: var(--primary); }
+[data-style="e"] .tab-btn.active {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35);
+}
+
+[data-style="e"] .main { max-width: 1080px; margin: 0 auto; padding: 28px 24px; }
+[data-style="e"] .tab-panel { display: none; }
+[data-style="e"] .tab-panel.active { display: block; }
+
+/* ---- 卡片：毛玻璃 ---- */
+[data-style="e"] .card {
+  background: var(--card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+[data-style="e"] .card-header {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+[data-style="e"] .card-header::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  margin-right: 9px;
+}
+
+/* ---- 筛选栏 ---- */
+[data-style="e"] .filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 10px 14px;
+  box-shadow: var(--shadow);
+}
+[data-style="e"] .filter-bar input,
+[data-style="e"] .filter-bar select {
+  padding: 9px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 999px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.75);
+}
+[data-style="e"] .filter-bar input:focus,
+[data-style="e"] .filter-bar select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.18);
+}
+[data-style="e"] .filter-bar input { flex: 1; min-width: 200px; }
+[data-style="e"] .filter-bar select { min-width: 140px; }
+
+/* ---- 专栏 ---- */
+[data-style="e"] .policy-column { margin-bottom: 28px; }
+[data-style="e"] .policy-column:last-child { margin-bottom: 0; }
+[data-style="e"] .column-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 0 6px;
+}
+[data-style="e"] .column-title {
+  font-weight: 800;
+  font-size: 17px;
+  color: var(--text);
+  letter-spacing: 1px;
+}
+[data-style="e"] .column-title::before {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  margin-right: 8px;
+}
+[data-style="e"] .column-desc { flex: 1; min-width: 220px; font-size: 12.5px; color: var(--text-secondary); }
+[data-style="e"] .column-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  background: rgba(14, 165, 233, 0.12);
+  padding: 3px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+[data-style="e"] .empty-tip { padding: 40px 20px; text-align: center; color: var(--text-secondary); font-size: 14px; border: 1px dashed rgba(148, 163, 184, 0.5); border-radius: var(--radius); background: var(--card); }
+
+/* ---- 政策卡片：毛玻璃圆角 ---- */
+[data-style="e"] .policy-card {
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: all 0.18s;
+}
+[data-style="e"] .policy-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+[data-style="e"] .policy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 15px 20px;
+  cursor: pointer;
+}
+[data-style="e"] .policy-card-header:hover { background: rgba(255, 255, 255, 0.45); }
+[data-style="e"] .policy-name { font-weight: 800; font-size: 15.5px; color: var(--text); }
+[data-style="e"] .policy-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+[data-style="e"] .policy-meta .tag { font-size: 11.5px; padding: 3px 11px; border-radius: 999px; font-weight: 700; letter-spacing: 0.5px; }
+[data-style="e"] .tag-level { background: rgba(14, 165, 233, 0.15); color: #0369a1; }
+[data-style="e"] .tag-body { background: rgba(139, 92, 246, 0.14); color: #6d28d9; }
+[data-style="e"] .tag-deadline { background: rgba(244, 63, 94, 0.13); color: #be123c; }
+[data-style="e"] .policy-card-body { padding: 0 20px 18px; display: none; }
+[data-style="e"] .policy-card.open .policy-card-body { display: block; }
+[data-style="e"] .policy-card.open .policy-card-header { background: rgba(255, 255, 255, 0.45); border-bottom: 1px solid rgba(255, 255, 255, 0.7); }
+
+[data-style="e"] .condition-category { margin-top: 14px; }
+[data-style="e"] .condition-cat-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+[data-style="e"] .condition-cat-title::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  margin-right: 7px;
+}
+[data-style="e"] .condition-item { display: flex; gap: 9px; padding: 6px 0; font-size: 13.5px; border-bottom: 1px dashed rgba(148, 163, 184, 0.35); }
+[data-style="e"] .condition-item .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+[data-style="e"] .dot.required { background: var(--danger); }
+[data-style="e"] .dot.optional { background: var(--primary); opacity: 0.55; }
+[data-style="e"] .condition-item .desc { flex: 1; color: var(--text-secondary); font-size: 12.5px; margin-top: 1px; }
+
+[data-style="e"] .policy-tips {
+  margin-top: 12px;
+  padding: 11px 14px;
+  background: rgba(249, 115, 22, 0.1);
+  border: 1px solid rgba(249, 115, 22, 0.25);
+  border-radius: 12px;
+  font-size: 13px;
+  color: var(--text);
+}
+[data-style="e"] .policy-alert { margin-top: 12px; padding: 11px 14px; font-size: 13px; border-radius: 12px; }
+[data-style="e"] .policy-alert.danger { background: var(--bg-danger); border: 1px solid rgba(239, 68, 68, 0.3); color: #9f1239; }
+[data-style="e"] .policy-alert a { color: var(--danger); font-weight: 700; text-decoration: underline; word-break: break-all; }
+[data-style="e"] .policy-summary {
+  margin-top: 12px;
+  padding: 13px 16px;
+  background: rgba(14, 165, 233, 0.09);
+  border: 1px solid rgba(14, 165, 233, 0.22);
+  border-radius: 12px;
+  font-size: 13.5px;
+  line-height: 1.85;
+}
+[data-style="e"] .policy-summary strong { color: var(--primary); }
+[data-style="e"] .policy-source { margin-top: 12px; font-size: 13px; }
+[data-style="e"] .policy-source a { color: var(--primary); text-decoration: underline; word-break: break-all; }
+[data-style="e"] .policy-source .src-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin-right: 6px;
+}
+[data-style="e"] .policy-changes { margin-top: 12px; padding: 11px 14px; background: var(--bg-warning); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; font-size: 13px; }
+[data-style="e"] .policy-changes strong { color: var(--warning); }
+[data-style="e"] .policy-changes ul { margin: 6px 0 0; padding-left: 18px; }
+[data-style="e"] .policy-changes li { margin-bottom: 4px; }
+[data-style="e"] .src-docs { display: inline-block; vertical-align: top; }
+[data-style="e"] .src-doc { margin-bottom: 4px; }
+[data-style="e"] .src-note { color: var(--text-secondary); font-size: 12px; }
+
+/* ---- 梯度链条 ---- */
+[data-style="e"] .gradient-chain {
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+[data-style="e"] .chain-title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 14px; letter-spacing: 1px; }
+[data-style="e"] .chain-node {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+  padding: 12px 16px;
+}
+[data-style="e"] .chain-node-head { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; flex-wrap: wrap; }
+[data-style="e"] .chain-badge {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  color: #fff; font-size: 13px; font-weight: 800;
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(14, 165, 233, 0.35);
+}
+[data-style="e"] .chain-name { font-weight: 800; font-size: 14.5px; color: var(--text); }
+[data-style="e"] .chain-level { font-size: 11px; color: var(--primary); background: rgba(14, 165, 233, 0.12); padding: 2px 10px; border-radius: 999px; font-weight: 600; }
+[data-style="e"] .chain-row { font-size: 12.5px; color: var(--text-secondary); margin-bottom: 4px; line-height: 1.65; }
+[data-style="e"] .chain-k { display: inline-block; min-width: 64px; color: var(--primary); font-weight: 700; font-size: 11px; }
+[data-style="e"] .chain-arrow { text-align: center; color: var(--primary); font-size: 14px; line-height: 2; font-weight: 700; }
+[data-style="e"] .chain-arrow.branch { color: var(--text-secondary); font-size: 12px; font-weight: 500; }
+[data-style="e"] .chain-no-card { font-size: 12px; color: var(--warning); margin-top: 4px; }
+
+/* ---- 表单 ---- */
+[data-style="e"] .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+[data-style="e"] .form-group { display: flex; flex-direction: column; gap: 4px; }
+[data-style="e"] .form-group label { font-size: 13px; font-weight: 700; color: var(--text-secondary); }
+[data-style="e"] .form-group select,
+[data-style="e"] .form-group input {
+  padding: 10px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.75);
+}
+[data-style="e"] .form-group select:focus,
+[data-style="e"] .form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.18);
+}
+[data-style="e"] .btn {
+  padding: 11px 26px;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.18s;
+  letter-spacing: 1px;
+}
+[data-style="e"] .btn-primary {
+  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  color: #fff;
+  box-shadow: 0 5px 16px rgba(14, 165, 233, 0.35);
+}
+[data-style="e"] .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 7px 22px rgba(14, 165, 233, 0.45); }
+[data-style="e"] .btn-secondary {
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+[data-style="e"] .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+
+/* ---- 匹配结果 ---- */
+[data-style="e"] .match-result { margin-top: 20px; }
+[data-style="e"] .match-item {
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 17px 20px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+[data-style="e"] .match-item.high { border-top: 4px solid var(--success); }
+[data-style="e"] .match-item.medium { border-top: 4px solid var(--warning); }
+[data-style="e"] .match-item.low { border-top: 4px solid var(--danger); }
+[data-style="e"] .match-item.veto { border-top: 4px solid var(--danger); background: var(--bg-danger); }
+[data-style="e"] .match-score {
+  display: inline-block;
+  font-size: 26px;
+  font-weight: 800;
+  margin-right: 8px;
+}
+[data-style="e"] .match-score.high { color: var(--success); }
+[data-style="e"] .match-score.medium { color: var(--warning); }
+[data-style="e"] .match-score.low { color: var(--danger); }
+[data-style="e"] .match-score.veto { color: var(--danger); }
+[data-style="e"] .match-detail { margin-top: 8px; font-size: 13px; color: var(--text-secondary); }
+
+/* ---- 自诊断 ---- */
+[data-style="e"] .diagnosis-policy-select { margin-bottom: 20px; }
+[data-style="e"] .diagnosis-policy-select select {
+  width: 100%;
+  padding: 11px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.75);
+}
+[data-style="e"] .diagnosis-checklist { margin-top: 16px; }
+[data-style="e"] .checklist-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 11px 14px;
+  border-bottom: 1px dashed rgba(148, 163, 184, 0.35);
+  gap: 10px;
+  font-size: 14px;
+}
+[data-style="e"] .checklist-item:last-child { border-bottom: none; }
+[data-style="e"] .checklist-item input[type="checkbox"] { width: 20px; height: 20px; margin-top: 1px; flex-shrink: 0; accent-color: var(--primary); border-radius: 6px; }
+[data-style="e"] .checklist-item .cond-label { flex: 1; }
+[data-style="e"] .checklist-item .cond-tag { font-size: 11px; padding: 2px 9px; border-radius: 999px; font-weight: 700; flex-shrink: 0; }
+[data-style="e"] .cond-tag.required-tag { background: var(--bg-danger); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+[data-style="e"] .cond-tag.optional-tag { background: var(--bg-warning); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+[data-style="e"] .diagnosis-report {
+  margin-top: 20px;
+  padding: 22px;
+  background: var(--card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+[data-style="e"] .report-score { font-size: 42px; font-weight: 800; text-align: center; margin-bottom: 16px; background: linear-gradient(135deg, var(--primary), #8b5cf6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+[data-style="e"] .report-section { margin-top: 16px; }
+[data-style="e"] .report-section h4 { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+[data-style="e"] .report-section h4::before { content: "· "; color: var(--primary); }
+[data-style="e"] .report-section ul { padding-left: 20px; font-size: 14px; }
+[data-style="e"] .report-section li { margin-bottom: 4px; color: var(--text-secondary); }
+[data-style="e"] .gap-critical { color: var(--danger); font-weight: 700; }
+[data-style="e"] .gap-important { color: var(--warning); font-weight: 700; }
+
+/* ---- 培育规划 ---- */
+[data-style="e"] .plan-card {
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+[data-style="e"] .plan-card h4 { font-size: 16px; font-weight: 800; margin-bottom: 10px; color: var(--text); }
+[data-style="e"] .plan-tier-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  color: #fff;
+  padding: 3px 12px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+[data-style="e"] .plan-window { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+[data-style="e"] .plan-pace { font-size: 13px; margin-top: 8px; padding: 9px 13px; background: var(--bg-info); border: 1px solid rgba(14, 165, 233, 0.2); border-radius: 12px; }
+[data-style="e"] .plan-gap { display: flex; gap: 9px; padding: 7px 0; border-bottom: 1px dashed rgba(148, 163, 184, 0.35); align-items: baseline; font-size: 13.5px; }
+[data-style="e"] .plan-gap .plan-mark { flex-shrink: 0; font-weight: 800; width: 22px; text-align: center; }
+[data-style="e"] .plan-gap.ok .plan-mark { color: var(--success); }
+[data-style="e"] .plan-gap.no .plan-mark { color: var(--danger); }
+[data-style="e"] .plan-gap.maybe .plan-mark { color: var(--warning); }
+[data-style="e"] .plan-gap-name { font-weight: 700; }
+[data-style="e"] .plan-gap-desc { color: var(--text-secondary); font-size: 12.5px; }
+
+/* ---- 方法论横幅：玻璃卡 ---- */
+[data-style="e"] .methodology-banner {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  color: var(--text);
+  padding: 18px 22px;
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow);
+}
+[data-style="e"] .methodology-banner .icon {
+  font-size: 26px;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.18), rgba(249, 115, 22, 0.18));
+}
+[data-style="e"] .methodology-banner .text { font-size: 14px; line-height: 1.8; }
+[data-style="e"] .methodology-banner .text strong { font-size: 15px; color: var(--text); }
+[data-style="e"] .methodology-banner .step {
+  display: inline-block;
+  margin: 3px 2px 3px 0;
+  padding: 2px 12px;
+  background: rgba(14, 165, 233, 0.12);
+  border-radius: 999px;
+  font-weight: 700;
+  color: var(--primary);
+}
+[data-style="e"] .methodology-banner .core { display: block; margin-top: 6px; font-size: 12px; opacity: 0.7; }
+
+/* ---- 移动端 E：导航沉底胶囊 ---- */
+@media (max-width: 768px) {
+  [data-style="e"] .header { padding: 18px 16px 10px; flex-direction: column; align-items: flex-start; }
+  [data-style="e"] .header-brand { font-size: 18px; padding: 7px 16px; }
+  [data-style="e"] .header-subtitle { font-size: 12px; max-width: 100%; }
+  /* 底部胶囊导航（布局重排：导航从顶部移到底部悬浮） */
+  [data-style="e"] .tab-nav {
+    position: fixed;
+    bottom: 14px;
+    left: 10px;
+    right: 10px;
+    top: auto;
+    margin: 0;
+    max-width: none;
+    z-index: 30;
+    padding: 6px;
+    gap: 4px;
+  }
+  [data-style="e"] .main { padding: 18px 14px 110px; }
+  [data-style="e"] .tab-btn { padding: 11px 10px; font-size: 13px; letter-spacing: 0.5px; }
+  [data-style="e"] .form-grid { grid-template-columns: 1fr; }
+  [data-style="e"] .filter-bar { flex-direction: column; border-radius: 20px; }
+  [data-style="e"] .filter-bar input, [data-style="e"] .filter-bar select { width: 100%; }
+  [data-style="e"] .card { padding: 16px 18px; }
+  [data-style="e"] .policy-card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  [data-style="e"] .policy-name { font-size: 14.5px; }
+  [data-style="e"] .match-score { font-size: 22px; }
+  [data-style="e"] .match-item { padding: 13px 15px; }
+  [data-style="e"] .report-score { font-size: 32px; }
+  [data-style="e"] .diagnosis-report { padding: 16px; }
+  [data-style="e"] .methodology-banner { flex-direction: column; padding: 16px; gap: 10px; text-align: center; }
+  .style-switcher { top: auto; bottom: 92px; right: 12px; }
+}
+@media (max-width: 480px) {
+  [data-style="e"] body { font-size: 14px; }
+  [data-style="e"] .header { padding: 14px 12px 8px; }
+  [data-style="e"] .header-brand { font-size: 16px; }
+  [data-style="e"] .btn { width: 100%; padding: 13px 16px; margin-left: 0 !important; margin-top: 8px; }
+  [data-style="e"] .form-group select, [data-style="e"] .form-group input { padding: 11px 12px; font-size: 16px; }
+  [data-style="e"] .filter-bar input, [data-style="e"] .filter-bar select { padding: 11px 12px; font-size: 16px; }
+  [data-style="e"] .policy-card-header { padding: 13px 14px; }
+  [data-style="e"] .policy-name { font-size: 14px; }
+  [data-style="e"] .policy-meta .tag { font-size: 11px; padding: 2px 8px; }
+  [data-style="e"] .checklist-item input[type="checkbox"] { width: 22px; height: 22px; }
+  [data-style="e"] .form-group label input[type="checkbox"] { width: 16px; height: 16px; }
+}
+
+
+/* ===== 全局移动端修复：专栏头部窄屏堆叠，防横向溢出 ===== */
+@media (max-width: 768px) {
+  .column-head { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .column-desc { min-width: 0; }
+  .column-count { white-space: nowrap; flex-shrink: 0; }
+}
+</style>
+</head>
+<body data-style="a">
+
+<!-- ===== 顶部 ===== -->
+<header class="header">
+  <div>
+    <div class="header-brand">政策通</div>
+    <div style="font-size:12px;opacity:0.7;margin-top:2px;">企业政策申报智能诊断平台 v1.0 MVP</div>
+  </div>
+  <div class="header-subtitle">
+    核心理念：政策不是玄学，是可拆解的逻辑树。每一份政策文件都可以被拆成结构化的申报条件矩阵 —— 可检查、可量化、可补齐。
+  </div>
+</header>
+
+<!-- ===== 标签导航 ===== -->
+<nav class="tab-nav">
+  <button class="tab-btn active" data-tab="browse">政策库</button>
+  <button class="tab-btn" data-tab="match">智能匹配</button>
+  <button class="tab-btn" data-tab="diagnose">自诊断</button>
+  <button class="tab-btn" data-tab="plan">培育规划</button>
+</nav>
+
+<!-- ===== 主内容 ===== -->
+<main class="main">
+
+  <!-- ===== 三步使用指引横幅（仅在政策库显示） ===== -->
+  <div class="methodology-banner" id="methodologyBanner">
+    <div class="icon">⊿</div>
+    <div class="text">
+      <strong>三步完成申报决策</strong><br>
+      <span class="step">① 逛政策库</span>——看每条政策的奖补、硬性门槛与官方原文<br>
+      <span class="step">② 填企业信息</span>——智能匹配出值得申报的政策与差距<br>
+      <span class="step">③ 自诊断</span>——逐条核验条件，生成可打印的申报诊断报告<br>
+      <span class="core">核心方法论：政策不是玄学，是可拆解的逻辑树——把模糊的政策文本变成可执行的申报路线图。</span>
+    </div>
+  </div>
+
+  <!-- ========== 标签1：政策库 ========== -->
+  <section class="tab-panel active" id="tab-browse">
+    <div class="filter-bar">
+      <input type="text" id="policySearch" placeholder="搜索政策名称或发文机关...">
+      <select id="filterLevel">
+        <option value="">全部级别</option>
+        <option value="国家级">国家级</option>
+        <option value="省级">省级</option>
+      </select>
+      <select id="filterIndustry">
+        <option value="">全部行业</option>
+      </select>
+    </div>
+    <div id="policyList"></div>
+  </section>
+
+  <!-- ========== 标签2：智能匹配 ========== -->
+  <section class="tab-panel" id="tab-match">
+    <div class="card no-print">
+      <div class="card-header">企业基本信息</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>所属行业</label>
+          <!-- 选项由 JS 从 POLICIES 数据生成（与筛选栏行业同源，避免两处维护分叉） -->
+          <select id="mIndustry">
+            <option value="">请选择</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>企业类型</label>
+          <select id="mType">
+            <option value="">请选择</option>
+            <option value="规模以上工业企业">规模以上工业企业</option>
+            <option value="科技型中小企业">科技型中小企业</option>
+            <option value="大型企业（营收>4亿）">大型企业（营收>4亿）</option>
+            <option value="中小微企业">中小微企业</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>上年度营业收入</label>
+          <select id="mRevenue">
+            <option value="">请选择</option>
+            <option value="<500万">< 500 万</option>
+            <option value="500万-2000万">500 万 - 2000 万</option>
+            <option value="2000万-5000万">2000 万 - 5000 万</option>
+            <option value="5000万-1亿">5000 万 - 1 亿</option>
+            <option value="1亿-4亿">1 亿 - 4 亿</option>
+            <option value=">4亿">> 4 亿</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>成立年限</label>
+          <select id="mYears">
+            <option value="">请选择</option>
+            <option value="<1年">< 1 年</option>
+            <option value="1-3年">1 - 3 年</option>
+            <option value="3-5年">3 - 5 年</option>
+            <option value=">5年">> 5 年</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>研发费用占营收比例</label>
+          <select id="mRD">
+            <option value="">请选择</option>
+            <option value="<3%">< 3%</option>
+            <option value="3%-5%">3% - 5%</option>
+            <option value="5%-8%">5% - 8%</option>
+            <option value=">8%">> 8%</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>有效知识产权数量</label>
+          <select id="mIPR">
+            <option value="">请选择</option>
+            <option value="0">无</option>
+            <option value="1-5">1 - 5 件</option>
+            <option value="6-15">6 - 15 件</option>
+            <option value=">15">> 15 件</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>近三年有无重大安全/环保/质量事故</label>
+          <select id="mAccident">
+            <option value="">请选择</option>
+            <option value="无">无</option>
+            <option value="有">有</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>污染物排放是否达标</label>
+          <select id="mEmission">
+            <option value="">请选择</option>
+            <option value="是">是</option>
+            <option value="否">否</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>现有认证（多选）</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;padding-top:6px;">
+            <label style="font-weight:400;font-size:13px;"><input type="checkbox" class="mCert" value="ISO9001"> ISO9001</label>
+            <label style="font-weight:400;font-size:13px;"><input type="checkbox" class="mCert" value="ISO14001"> ISO14001</label>
+            <label style="font-weight:400;font-size:13px;"><input type="checkbox" class="mCert" value="ISO50001"> ISO50001</label>
+            <label style="font-weight:400;font-size:13px;"><input type="checkbox" class="mCert" value="OHSAS18001"> OHSAS18001</label>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="runMatch()" style="margin-top:16px;">开始匹配</button>
+      <button class="btn btn-secondary" onclick="resetMatch()" style="margin-top:16px;margin-left:8px;">重置</button>
+    </div>
+    <div id="matchResults"></div>
+  </section>
+
+  <!-- ========== 标签3：自诊断 ========== -->
+  <section class="tab-panel" id="tab-diagnose">
+    <div class="card">
+      <div class="card-header">选择目标政策，逐条自检</div>
+      <div class="diagnosis-policy-select no-print">
+        <select id="diagPolicySelect" onchange="loadDiagnosis()">
+          <option value="">-- 请选择一项政策 --</option>
+        </select>
+      </div>
+      <div id="diagnosisChecklist" class="no-print"></div>
+      <div id="diagnosisReport"></div>
+    </div>
+  </section>
+
+  <!-- ========== 标签4：培育规划 ========== -->
+  <section class="tab-panel" id="tab-plan">
+    <div class="card no-print">
+      <div class="card-header">培育规划 — 判断你在专精特新梯度第几层，下一步报什么</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;padding:10px 14px;background:#eff6ff;border-left:4px solid var(--primary-light);border-radius:6px;">
+        梯度培育 5 层：<strong>创新型 → 省级专精特新（广东省认定）→ 小巨人 → 重点小巨人 / 单项冠军（末两层并列方向）</strong>。填企业现状 → 判断当前层位 → 输出「下一步申报什么 + 差距清单 + 节奏」。判断依据：粤工信规字〔2024〕5 号（广东省细则）、工信部企业〔2026〕2 号、工信厅企业函〔2026〕117 号、财建〔2024〕148 号、工信部政法〔2023〕138 号。
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>已获得资质（选最高一级）</label>
+          <select id="pLevel">
+            <option value="">请选择</option>
+            <option value="0">还没入库创新型（从零开始）</option>
+            <option value="1">已入库创新型中小企业</option>
+            <option value="2">已获省级专精特新中小企业</option>
+            <option value="3">已是专精特新「小巨人」</option>
+            <option value="4">已是重点「小巨人」（中央财政支持）</option>
+            <option value="5">已是制造业单项冠军</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>上年度营业收入</label>
+          <select id="pRevenue">
+            <option value="">请选择</option>
+            <option value="<500万">< 500 万</option>
+            <option value="500万-2000万">500 万 - 2000 万</option>
+            <option value="2000万-5000万">2000 万 - 5000 万</option>
+            <option value="5000万-1亿">5000 万 - 1 亿</option>
+            <option value="1亿-4亿">1 亿 - 4 亿</option>
+            <option value=">4亿">> 4 亿</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>成立年限</label>
+          <select id="pYears">
+            <option value="">请选择</option>
+            <option value="<1年">< 1 年</option>
+            <option value="1-3年">1 - 3 年</option>
+            <option value="3-5年">3 - 5 年</option>
+            <option value=">5年">> 5 年</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>研发费用占营收比例</label>
+          <select id="pRD">
+            <option value="">请选择</option>
+            <option value="<3%">< 3%</option>
+            <option value="3%-5%">3% - 5%</option>
+            <option value="5%-8%">5% - 8%</option>
+            <option value=">8%">> 8%</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>有效知识产权数量（专利总数，≥6 件从严覆盖 4 项Ⅰ类）</label>
+          <select id="pIPR">
+            <option value="">请选择</option>
+            <option value="0">无</option>
+            <option value="1-5">1 - 5 件</option>
+            <option value="6-15">6 - 15 件</option>
+            <option value=">15">> 15 件</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>近三年有无重大安全/环保/质量事故</label>
+          <select id="pAccident">
+            <option value="">请选择</option>
+            <option value="无">无</option>
+            <option value="有">有</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>主营业务收入占营收比例（小巨人要求 ≥90%）</label>
+          <select id="pMainRatio">
+            <option value="">请选择</option>
+            <option value="≥90%">≥ 90%</option>
+            <option value="<90%">< 90%</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>是否满足创新型直通条件（高企有效期内/省级以上科技奖励/省部级研发机构/股权融资 ≥500 万，满足任一即可）</label>
+          <select id="pDirect">
+            <option value="">请选择</option>
+            <option value="是">是，满足至少一项</option>
+            <option value="否">否</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>申请产品市场占有率是否全球前 3（单项冠军要求）</label>
+          <select id="pGlobalShare">
+            <option value="">请选择</option>
+            <option value="是">是</option>
+            <option value="否">否</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="runPlan()">生成培育规划</button>
+        <button class="btn" onclick="resetPlan()">清空重填</button>
+      </div>
+    </div>
+    <div id="planResult"></div>
+  </section>
+
+</main>
+
+<script>
+// ============================================================
+// 数据版本：任何政策数据变更后更新此值（同步更新自诊断报告页脚日期戳）
+// ============================================================
+const DATA_VERSION = '2026-08-01';
+
+// ============================================================
+// 政策数据（核心资产，新增政策在此追加）
+// 每条政策 = 基本信息 + 条件矩阵（按类别分组）
+// 条件字段：name=条件名, required=true/false, weight=1-3,
+//           description=说明, autoMatch=自动匹配字段名(可选)
+// ============================================================
+const POLICIES = [
+  {
+    id: "gxjsqy",
+    column: "gxjs",
+    name: "国家高新技术企业认定",
+    issuingBody: "科技部 / 财政部 / 税务总局",
+    level: "国家级",
+    deadline: "每年 6-8 月申报",
+    updated: "2026-08-01",
+    source: { name: "《高新技术企业认定管理办法》（国科发火〔2016〕32 号）", url: "http://www.innocom.gov.cn/gxjsqyrdw/ztwj/201602/5e7d1f23faf547de9de2aff3ce9f434a.shtml" },
+    summary: "国家级税收优惠资质。认定后企业所得税由 25% 减按 15% 征收，另有地方一次性奖励 20-100 万元。核心门槛：注册成立满一年、拥有核心知识产权、科技人员占比 ≥10%、研发费用占比达标、高新技术产品收入占比 ≥60%。每年 6-8 月申报，证书有效期 3 年，适合有研发投入、有专利的科技型企业。",
+    subsidy: "所得税减按 15% 征收（原 25%）+ 地方一次性奖励 20-100 万不等",
+    applicableIndustries: ["电子信息","生物与新医药","航空航天","新材料","新能源与节能","资源与环境","先进制造与自动化","高技术服务"],
+    conditions: [
+      {
+        category: "基础合规",
+        items: [
+          { name: "注册成立一年以上", required: true, weight: 3, veto: true, description: "企业申请认定时须注册成立 365 天以上", autoMatch: "years", rule: v => v === ">5年" || v === "3-5年" }, // 「1-3年」档含未满 1 年企业，统一从严（宁可漏判不可误判），与小巨人成立年限规则口径一致
+          { name: "拥有核心自主知识产权", required: true, weight: 3, description: "通过自主研发、受让、受赠、并购等方式取得，对其主要产品/服务发挥核心支持作用", autoMatch: "ipr", rule: v => v !== "0" },
+          { name: "属于国家重点支持的高新技术领域", required: true, weight: 3, description: "产品/服务属于《国家重点支持的高新技术领域》规定的范围", autoMatch: "industry", rule: (v, p) => p.applicableIndustries.includes(v) }
+        ]
+      },
+      {
+        category: "财务指标",
+        items: [
+          { name: "研发费用占比达标", required: true, weight: 3, description: "近三个会计年度研发费用占同期销售收入比例：<5000万≥5%，5000万-2亿≥4%，>2亿≥3%", autoMatch: "rd", rule: (v, profile) => {
+            if (!v) return false;
+            const rev = profile.revenue;
+            if (rev === ">4亿") return v !== "<3%"; // >2亿 → ≥3%
+            // 1亿-4亿 跨 2亿 分界（1亿-2亿 需≥4%），保守按 ≥4%；5000万-1亿 → ≥4%
+            if (rev === "1亿-4亿" || rev === "5000万-1亿") return v === "5%-8%" || v === ">8%";
+            // <5000万（含未选营收，按最严要求）→ ≥5%
+            return v === "5%-8%" || v === ">8%";
+          } },
+          { name: "高新技术产品/服务收入占比 ≥ 60%", required: true, weight: 2, description: "近一年高新技术产品/服务收入占企业同期总收入的比例不低于 60%" },
+          { name: "近三个会计年度营收有增长", required: false, weight: 1, description: "营收增长率是评审加分项，非硬性门槛" }
+        ]
+      },
+      {
+        category: "技术能力",
+        items: [
+          { name: "科技人员占比 ≥ 10%", required: true, weight: 2, description: "从事研发和相关技术创新活动的科技人员占企业当年职工总数的比例不低于 10%" },
+          { name: "有产学研合作", required: false, weight: 1, description: "与高校/科研院所有合作协议或联合项目，评审加分项" },
+          { name: "参与制定标准（国标/行标/团标）", required: false, weight: 2, description: "近三年参与制定标准是重要加分项" }
+        ]
+      },
+      {
+        category: "合规底线",
+        items: [
+          { name: "近一年无重大安全/质量/环境事故", required: true, weight: 3, veto: true, description: "申请前一年内未发生重大安全、重大质量事故或严重环境违法行为", autoMatch: "accident", rule: v => v === "无" }
+        ]
+      }
+    ],
+    tips: "评审核心逻辑：证明你不是一家「普通制造企业」，而是一家「靠技术赚钱的企业」。三个命门——知识产权（有没有）、研发费用（花没花）、高新收入（赚没赚到）。评审老师会交叉验证这三组数据的逻辑一致性。"
+  },
+  {
+    id: "xjr",
+    column: "zjt",
+    name: "专精特新「小巨人」企业认定",
+    issuingBody: "工信部",
+    level: "国家级",
+    deadline: "每年 1 批 · 2026 第八批 4.25-5.25 填报",
+    updated: "2026-08-01",
+    source: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" },
+    notice: { name: "《关于开展 2026 年度专精特新「小巨人」企业认定和复核工作的通知》（工信厅企业函〔2026〕117 号）", url: "https://wap.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_83857a4773ac4583bd1540eeb78bcbcb.html", timeline: "2026 第八批：4.25-5.25 线上填报 → 5.25-6.30 省级初核推荐 → 6.30 材料寄送截止" },
+    summary: "专精特新梯度培育的最高层级荣誉。认定本身无中央直接奖补；中央财政奖补针对「重点小巨人」专项（财建〔2024〕148 号）：每家企业连续支持三年、合计 600 万元测算，绩效挂钩、95% 以上直达企业；地方配套以各省当年政策为准。前提：先获省级「专精特新」中小企业称号。硬门槛（2026 年 4 月起执行《优质中小企业梯度培育管理办法》新标准）：营收 ≥5000 万元、主营占比 ≥90%、研发费用近两年合计 ≥1200 万元且占比 ≥3%、Ⅰ类知识产权 4 项以上、细分市场占有率 ≥10% 或国内前三、发展评价得分 ≥60。申报每年 1 批（年度通知制）；2026 年第八批 4 月 25 日-5 月 25 日线上填报、省级初核推荐至 6 月 30 日（工信厅企业函〔2026〕117 号）。申报免费，材料建议提前半年准备。",
+    subsidy: "认定「小巨人」本身无中央直接奖补；中央奖补为「重点小巨人」专项（财建〔2024〕148 号）：每家企业连续三年合计 600 万元测算、分两次下达、绩效挂钩、95% 以上直达企业；地方配套以各省当年政策为准。",
+    applicableIndustries: ["电子信息","生物与新医药","航空航天","新材料","新能源与节能","资源与环境","先进制造与自动化","制造业（通用）"],
+    conditions: [
+      {
+        category: "基础合规",
+        items: [
+          { name: "在境内注册、独立法人", required: true, weight: 3, description: "符合《中小企业划型标准规定》" },
+          { name: "成立 3 年以上", required: true, weight: 2, description: "截至上年末从事特定细分市场时间达 3 年以上（关键领域补短板/填空白企业可放宽）", autoMatch: "years", rule: v => v === ">5年" || v === "3-5年" },
+          { name: "已获得专精特新中小企业称号", required: true, weight: 3, description: "申报「小巨人」须先认定为省级专精特新中小企业（2026 年 2 号文基础条件）" },
+          { name: "近三年无重大安全/质量/环境事故", required: true, weight: 3, veto: true, description: "需出具相关主管部门证明", autoMatch: "accident", rule: v => v === "无" },
+          { name: "非制造业单项冠军企业", required: true, weight: 3, description: "已获制造业单项冠军示范企业或单项冠军产品的企业，不再推荐新申请（117 号通知）" },
+          { name: "无控股/同质关联冲突", required: true, weight: 3, description: "与已认定「小巨人」企业存在控股关系的企业、同一集团内生产相似主导产品的企业不予推荐（117 号通知）" }
+        ]
+      },
+      {
+        category: "专业化（主营业务）",
+        items: [
+          { name: "主营业务收入占营收 ≥ 90%", required: true, weight: 2, description: "上年度主营业务收入总额占营业收入总额比重不低于 90%（2026 年新标准，原为 70%）", autoMatch: "mainRatio", rule: v => v === "≥90%" ? true : v === "<90%" ? false : undefined },
+          { name: "上年度营业收入 ≥ 5000 万元", required: true, weight: 2, description: "2026 年新标准经营规模要求", autoMatch: "revenue", rule: v => v === "5000万-1亿" || v === "1亿-4亿" || v === ">4亿" },
+          { name: "近两年营业收入复合增长率 ≥ 5%", required: true, weight: 2, description: "复核企业不考查该项指标" },
+          { name: "上年末资产负债率 ≤ 75%", required: true, weight: 1, description: "2026 年新标准财务健康指标" },
+          { name: "主导产品在细分市场占有率位于全国前列", required: true, weight: 3, description: "细分市场占有率达到 10% 以上或国内前三名，且享有较高知名度、影响力（2026 年起材料简化，如实说明即可，无需第三方证明）" }
+        ]
+      },
+      {
+        category: "精细化",
+        items: [
+          { name: "取得质量管理体系认证", required: true, weight: 1, description: "如 ISO9001 或同等级别质量管理体系认证", autoMatch: "cert", rule: v => v.includes("ISO9001") },
+          { name: "拥有自主品牌", required: true, weight: 2, description: "拥有注册商标或品牌" },
+          { name: "产品通过国际/国内权威认证", required: false, weight: 1, description: "如 CE、UL、CCC 等产品认证" }
+        ]
+      },
+      {
+        category: "创新能力",
+        items: [
+          { name: "研发费用投入达标", required: true, weight: 3, description: "近两年研发费用合计不低于 1200 万元，且每年占营业收入比重均不低于 3%（2026 年新标准）", autoMatch: "rd", rule: v => v !== "<3%" }, // 2026 年新标准：各营收档统一 ≥3% + 合计 1200 万（合计金额须人工核验）
+          { name: "拥有 4 项以上与主导产品相关的Ⅰ类知识产权", required: true, weight: 2, description: "Ⅰ类知识产权含发明专利（含国防专利）、植物新品种、集成电路布图设计等；近三年获国家级科技奖励（排名前三）的企业可豁免本项", autoMatch: "ipr", rule: v => v === ">15" || v === "6-15" }, // 表单仅区分专利总数不区分类型，按「≥6 件」从严覆盖 4 项Ⅰ类（宁可漏判不可误判）
+          { name: "专精特新发展评价得分 ≥ 60 分", required: true, weight: 2, description: "本年度中小企业专精特新发展评价得分达 60 分以上（依据《中小企业专精特新发展评价指标体系（试行）》）" },
+          { name: "自建或联合建立研发机构", required: true, weight: 2, description: "如技术中心、实验室、博士后工作站等" },
+          { name: "主持或参与制修订标准", required: false, weight: 2, description: "国际/国家/行业标准均可" }
+        ]
+      },
+      {
+        category: "产业链配套",
+        items: [
+          { name: "属于工业「六基」领域或制造强国十大重点产业", required: true, weight: 3, description: "主导产品属于制造业核心基础零部件、核心基础元器件、关键软件、先进基础工艺、关键基础材料、产业基础技术，或属于改造提升传统产业、培育壮大新兴产业、布局建设未来产业，位于产业链关键环节" },
+          { name: "关键领域补短板/填空白/替代进口", required: false, weight: 3, description: "技术实力在细分领域具有明显竞争优势" }
+        ]
+      }
+    ],
+    changes: [
+      "上年度营业收入 ≥5000 万元——2026 年新标准新增经营规模门槛",
+      "主营业务收入占营收 ≥90%——由旧办法的 70% 提高",
+      "研发费用：近两年合计 ≥1200 万元且每年占比 ≥3%——2026 年新标准统一口径",
+      "拥有 4 项以上Ⅰ类知识产权——新增量化要求",
+      "上年末资产负债率 ≤75%——新增财务健康指标",
+      "专精特新发展评价得分 ≥60 分——新增，依据《中小企业专精特新发展评价指标体系（试行）》",
+      "材料简化：无需第三方市占率证明与发明专利证书（2026 年起）"
+    ],
+    tips: "小巨人评审最看重专业化程度和细分市场地位。申报完全免费，工信部不委托任何机构办理申报业务，谨防不良中介以「内部渠道」「包过」名义收费（117 号通知明确提醒）。2026 年起材料简化：无需第三方市场占有率证明和发明专利证书，如实说明市占率并填报发明专利数量即可，专利数据以国家知识产权局数据为准。财务数据须依据会计师事务所审计报告，并上传财政部注册会计师行业统一监管平台（acc.mof.gov.cn）已赋码电子原件。建议重点准备：营收与研发费用的审计数据口径（研发费用须近两年合计 ≥1200 万元）、专精特新发展评价自评材料。复核安排：2023 年认定的第五批及复核通过的第二批企业须参加 2026 年度复核（复核按 2022 年办法标准把握）。"
+  },
+  {
+    id: "greenfactory",
+    column: "green",
+    name: "国家级绿色工厂",
+    issuingBody: "工信部",
+    level: "国家级",
+    deadline: "每年 3-6 月申报",
+    updated: "2026-08-01",
+    source: { name: "《关于公布 2024 年度绿色制造名单的通知》（工信厅节函〔2025〕33 号）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2025/art_6f09c1deb79a41c49f106b012e76320e.html" },
+    summary: "国家级绿色制造体系的核心荣誉。无直接资金补贴，但入选后享受环保分级管控豁免、错峰生产豁免、绿色信贷优惠利率、政府优先采购等政策红利，部分省市另有 50-200 万地方奖励。核心是证明你在同等产量下能耗、水耗、物耗、排放比别人省。硬门槛：依法取得排污许可证、近三年无重大事故、污染物持续达标。每年 3-6 月申报，适合能耗管理水平较好的制造业企业。",
+    subsidy: "无直接资金补贴，可享受环保分级管控豁免、错峰生产豁免、绿色信贷优惠利率、政府优先采购等政策红利。部分省市有 50-200 万地方奖励。",
+    applicableIndustries: ["制造业（通用）","化工","汽车","电子信息","消费品","新能源与节能","资源与环境","新材料"],
+    conditions: [
+      {
+        category: "基础合规",
+        items: [
+          { name: "依法设立、正常运营的制造业企业", required: true, weight: 3, description: "具有独立法人资格", autoMatch: "type", rule: () => true }, // 表单四种企业类型均为依法设立的正常企业，此条件自动通过；未选类型时归为未核验
+          { name: "近三年无重大安全、环保、质量事故", required: true, weight: 3, veto: true, description: "需提供应急管理局/生态环境局/市场监管局出具的证明", autoMatch: "accident", rule: v => v === "无" },
+          { name: "污染物排放持续达标", required: true, weight: 3, veto: true, description: "需提供近一年在线监测数据或第三方检测报告", autoMatch: "emission", rule: v => v === "是" },
+          { name: "依法取得排污许可证", required: true, weight: 2, veto: true, description: "按《排污许可管理条例》应领尽领" }
+        ]
+      },
+      {
+        category: "管理体系",
+        items: [
+          { name: "已建立环境管理体系", required: true, weight: 2, description: "如 ISO14001 认证或等效体系", autoMatch: "cert", rule: v => v.includes("ISO14001") },
+          { name: "已建立能源管理体系", required: true, weight: 2, description: "如 ISO50001 认证或等效体系", autoMatch: "cert", rule: v => v.includes("ISO50001") },
+          { name: "已建立职业健康安全管理体系", required: false, weight: 1, description: "如 OHSAS18001/ISO45001，加分项", autoMatch: "cert", rule: v => v.includes("OHSAS18001") }
+        ]
+      },
+      {
+        category: "绿色绩效（硬指标）",
+        items: [
+          { name: "单位产品综合能耗低于行业基准值", required: true, weight: 3, description: "需提供能源审计报告或节能评估报告" },
+          { name: "单位产品取水量低于行业基准值", required: true, weight: 2, description: "需提供水平衡测试报告" },
+          { name: "主要污染物排放强度低于行业平均水平", required: true, weight: 3, description: "需提供环评批复 + 验收文件 + 近两年监测报告" },
+          { name: "一般工业固废综合利用率 ≥ 行业平均水平", required: true, weight: 2, description: "需提供固废台账和综合利用去向证明" }
+        ]
+      },
+      {
+        category: "绿色设计与采购",
+        items: [
+          { name: "开展了绿色设计或生态设计", required: false, weight: 2, description: "有绿色设计产品或绿色设计示范企业资质为佳" },
+          { name: "建立了绿色供应链管理制度", required: false, weight: 1, description: "对供应商有绿色准入要求" },
+          { name: "使用清洁能源或可再生能源", required: false, weight: 2, description: "如分布式光伏、绿电购买合同等" }
+        ]
+      }
+    ],
+    tips: "绿色工厂的核心判据是一个字：省。能不能证明你在同等产量下用得比别人少（能耗、水耗、物耗、排放）是关键。建议用单位产品指标而非总量指标做申报数据——总量指标会因产能波动被评审老师扣分。另外排污许可证是最基础的合规门槛，缺这个直接一票否决。"
+  },
+  {
+    id: "battery",
+    column: "green",
+    name: "动力电池回收白名单（新能源汽车废旧动力蓄电池综合利用行业规范条件）",
+    issuingBody: "工信部",
+    level: "国家级",
+    deadline: "按批次申报，每年 2-3 批",
+    updated: "2026-08-01",
+    alert: {
+      level: "danger",
+      text: "2026-07-30 工信部第 20 号公告：废止动力电池「梯次利用」条款，100 家梯次利用企业已移出白名单，不再受理梯次利用公告申报；现仅「再生利用」企业可申请白名单，且废旧动力电池不得用于电动自行车等领域。",
+      link: "https://wap.miit.gov.cn/jgsj/jns/zhlyh/art/2026/art_68252019ef6648f886b2c070ef8ced02.html",
+      linkLabel: "查看第 20 号公告原文"
+    },
+    source: { name: "《新能源汽车废旧动力电池综合利用行业规范条件（2024 年本）》（工信部公告 2024 年第 42 号）", url: "https://www.miit.gov.cn/jgsj/jns/zhlyh/art/2024/art_45b0bb0a98ca4f2ab35d79f6a17e5bc3.html" },
+    summary: "动力电池回收行业的从业资格证——入选白名单是从事动力电池再生利用（拆解、破碎、分选、冶炼）业务的前提。入选后自动获得行业准入资格、溯源管理平台接入资格，部分省市按回收量给予 10-30 元/kWh 补贴。硬门槛：环评批复 + 排污许可证 + 危废依法处置 + 溯源系统四样缺一不可，另有产能（再生利用 ≥5000 吨/年）和主要金属回收率（镍钴锰 ≥98%）要求。⚠️ 2026-07-30 起「梯次利用」条款已废止，仅再生利用可申报。按批次申报（每年 2-3 批），溯源系统接入建议提前 3-6 个月准备。",
+    subsidy: "入选白名单后自动获得：电池回收利用行业准入资格、参与新能源汽车国家监测与动力蓄电池回收利用溯源管理平台资格、部分省市按回收量给予 10-30 元/kWh 补贴。非白名单企业不得从事动力电池综合利用业务。",
+    applicableIndustries: ["新能源与节能","资源与环境","汽车","先进制造与自动化"],
+    conditions: [
+      {
+        category: "基础合规",
+        items: [
+          { name: "在中国境内注册、独立法人", required: true, weight: 3, description: "经营范围须包含动力电池回收/综合利用相关内容" },
+          { name: "近三年无重大安全、环保事故", required: true, weight: 3, veto: true, description: "环保处罚记录直接一票否决", autoMatch: "accident", rule: v => v === "无" },
+          { name: "已取得排污许可证和环评批复", required: true, weight: 3, veto: true, description: "项目须通过竣工环保验收", autoMatch: "emission", rule: v => v === "是" }
+        ]
+      },
+      {
+        category: "技术能力",
+        items: [
+          { name: "具备动力电池再生利用技术能力", required: true, weight: 3, description: "拆解、破碎、分选、冶炼等资源化利用技术能力（梯次利用条款已于 2026-07-30 废止）" },
+          { name: "主要工艺设备为自主研发或国产化", required: false, weight: 2, description: "鼓励自主技术而非全套进口" },
+          { name: "具有 CNAS 认可实验室", required: false, weight: 1, description: "或有与第三方检测机构长期合作协议" }
+        ]
+      },
+      {
+        category: "回收利用规模",
+        items: [
+          { name: "年综合利用能力达标", required: true, weight: 3, description: "再生利用企业年综合利用能力 ≥5000 吨/年（梯次利用产能要求已随 2026 年第 20 号公告废止）" },
+          { name: "主要金属回收率达标", required: true, weight: 3, description: "镍、钴、锰综合回收率≥98%，锂回收率≥85%" },
+          { name: "有稳定的废旧电池回收渠道", required: true, weight: 2, description: "需提供与车企/电池厂/回收网点的合作协议" }
+        ]
+      },
+      {
+        category: "环保合规（重头）",
+        items: [
+          { name: "废水/废气/噪声达标排放", required: true, weight: 3, description: "需提供近一年第三方检测报告", autoMatch: "emission", rule: v => v === "是" },
+          { name: "一般工业固废和危废依法处置", required: true, weight: 3, description: "危废须交有资质单位处置，保留转移联单至少 5 年" },
+          { name: "建立完整的溯源管理体系", required: true, weight: 2, description: "须接入新能源汽车国家监测与动力蓄电池回收利用溯源管理平台" }
+        ]
+      }
+    ],
+    tips: "这个白名单的审批逻辑本质是「先有环保合规，再看技术规模」。环评批复+排污许可证+危废处置+溯源系统，四样缺一不可。实操中最多被卡的点是溯源系统——非动力电池但这个系统接入周期长，建议提前 3-6 个月准备。另外回收渠道证明最容易造假被退，建议用真实的合作协议+发票+银行流水。"
+  },
+  {
+    id: "greensupplychain",
+    column: "green",
+    name: "绿色供应链管理示范企业",
+    issuingBody: "工信部",
+    level: "国家级",
+    deadline: "每年 3-6 月申报（与绿色工厂同期）",
+    updated: "2026-08-01",
+    source: { name: "《关于公布 2024 年度绿色制造名单的通知》（工信厅节函〔2025〕33 号）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2025/art_6f09c1deb79a41c49f106b012e76320e.html" },
+    summary: "把绿色要求穿透到整个供应链的管理能力认证。无直接资金补贴，核心价值在于提升你在主机厂/大客户供应链体系中的评分和优先级，同时享受环保管控豁免、绿色信贷优惠。核心门槛：建立绿色供应商准入制度 + 将绿色指标纳入供应商绩效考核 + 建立供应链管理信息平台。申报主体以行业龙头/链主企业为主，原则上应先获评省级绿色工厂。每年 3-6 月申报（与绿色工厂同期，需提交纸质申报书），适合大企业供应商体系的制造业企业。",
+    subsidy: "与绿色工厂类似——无直接资金补贴，享受环保管控豁免、绿色信贷优惠。核心价值在于提升在主机厂/大客户供应链体系中的评分和优先级。",
+    applicableIndustries: ["制造业（通用）","汽车","电子信息","消费品","化工"],
+    conditions: [
+      {
+        category: "基础合规",
+        items: [
+          { name: "已获评国家级绿色工厂", required: false, weight: 2, description: "非硬性条件但几乎是事实前提，纯绿色供应链企业获批极少" },
+          { name: "依法设立、正常运营的制造业企业", required: true, weight: 3, description: "具有独立法人资格", autoMatch: "type", rule: () => true }, // 与绿色工厂同名条件一致：表单四种企业类型均为依法设立的正常企业，此条件自动通过；未选类型时归为未核验
+          { name: "近三年无重大安全、环保、质量事故", required: true, weight: 3, veto: true, description: "需提供三部门证明", autoMatch: "accident", rule: v => v === "无" }
+        ]
+      },
+      {
+        category: "绿色采购（核心）",
+        items: [
+          { name: "建立了绿色供应商准入和管理制度", required: true, weight: 3, description: "须有书面制度文件，明确供应商绿色准入标准" },
+          { name: "将绿色指标纳入供应商绩效考核", required: true, weight: 2, description: "考核结果与订单分配/付款条件挂钩" },
+          { name: "核心供应商中绿色工厂占比 > 30%", required: false, weight: 2, description: "鼓励但不是硬性门槛，是评审加分项" }
+        ]
+      },
+      {
+        category: "绿色生产",
+        items: [
+          { name: "单位产品综合能耗持续下降", required: true, weight: 2, description: "需提供近三年能源消耗数据对比" },
+          { name: "污染物排放达到行业先进值", required: true, weight: 2, description: "不仅仅是达标，须达到行业前 20% 水平" },
+          { name: "开展产品碳足迹核算", required: false, weight: 2, description: "有 LCA 或产品碳足迹报告为佳" }
+        ]
+      },
+      {
+        category: "绿色回收",
+        items: [
+          { name: "建立了产品废弃回收体系", required: true, weight: 1, description: "有明确的回收渠道和处理流程" },
+          { name: "产品可拆解/可回收设计", required: false, weight: 1, description: "在产品设计阶段考虑可拆解性和材料可回收性" }
+        ]
+      },
+      {
+        category: "信息平台",
+        items: [
+          { name: "建立绿色供应链管理信息平台", required: true, weight: 2, description: "用于供应商绿色绩效数据采集、监控和分析" },
+          { name: "定期发布绿色供应链绩效报告", required: false, weight: 1, description: "对外披露绿色供应链管理进展" }
+        ]
+      }
+    ],
+    tips: "绿色供应链的核心不是你自己多绿色，而是你有没有把绿色要求穿透到供应商。建立制度文件 + 供应商绩效考核体系这两件事是申报基础。实际评审中，最容易被抓住追问的是：供应商绿色准入标准具体是什么？有没有真实的考核记录？制度有没有实际执行痕迹？申报前请务必确保制度和执行记录之间存在可追溯的双向对应关系。"
+  },
+  {
+    id: "innovative",
+    column: "zjt",
+    name: "创新型中小企业评价入库",
+    issuingBody: "广东省工信厅（全国标准工信部制定）",
+    level: "省级",
+    deadline: "广东省每年 1 批（2025 年：各地 7.15 前报送推荐）",
+    updated: "2026-08-01",
+    source: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" },
+    notice: { name: "《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4459/mpost_4459794.html", timeline: "2024-08-20 实施、有效期 5 年；广东省评价（复核）每年 1 批：2025 年各地 7 月 15 日前报送推荐（粤工信融资函〔2025〕4 号）" },
+    summary: "专精特新梯度培育的第一层（基础层），入库是申报省级专精特新、小巨人的起点。2026 年起新口径将科技型中小企业一并纳入。谁能报：广东省注册、符合中小企业划型、合规经营的企业。怎么过（二选一）：① 满足 4 项直通条件之一（近三年国家级/省级科技奖励、高企等有效期内荣誉、省部级研发机构、新增股权融资 ≥500 万元）；② 评价得分 ≥60 分（创新能力 40 分 + 成长性 30 分 + 专业化 30 分，且创新能力 ≥20 分、成长性及专业化均 ≥15 分）。广东省按《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）组织实施：每年 1 批、线上自评（培育平台 zjtx.miit.gov.cn）、市级审核公示后省厅公告；深圳市自行组织评价并报省厅备案。资质有效期 3 年，到期需重新评价。无中央统一资金奖补。",
+    subsidy: "无中央统一资金奖补；部分省市对首次入库有奖励（以属地政策为准）",
+    applicableIndustries: ["制造业（通用）","电子信息","生物与新医药","航空航天","新材料","新能源与节能","资源与环境","先进制造与自动化","汽车","化工","消费品"],
+    conditions: [
+      {
+        category: "基础合规",
+        items: [
+          { name: "在境内注册、符合中小企业划型", required: true, weight: 3, description: "符合《中小企业划型标准规定》" },
+          { name: "未被列入经营异常名录/严重失信名单", required: true, weight: 3, description: "以国家企业信用信息公示系统、信用中国为准" },
+          { name: "近三年无重大安全/质量/环境事故及偷漏税", required: true, weight: 3, veto: true, autoMatch: "accident", rule: v => v === "无", description: "无违法违规行为（事故部分表单可判，偷漏税需人工核验）" },
+          { name: "产品不属于国家禁止、限制或淘汰类", required: true, weight: 2, description: "主导产品（服务）不在禁止、限制、淘汰类产业目录" }
+        ]
+      },
+      {
+        category: "评价路径（二选一，满足其一即过）",
+        items: [
+          { name: "直通条件：4 项中满足任意 1 项", required: true, weight: 5, description: "①近三年获国家级或省级科技奖励；②高新技术企业、国家级技术创新示范企业、知识产权优势/示范企业等且处于有效期；③拥有经认定的省部级及以上研发机构；④近三年新增股权融资（合格机构投资者实缴）≥500 万元", autoMatch: "direct", rule: v => v === "是" ? true : v === "否" ? false : undefined },
+          { name: "评分路径：综合评价 ≥60 分", required: true, weight: 5, description: "创新能力 40 分（Ⅰ类知识产权数量、研发费用占营收比重）+ 成长性 30 分（营收增长率、资产负债率）+ 专业化 30 分（主导产品领域、主营收入占比）" }
+        ]
+      }
+    ],
+    tips: "对初创企业最友好的一层：免费、门槛低。最快路径是查自己是否已具备直通条件——比如高企还在有效期内，直接满足第 ② 项。没有直通条件的，评分路径里「研发费用占比」和「Ⅰ类知识产权」分值最大，初创期就要注意留存研发费用归集台账。广东省每年 1 批（2025 年各地 7 月 15 日前报送推荐，珠海等市企业 6 月初前完成自评），全程线上自评、无需纸质材料；深圳市由深圳市自行组织评价。入库满 3 年需重新评价。"
+  },
+  {
+    id: "prov",
+    column: "zjt",
+    name: "专精特新中小企业认定（广东省）",
+    issuingBody: "广东省工业和信息化厅",
+    level: "省级",
+    deadline: "每年 1 批（2025 年：广佛莞 10.15 前、其他地市 9.25 前报送推荐）",
+    updated: "2026-08-01",
+    source: { name: "《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4459/mpost_4459794.html" },
+    notice: { name: "《广东省工业和信息化厅关于组织开展 2025 年创新型中小企业评价（复核）和专精特新中小企业认定（复核）工作的通知》（粤工信融资函〔2025〕4 号）", url: "http://gdii.gd.gov.cn/gkmlpt/content/4/4681/mpost_4681999.html", timeline: "每年 1 批；2025 年：广州/佛山/东莞 10 月 15 日前、其他地市 9 月 25 日前报送推荐文；申报全程线上（培育平台 zjtx.miit.gov.cn）、无需纸质材料" },
+    summary: "广东省专精特新梯度培育的中间层：省级认定，申报前提为已入库创新型中小企业（3 年有效期内）。认定条件（须同时满足，粤工信规字〔2024〕5 号）：①从事特定细分市场 ≥2 年；②上年度研发费用 ≥100 万元且占营收 ≥3%；③上年度营收 ≥1000 万元（不足 1000 万但近 2 年新增股权融资 ≥2000 万元的除外）；④专精特新发展评价得分 ≥70 分，或满足省级科技奖励、研发费用均值 ≥1000 万、新增股权融资 ≥6000 万、「创客中国」全国 500 强等直通条件之一。评价指标满分 100 分：专业化 25 + 精细化 25 + 特色化 15（广东自主设定）+ 创新能力 35。认定有效期 3 年，每年 4 月 30 日前在培育平台更新企业信息，否则取消复核资格。广东省培育目标：到 2027 年累计培育约 2 万家专精特新中小企业。",
+    subsidy: "无统一现金奖补；省制造业当家重点任务保障等专项资金对符合条件的专精特新企业项目予以支持；部分地市有一次性奖励，以属地政策为准",
+    applicableIndustries: ["制造业（通用）","电子信息","生物与新医药","航空航天","新材料","新能源与节能","资源与环境","先进制造与自动化","汽车","化工","消费品"],
+    conditions: [
+      {
+        category: "基础合规",
+        items: [
+          { name: "广东省注册、独立法人、符合中小企业划型", required: true, weight: 3, description: "符合《中小企业划型标准规定》（工信部联企业〔2011〕300 号）" },
+          { name: "合规经营", required: true, weight: 3, description: "未被列入经营异常名录或严重失信主体名单；产品（服务）不属于国家禁止、限制或淘汰类" },
+          { name: "近三年无重大事故及偷漏税", required: true, weight: 2, veto: true, autoMatch: "accident", rule: v => v === "无", description: "重大及以上安全（含网络安全、数据安全）、质量、环境污染事故（偷漏税需人工核验）" }
+        ]
+      },
+      {
+        category: "认定条件（须同时满足，粤工信规字〔2024〕5 号）",
+        items: [
+          { name: "从事特定细分市场 2 年以上", required: true, weight: 3, autoMatch: "years", rule: v => v === ">5年" || v === "3-5年" ? true : v === "<1年" ? false : undefined, description: "表单「1-3 年」档无法区分是否满 2 年，需人工核验" },
+          { name: "上年度研发费用 ≥100 万元且占营收 ≥3%", required: true, weight: 3, autoMatch: "rd", rule: v => v !== "<3%", description: "占比表单可判；≥100 万元金额需人工核验（以审计报告为准）" },
+          { name: "上年度营业收入 ≥1000 万元", required: true, weight: 3, autoMatch: "revenue", rule: v => v === "<500万" ? false : v === "500万-2000万" ? undefined : true, description: "不足 1000 万但近 2 年新增股权融资（合格机构投资者实缴）≥2000 万元的除外，需人工核验" },
+          { name: "专精特新发展评价得分 ≥70 分，或满足直通条件之一", required: true, weight: 5, description: "评价指标 100 分：专业化 25 + 精细化 25 + 特色化 15（广东自主）+ 创新能力 35；直通条件：省级以上科技奖励、近两年研发费用均值 ≥1000 万元、新增股权融资 ≥6000 万元、「创客中国」全国 500 强等" }
+        ]
+      },
+      {
+        category: "申报要求",
+        items: [
+          { name: "须先入库创新型中小企业", required: true, weight: 2, description: "申报专精特新必须具备创新型中小企业资质（3 年有效期内）；深圳企业由深圳市自行组织评价" },
+          { name: "线上填报 + 上传佐证 PDF", required: true, weight: 1, description: "登录优质中小企业梯度培育平台（zjtx.miit.gov.cn）填报，无需纸质材料；审计报告须在监管平台报备赋码" }
+        ]
+      }
+    ],
+    tips: "广东特色：评价指标中「特色化 15 分」为广东省自主设定，企业可对照细则自查加分项；广州/佛山/东莞由市级审核公示后报省厅，其他地市市级初审后报省厅审核公示认定；申报须以当年通知为准（2025 年为粤工信融资函〔2025〕4 号），建议提前准备上一年度审计报告（须报备赋码）与研发费用归集台账。"
+  },
+  {
+    id: "champion",
+    column: "zjt",
+    name: "制造业单项冠军企业认定",
+    issuingBody: "工信部",
+    level: "国家级",
+    deadline: "原则上每年 1 次；国家级遴选 2025-2026 暂无新通知（以工信部公告为准）",
+    updated: "2026-08-01",
+    source: { name: "《制造业单项冠军企业认定管理办法》（工信部政法〔2023〕138 号）", url: "http://gxj.anshan.gov.cn/html/GXJ/202310/0169830047576117.html" },
+    notice: { name: "《关于开展 2024 年制造业单项冠军企业遴选认定和复核评价工作的通知》（工信厅政法函〔2024〕328 号）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_af92d3d91e2342cd91b2221c9348580b.html", timeline: "最近一次国家级遴选（2024 年）：培育平台 excellent-ent.cn 线上填报，2024-10-27 前报送；2025 年起暂无国家级遴选新通知" },
+    summary: "制造业细分领域的天花板级荣誉：单项产品（生产性服务）市场占有率全球前 3。硬门槛（138 号文）：从事细分领域 ≥10 年（新产品 ≥5 年）、近 3 年平均主营收入 ≥4 亿元（省级以上专精特新可降至 2 亿）、申请产品市占率全球前 3、生产技术或工艺国际先进。专精特新「小巨人」企业可优先推荐——从梯度培育链条走向顶层的官方通道。原则上每年认定一次，证书有效期 3 年，有效期内每年 5 月 31 日前在培育平台更新企业信息。国家级遴选 2025-2026 年暂无新通知，申报安排以工信部公告为准。",
+    subsidy: "无中央统一资金奖补；部分省市对国家级/省级单项冠军给予一次性奖励（50-100 万元级，各地不一，以属地政策为准）",
+    applicableIndustries: ["制造业（通用）","电子信息","生物与新医药","航空航天","新材料","新能源与节能","资源与环境","先进制造与自动化","汽车","化工"],
+    conditions: [
+      {
+        category: "基础合规",
+        items: [
+          { name: "境内注册、独立法人", required: true, weight: 3, description: "未被列入经营异常名录或严重失信主体名单" },
+          { name: "产品不属于国家禁止、限制或淘汰类", required: true, weight: 2, description: "主导产品（生产性服务）合规" },
+          { name: "近 3 年无重大安全/质量/环境事故及偷漏税", required: true, weight: 3, veto: true, autoMatch: "accident", rule: v => v === "无", description: "含网络安全、数据安全、数据造假等违法违规行为" }
+        ]
+      },
+      {
+        category: "认定标准（138 号文）",
+        items: [
+          { name: "从事细分领域 ≥10 年（新产品 ≥5 年）", required: true, weight: 3, description: "截至上年末从事相关领域时间，体现「十年磨一剑」导向" },
+          { name: "近 3 年平均主营收入 ≥4 亿元", required: true, weight: 3, autoMatch: "revenue", rule: v => v === ">4亿", description: "省级以上专精特新企业可降至 ≥2 亿元（表单按 >4亿 档从严判定）" },
+          { name: "申请产品市占率全球前 3 位", required: true, weight: 3, description: "按《统计用产品分类目录》8 位或 10 位代码界定，需权威佐证（行业协会/海关数据等）", autoMatch: "globalShare", rule: v => v === "是" ? true : v === "否" ? false : undefined },
+          { name: "生产技术或工艺国际先进", required: true, weight: 2, description: "关键性能指标国际同类领先，主导产品能耗达行业能耗限额先进值" },
+          { name: "拥有高水平研发机构与核心自主知识产权", required: true, weight: 2, description: "研发投入强度行业领先，国际/国内专利数量行业领先" },
+          { name: "主导或参与制定国际/国家/行业标准", required: false, weight: 2, description: "加分项：参与国家重大创新平台、强链补链行动、卡脖子技术攻关等" }
+        ]
+      }
+    ],
+    tips: "链条顶层，通常是从小巨人成长 3-5 年后的目标（138 号文明确小巨人优先推荐）。国家级遴选 2025 年起暂无新通知，申报安排务必以工信部最新公告为准，谨防不良中介。各省有省级单项冠军认定（标准低于国家级，如市占率国内领先即可），可先冲省级。市占率全球前 3 需要严谨的第三方佐证，不要凭感觉填报。"
+  },
+  {
+    id: "keygiant",
+    column: "zjt",
+    name: "重点「小巨人」企业（中央财政支持专精特新中小企业）",
+    issuingBody: "财政部 · 工业和信息化部",
+    level: "国家级",
+    deadline: "2024-2026 三年分三批次；2026 年度各地预申报已启动（正式申报预计年中）",
+    updated: "2026-08-01",
+    source: { name: "《财政部 工业和信息化部关于进一步支持专精特新中小企业高质量发展的通知》（财建〔2024〕148 号）", url: "https://www.miit.gov.cn/jgsj/qyj/bszn/art/2024/art_afa307276f6e40e58b8bc651b1d4cf32.html" },
+    notice: { name: "《广州市工业和信息化局关于开展 2026 年度重点「小巨人」、专精特新「小巨人」预申报的通知》", url: "https://gxj.gz.gov.cn/yw/tzgg/content/post_10609188.html", timeline: "2026 年度预申报（地方摸底，非正式申报）：广州市企业 2026-01-25 前报送区工信部门；正式申报以上级部门通知为准，预计 2026 年年中" },
+    summary: "从有效期内「小巨人」企业中择优支持：聚焦重点产业链、工业「六基」、战略性新兴产业与未来产业领域，由地方工信部门按名额评审推荐（推荐制，企业不能直接申报）。申报要件（财建〔2024〕148 号）：提出「三新一强」推进计划（打造新动能、攻坚新技术、开发新产品、强化产业链配套），推进计划投资总额超过 2000 万元（设备购置、研发投入、产学研建设、人才引育等；土地购置与厂房建设费用不计入）。中央财政奖补：每家企业连续支持三年、合计最高 600 万元（实施期初下达 50%，实施期末按绩效评价情况下达剩余 50%），95% 以上直达企业；投资未达 2000 万元收回资金。政策周期 2024-2026 年、分三批次开展。",
+    subsidy: "中央财政综合奖补：600 万元/家·三年（分两次下达、绩效挂钩），95% 以上直达企业",
+    applicableIndustries: ["制造业（通用）","电子信息","生物与新医药","航空航天","新材料","新能源与节能","资源与环境","先进制造与自动化","汽车","化工"],
+    conditions: [
+      {
+        category: "申报资格（须全部满足，148 号文）",
+        items: [
+          { name: "工信部认定的有效期内专精特新「小巨人」企业", required: true, weight: 3, description: "已获「小巨人」认定且证书在有效期内" },
+          { name: "未在境内外公开发行股票", required: true, weight: 2, description: "不含已在上交所、深交所、北交所或境外上市的企业" },
+          { name: "未获过前轮支持", required: true, weight: 2, description: "财建〔2021〕2 号文（上一轮）及本轮已获支持的企业不再推荐申报" }
+        ]
+      },
+      {
+        category: "申报要件（财建〔2024〕148 号）",
+        items: [
+          { name: "提出「三新一强」推进计划", required: true, weight: 5, description: "打造新动能、攻坚新技术、开发新产品、强化产业链配套；可覆盖单个或多个方面，分别提出绩效目标" },
+          { name: "推进计划投资总额超过 2000 万元", required: true, weight: 5, description: "用于设备购置、研发投入、产学研建设、人才引育等；土地购置与厂房建设费用不能计入" }
+        ]
+      },
+      {
+        category: "地方实施（以属地为准）",
+        items: [
+          { name: "地方工信部门按名额评审推荐", required: true, weight: 3, description: "企业先向属地工信部门报送预申报/摸底材料，由地方按分配名额组织评审推荐（部分地市附加：有效发明专利 ≥5 项、近 2 年研发费用占营收比重均值 ≥4%、营收正增长等，以属地通知为准）" }
+        ]
+      }
+    ],
+    tips: "这是推荐制专项，不是公开申报：先参加地方预申报摸底（2026 年度广州市企业 1 月 25 日前报送），再由地方按名额评审推荐。奖补绩效挂钩：推进计划投资未达 2000 万元会被收回资金，投资计划务必可兑现——不要为拿奖补虚报投资。申报全程免费，不得委托第三方中介机构代理申报。"
+  }
+];
+
+// ============================================================
+// 工具函数
+// ============================================================
+function $(sel) { return document.querySelector(sel); }
+function $$(sel) { return document.querySelectorAll(sel); }
+
+// ============================================================
+// 标签切换
+// ============================================================
+$$('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    $$('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    $$('.tab-panel').forEach(p => p.classList.remove('active'));
+    $(`#tab-${btn.dataset.tab}`).classList.add('active');
+    // 切换到匹配/诊断标签时隐藏方法论横幅
+    $('#methodologyBanner').style.display = btn.dataset.tab === 'browse' ? '' : 'none';
+  });
+});
+
+// ============================================================
+// 标签1：政策库 - 渲染与筛选
+// ============================================================
+// 行业选项从政策数据自动生成（单一数据源，筛选栏与匹配表单共用，避免词表分叉）
+function industryOptionsHTML() {
+  const industries = [...new Set(POLICIES.flatMap(p => p.applicableIndustries))].sort();
+  return industries.map(ind => `<option value="${ind}">${ind}</option>`).join('');
+}
+
+function populateIndustryFilter() {
+  $('#filterIndustry').innerHTML = '<option value="">全部行业</option>' + industryOptionsHTML();
+}
+
+function populateMatchIndustry() {
+  $('#mIndustry').innerHTML = '<option value="">请选择</option>' + industryOptionsHTML();
+}
+
+// ============================================================
+// 政策库专栏（P4：按政策体系分专栏；链条视图归属专精特新专栏）
+// ============================================================
+const COLUMNS = [
+  { id: "zjt", name: "专精特新梯度培育", desc: "5 层梯度链条：创新型 → 省级专精特新 → 小巨人 → 重点小巨人/单项冠军（末两层并列方向；创新型与省级按广东省细则，粤工信规字〔2024〕5 号）", countLabel: "5 条政策 + 5 层链条" },
+  { id: "gxjs", name: "高新技术企业", desc: "国家级税收优惠资质体系：企业所得税减按 15% 征收", countLabel: "1 条政策" },
+  { id: "green", name: "绿色制造与循环利用", desc: "绿色制造体系评价 + 资源循环利用白名单", countLabel: "3 条政策" }
+];
+
+function policyCardHtml(p) {
+  return `
+    <div class="policy-card" id="card-${p.id}">
+      <div class="policy-card-header" onclick="togglePolicy('${p.id}')">
+        <div>
+          <div class="policy-name">${p.name}</div>
+          <div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">${p.issuingBody}</div>
+        </div>
+        <div class="policy-meta">
+          <span class="tag tag-level">${p.level}</span>
+          <span class="tag tag-body">${p.issuingBody.split(' / ')[0]}</span>
+          <span class="tag tag-deadline">${p.deadline}</span>
+        </div>
+      </div>
+      <div class="policy-card-body">
+        ${p.alert ? `<div class="policy-alert ${p.alert.level}"><strong>⚠️ 政策重要变更</strong>：${p.alert.text} <a href="${p.alert.link}" target="_blank" rel="noopener">${p.alert.linkLabel}</a></div>` : ''}
+        <div class="policy-summary"><strong>政策简介</strong>：${p.summary}</div>
+        ${p.changes ? `<div class="policy-changes"><strong>2026 新标准变化要点</strong>（依据《优质中小企业梯度培育管理办法》2026 年 2 号文，门槛总体提高）：<ul>${p.changes.map(c => `<li>${c}</li>`).join('')}</ul></div>` : ''}
+        <div style="margin-bottom:10px;font-size:13px;color:var(--text-secondary);">
+          适用行业：${p.applicableIndustries.join(' / ')} &nbsp;|&nbsp; 奖补：${p.subsidy} &nbsp;|&nbsp; 数据更新：${p.updated}
+        </div>
+        ${p.conditions.map(cat => `
+          <div class="condition-category">
+            <div class="condition-cat-title">${cat.category}</div>
+            ${cat.items.map(item => `
+              <div class="condition-item">
+                <span class="dot ${item.required ? 'required' : 'optional'}" title="${item.required ? '必选条件' : '可选条件'}"></span>
+                <div>
+                  <span style="font-weight:500;">${item.name}</span>
+                  ${item.required ? '<span style="font-size:11px;color:var(--danger);margin-left:4px;">[必选]</span>' : '<span style="font-size:11px;color:var(--warning);margin-left:4px;">[可选]</span>'}
+                  <div class="desc">${item.description}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `).join('')}
+        <div class="policy-tips">
+          <strong>实操提醒（来自 49 家企业申报经验）</strong>：${p.tips}
+        </div>
+        <div class="policy-source">
+          <span class="src-tag">政策原文</span>
+          <div class="src-docs">
+            <div class="src-doc"><a href="${p.source.url}" target="_blank" rel="noopener">${p.source.name}（政府官网）</a></div>
+            ${p.notice ? `<div class="src-doc"><a href="${p.notice.url}" target="_blank" rel="noopener">${p.notice.name}（政府官网）</a>${p.notice.timeline ? `<span class="src-note">｜${p.notice.timeline}</span>` : ''}</div>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderPolicyList() {
+  const searchTerm = ($('#policySearch')?.value || '').toLowerCase();
+  const levelFilter = ($('#filterLevel')?.value || '');
+  const industryFilter = ($('#filterIndustry')?.value || '');
+
+  const filtered = POLICIES.filter(p => {
+    const matchSearch = !searchTerm ||
+      p.name.toLowerCase().includes(searchTerm) ||
+      p.issuingBody.toLowerCase().includes(searchTerm);
+    const matchLevel = !levelFilter || p.level === levelFilter;
+    const matchIndustry = !industryFilter || p.applicableIndustries.includes(industryFilter);
+    return matchSearch && matchLevel && matchIndustry;
+  });
+
+  const container = $('#policyList');
+  container.innerHTML = COLUMNS.map(col => {
+    const cards = filtered.filter(p => p.column === col.id);
+    if (cards.length === 0) return ''; // 过滤后空专栏整块隐藏（含其链条视图）
+    return `
+      <div class="policy-column" data-column="${col.id}">
+        <div class="column-head">
+          <div class="column-title">${col.name}</div>
+          <div class="column-desc">${col.desc}</div>
+          <span class="column-count">${col.countLabel}</span>
+        </div>
+        ${col.id === 'zjt' ? '<div id="gradientChain"></div>' : ''}
+        ${cards.map(policyCardHtml).join('')}
+      </div>`;
+  }).join('') || '<div class="empty-tip">没有符合条件的政策——试试清空搜索或筛选条件</div>';
+
+  renderGradientChain(); // 容器在专精特新专栏内；专栏被过滤隐藏时函数内已判空
+}
+
+function togglePolicy(id) {
+  const card = document.getElementById(`card-${id}`);
+  card.classList.toggle('open');
+}
+
+// ============================================================
+// 专精特新梯度培育全链条（5 层视图：前三层逐级申报，末两层并列方向，政策库顶部）
+// 每层内容均以官方文件为准：粤工信规字〔2024〕5 号（1-2 层广东省细则）/ 工信部企业〔2026〕2 号（全国框架）/
+// 财建〔2024〕148 号（重点小巨人）/ 工信部政法〔2023〕138 号（单项冠军）
+// ============================================================
+const GRADIENT_CHAIN = [
+  { level: "第一层 · 评价入库", name: "创新型中小企业", org: "工信部定标准 · 广东省工信厅组织评价（深圳自行组织）", doc: "《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）+ 工信部企业〔2026〕2 号", std: "直通条件 4 项任一，或评价 ≥60 分（创新能力 ≥20 分、成长性及专业化均 ≥15 分）", window: "广东省每年 1 批（2025 年：各地 7.15 前报送推荐）", value: "入库是申报省级专精特新前提；资质有效期 3 年", policyId: "innovative" },
+  { level: "第二层 · 认定", name: "省级专精特新中小企业", org: "广东省工业和信息化厅认定", doc: "粤工信规字〔2024〕5 号细则 + 粤工信融资函〔2025〕4 号年度通知", std: "细分 ≥2 年、研发 ≥100 万且占比 ≥3%、营收 ≥1000 万（或融资 ≥2000 万）、评价 ≥70 分或直通", window: "每年 1 批（2025 年：广佛莞 10.15 前、其他地市 9.25 前报送推荐）", value: "省级荣誉 + 省专项资金项目支持；是小巨人前提；有效期 3 年", policyId: "prov" },
+  { level: "第三层 · 认定", name: "专精特新「小巨人」", org: "工信部认定（广东省组织推荐）", doc: "工信部企业〔2026〕2 号办法 + 工信厅企业函〔2026〕117 号年度通知", std: "营收 ≥5000 万、主营占比 ≥90%、研发两年合计 ≥1200 万、Ⅰ类知产 ≥4 项、评价 ≥60 分", window: "每年 1 批（2026 第八批 4.25-5.25 填报）", value: "国家级最高层级称号，是重点小巨人/单项冠军的前提", policyId: "xjr" },
+  { level: "方向一 · 中央财政专项", name: "重点「小巨人」", org: "财政部 + 工信部（地方按名额评审推荐）", doc: "财建〔2024〕148 号（2024-2026 三年、分三批次）", std: "有效期内小巨人 + 「三新一强」推进计划 + 投资 >2000 万（不含土地厂房）", window: "2026 年度预申报已启动（广州市 1.25 前）；正式申报预计年中", value: "中央奖补 600 万/家·三年（绩效挂钩）", policyId: "keygiant", branch: true },
+  { level: "方向二 · 最高荣誉", name: "制造业单项冠军", org: "工信部认定（小巨人优先推荐）", doc: "工信部政法〔2023〕138 号办法 + 工信厅政法函〔2024〕328 号遴选通知", std: "细分 ≥10 年（新产品 ≥5 年）、近 3 年平均主营 ≥4 亿（省级以上专精特新 2 亿）、市占率全球前 3", window: "原则上每年 1 次；国家级遴选 2025 起暂无新通知（以公告为准）", value: "细分领域天花板名片；省级有对应奖励", policyId: "champion", branch: true }
+];
+
+function renderGradientChain() {
+  const container = $('#gradientChain');
+  if (!container) return;
+  container.innerHTML = `
+    <div class="gradient-chain">
+      <div class="chain-title">专精特新梯度培育全链条（5 层：前三层逐级申报，末两层并列方向）</div>
+      ${GRADIENT_CHAIN.map((n, i) => `
+        <div class="chain-node">
+          <div class="chain-node-head">
+            <span class="chain-badge">${i + 1}</span>
+            <span class="chain-name">${n.name}</span>
+            <span class="chain-level">${n.level}</span>
+          </div>
+          <div class="chain-row"><span class="chain-k">谁评</span>${n.org}</div>
+          <div class="chain-row"><span class="chain-k">文件依据</span>${n.doc}</div>
+          <div class="chain-row"><span class="chain-k">解读指标</span>${n.std}</div>
+          <div class="chain-row"><span class="chain-k">申报窗口</span>${n.window}</div>
+          <div class="chain-row"><span class="chain-k">申报了有什么用</span>${n.value}</div>
+          ${n.policyId ? `<button class="btn btn-primary" style="margin-top:6px;padding:4px 12px;font-size:12px;" onclick="goPolicy('${n.policyId}')">查看该层政策详情</button>` : '<div class="chain-no-card">省级细则以属地为准</div>'}
+        </div>
+        ${i < GRADIENT_CHAIN.length - 1 ? `<div class="chain-arrow ${i >= 3 ? 'branch' : ''}">${i >= 3 ? '↳ 并列方向（与小巨人衔接，非前后递进）' : '↓ 逐级申报'}</div>` : ''}
+      `).join('')}
+    </div>`;
+}
+
+function goPolicy(id) {
+  const btn = [...$$('.tab-btn')].find(b => b.dataset.tab === 'browse');
+  if (btn) btn.click();
+  togglePolicy(id);
+  document.getElementById(`card-${id}`).scrollIntoView({ behavior: 'smooth' });
+}
+
+// 绑定搜索与筛选
+document.addEventListener('DOMContentLoaded', () => {
+  populateIndustryFilter();
+  populateMatchIndustry();
+  renderGradientChain();
+  renderPolicyList();
+  populateDiagSelect();
+  // 恢复上次会话状态（P0-1.4 持久化；须在 populate 之后，选项就绪才能赋值）
+  restoreMatchState();
+  restoreDiagState();
+  restorePlanState();
+});
+$('#policySearch')?.addEventListener('input', renderPolicyList);
+$('#filterLevel')?.addEventListener('change', renderPolicyList);
+$('#filterIndustry')?.addEventListener('change', renderPolicyList);
+
+// ============================================================
+// 标签2：智能匹配
+// ============================================================
+function getMatchProfile() {
+  return {
+    industry: $('#mIndustry').value,
+    type: $('#mType').value,
+    revenue: $('#mRevenue').value,
+    years: $('#mYears').value,
+    rd: $('#mRD').value,
+    ipr: $('#mIPR').value,
+    accident: $('#mAccident').value,
+    emission: $('#mEmission').value,
+    certs: Array.from($$('.mCert:checked')).map(cb => cb.value)
+  };
+}
+
+// 逐条件评估公共函数（智能匹配 runMatch 与培育规划 runPlan 共用，规则单源，避免两处判定分叉）
+// 返回：score（已核验内达成率）/ coverage（已核验覆盖）/ insufficient + 聚合数组 + items（逐条明细，供培育规划差距清单）
+function evaluatePolicyConditions(policy, profile) {
+  let totalWeight = 0;
+  let verifiedWeight = 0; // 已核验条件权重（可自动判断且表单已填）
+  let matchedWeight = 0;
+  const failedRequired = [];
+  const failedVeto = [];
+  const unverifiedRequired = [];
+  const unverifiedVeto = [];
+  const matchedItems = [];
+  const unmatchedOptional = []; // 未匹配/未核验的可选条件（渲染为差距提示）
+  const items = []; // 逐条明细
+
+  policy.conditions.forEach(cat => {
+    cat.items.forEach(item => {
+      totalWeight += item.weight;
+      let matched = false;
+      let verdict; // 判定结果：true/false，或 undefined（3 态字段选「不清楚」= 无法判断）
+
+      const canAutoCheck = !!item.autoMatch && profile[item.autoMatch] !== undefined && profile[item.autoMatch] !== '';
+      if (canAutoCheck) {
+        verifiedWeight += item.weight;
+        if (item.autoMatch === 'cert') {
+          verdict = item.rule(profile.certs);
+        } else if (item.autoMatch === 'industry') {
+          verdict = item.rule(profile.industry, policy);
+        } else {
+          verdict = item.rule(profile[item.autoMatch], profile);
+        }
+        matched = verdict === true;
+      }
+      // 无法自动判断的条件（无 autoMatch / 表单字段未填 / 3 态字段选「不清楚」）：视为「未核验」而非「未通过」，
+      // 渲染时单独黄色提示，驱动用户去自诊断标签逐条核实
+
+      if (matched) {
+        matchedWeight += item.weight;
+        matchedItems.push(item.name);
+      } else if (!canAutoCheck || verdict === undefined) {
+        if (item.veto) unverifiedVeto.push(item.name);
+        if (item.required) unverifiedRequired.push(item.name);
+        if (!item.required) unmatchedOptional.push(item.name);
+      } else {
+        if (item.veto) failedVeto.push(item.name);
+        if (item.required) failedRequired.push(item.name);
+        if (!item.required) unmatchedOptional.push(item.name);
+      }
+
+      items.push({ name: item.name, category: cat.category, required: item.required, veto: item.veto, matched, auto: canAutoCheck, unverified: !canAutoCheck || verdict === undefined });
+    });
+  });
+
+  // 匹配度 = 已核验条件内的达成率（未核验条件不进分母，避免分数被无法自动判断的条件稀释）
+  // 2026-08-01 修复：原口径 matchedWeight/totalWeight 使各政策理论最高分仅 12%-65%，「推荐申报」档永远不可达
+  const score = verifiedWeight > 0 ? Math.round((matchedWeight / verifiedWeight) * 100) : 0;
+  // 已核验权重占全部条件权重的比例，用于「信息不足」判定
+  const coverage = totalWeight > 0 ? verifiedWeight / totalWeight : 0;
+  // 已核验覆盖 < 15%（或一个条件都没核验到）→ 信息不足，不做推荐判断
+  const insufficient = verifiedWeight === 0 || coverage < 0.15;
+
+  return { totalWeight, verifiedWeight, matchedWeight, score, coverage, insufficient, failedRequired, failedVeto, unverifiedRequired, unverifiedVeto, matchedItems, unmatchedOptional, items };
+}
+
+function runMatch() {
+  const profile = getMatchProfile();
+
+  // 验证至少填写了关键字段
+  if (!profile.industry && !profile.type && !profile.years) {
+    $('#matchResults').innerHTML = '<div class="card" style="color:var(--danger);">请至少填写行业、企业类型和成立年限后再进行匹配。</div>';
+    return;
+  }
+
+  const results = POLICIES.map(policy => {
+    // 行业匹配检查（数据里没有用「全部」通配的政策，无需特殊处理）
+    const industryMatch = policy.applicableIndustries.includes(profile.industry);
+
+    // 逐条件评估（公共函数，见 evaluatePolicyConditions；规则单源与培育规划共用）
+    const ev = evaluatePolicyConditions(policy, profile);
+    const { matchedItems, failedRequired, failedVeto, unmatchedOptional, unverifiedRequired, unverifiedVeto } = ev;
+    const score = ev.score;
+    const coverage = ev.coverage;
+    const insufficient = ev.insufficient;
+    const hasFailRequired = failedRequired.length > 0;
+    const hasFailVeto = failedVeto.length > 0;
+    const hasUnverifiedRequired = ev.unverifiedRequired.length > 0;
+
+    // 一票否决条件确认未通过 → 直接归为不通过
+    // 其他必选条件确认未通过 → 降为低匹配
+    // 已核验信息不足 → 归为「信息不足」档，提示完善信息（不武断判定）
+    // 行业不匹配 → 统一降为「需补齐」档（高企的行业条件是必选条件，已在 failRequired 分支处理）
+    // 注：存在无法自动判断的必选条件（未核验）不再封顶降档，改为黄条提示引导去自诊断核实
+    //     （匹配页定位是快速筛选，严谨判定由自诊断承担；否则所有政策永远到不了推荐申报档）
+    let tier, adjustedScore;
+    if (hasFailVeto) {
+      tier = 'veto';
+      adjustedScore = Math.min(score, 30);
+    } else if (hasFailRequired) {
+      tier = 'low';
+      adjustedScore = Math.min(score, 45);
+    } else if (insufficient) {
+      tier = 'medium';
+      adjustedScore = score;
+    } else if (!industryMatch) {
+      tier = 'medium';
+      adjustedScore = Math.min(score, 69);
+    } else if (score >= 75) {
+      tier = 'high';
+      adjustedScore = score;
+    } else if (score >= 50) {
+      tier = 'medium';
+      adjustedScore = score;
+    } else {
+      tier = 'low';
+      adjustedScore = score;
+    }
+
+    return {
+      policy,
+      score: adjustedScore,
+      tier,
+      industryMatch,
+      insufficient,
+      coverage,
+      matchedItems,
+      failedRequired,
+      failedVeto,
+      unverifiedRequired,
+      unverifiedVeto,
+      unmatchedOptional
+    };
+  });
+
+  // 按匹配度排序
+  results.sort((a, b) => b.score - a.score);
+
+  const container = $('#matchResults');
+  container.innerHTML = '<h3 style="margin-bottom:14px;font-size:16px;">匹配结果（按匹配度从高到低）</h3>' +
+    results.map((r, i) => `
+      <div class="match-item ${r.tier}">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <div>
+            <span class="match-score ${r.tier}">${r.score}%</span>
+            <span style="font-weight:600;">${r.policy.name}</span>
+            <span style="font-size:12px;color:var(--text-secondary);margin-left:8px;">${r.policy.issuingBody}</span>
+          </div>
+          <span style="font-size:12px;padding:4px 10px;border-radius:12px;font-weight:500;
+            ${r.tier === 'high' ? 'background:var(--bg-success);color:var(--success);' : ''}
+            ${r.tier === 'medium' ? 'background:var(--bg-warning);color:var(--warning);' : ''}
+            ${r.tier === 'low' ? 'background:var(--bg-danger);color:var(--danger);' : ''}
+            ${r.tier === 'veto' ? 'background:var(--bg-danger);color:var(--danger);border:1px solid var(--danger);' : ''}
+          ">
+            ${r.tier === 'high' ? '推荐申报' : r.tier === 'medium' ? (r.insufficient ? '信息不足，暂无法评估' : '部分匹配，需补齐') : r.tier === 'veto' ? '存在一票否决条件不满足' : '暂不建议申报'}
+          </span>
+        </div>
+        <div class="match-detail" style="margin-top:10px;">
+          ${r.policy.alert ? `<div style="color:var(--danger);margin-bottom:6px;padding:8px 12px;background:var(--bg-danger);border-left:3px solid var(--danger);border-radius:4px;"><strong>⚠️ 政策重要变更</strong>：${r.policy.alert.text} <a href="${r.policy.alert.link}" target="_blank" rel="noopener" style="color:var(--danger);font-weight:600;">${r.policy.alert.linkLabel}</a></div>` : ''}
+          ${r.insufficient ? `<div style="color:var(--warning);margin-bottom:6px;padding:8px 12px;background:var(--bg-warning);border-radius:4px;">已核验条件不足（覆盖 ${Math.round(r.coverage * 100)}%），暂无法评估匹配度。建议填写更多企业信息，或到「自诊断」逐条核实。</div>` : ''}
+          ${!r.industryMatch ? '<div style="color:var(--danger);margin-bottom:4px;">注意：行业不完全匹配，仍可参考条件差距</div>' : ''}
+          ${r.failedVeto.length > 0 ? `<div style="color:var(--danger);font-weight:600;margin-bottom:6px;padding:8px 12px;background:var(--bg-danger);border-radius:4px;">一票否决条件未通过（独立否决项，任一不满足即不具备申报资格）：${r.failedVeto.join('、')}</div>` : ''}
+          ${r.unverifiedVeto.length > 0 ? `<div style="color:var(--warning);margin-bottom:6px;padding:8px 12px;background:var(--bg-warning);border-radius:4px;">一票否决条件无法自动判断，须人工核实（任一不满足即不具备申报资格）：${r.unverifiedVeto.join('、')}</div>` : ''}
+          ${r.matchedItems.length > 0 ? `<div style="margin-bottom:4px;">已匹配条件（${r.matchedItems.length} 项）：${r.matchedItems.join('、')}</div>` : ''}
+          ${r.failedRequired.length > 0 ? `<div style="color:var(--danger);margin-bottom:4px;">未通过的必选条件：${r.failedRequired.join('、')}</div>` : ''}
+          ${r.unverifiedRequired.length > 0 ? `<div style="color:var(--warning);margin-bottom:4px;">以下必选条件无法自动判断，建议在自诊断中逐条核实：${r.unverifiedRequired.join('、')}</div>` : ''}
+          ${r.unmatchedOptional.length > 0 ? `<div style="margin-bottom:4px;">未匹配的可选条件（${r.unmatchedOptional.length} 项）：${r.unmatchedOptional.join('、')}</div>` : ''}
+          <div style="font-size:12px;color:var(--text-secondary);">提示：自动匹配仅覆盖部分可量化条件，建议在"自诊断"标签中逐条手动核实以获得精确结果。</div>
+        </div>
+      </div>
+    `).join('') + `
+    <div class="no-print" style="margin-top:16px;padding:12px 14px;background:var(--bg-info);border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="window.print()">打印 / 导出 PDF</button>
+      <span style="font-size:12px;color:var(--text-secondary);">打印匹配结果。打印时请选择「另存为 PDF」即可导出。如需单政策深度诊断，请切换到「自诊断」标签。</span>
+    </div>`;
+
+  // 滚动到结果
+  container.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetMatch() {
+  $$('#tab-match select').forEach(s => s.value = '');
+  $$('.mCert:checked').forEach(cb => cb.checked = false);
+  $('#matchResults').innerHTML = '';
+  storageRemove(LS_MATCH); // 重置时同步清除已保存的匹配表单
+}
+
+// ============================================================
+// 标签3：自诊断
+// ============================================================
+function populateDiagSelect() {
+  const sel = $('#diagPolicySelect');
+  sel.innerHTML = '<option value="">-- 请选择一项政策 --</option>' +
+    POLICIES.map(p => `<option value="${p.id}">${p.name} — ${p.issuingBody}</option>`).join('');
+}
+
+function loadDiagnosis() {
+  const id = $('#diagPolicySelect').value;
+  $('#diagnosisReport').innerHTML = '';
+
+  if (!id) {
+    $('#diagnosisChecklist').innerHTML = '';
+    return;
+  }
+
+  const policy = POLICIES.find(p => p.id === id);
+  let itemIndex = 0;
+
+  $('#diagnosisChecklist').innerHTML = `
+    <div style="margin-top:12px;">
+      <div style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">
+        ${policy.issuingBody} · ${policy.level} · ${policy.deadline} · 数据更新：${policy.updated}
+      </div>
+      ${policy.alert ? `<div class="policy-alert ${policy.alert.level}"><strong>⚠️ 政策重要变更</strong>：${policy.alert.text} <a href="${policy.alert.link}" target="_blank" rel="noopener">${policy.alert.linkLabel}</a></div>` : ''}
+    </div>
+    <div class="diagnosis-checklist">
+      ${policy.conditions.map(cat => `
+        <div style="font-weight:600;font-size:14px;color:var(--primary);padding:10px 14px 4px;margin-top:6px;border-left:3px solid var(--primary-light);">${cat.category}</div>
+        ${cat.items.map(item => {
+          const idx = itemIndex++;
+          return `
+            <label class="checklist-item">
+              <input type="checkbox" class="diag-check" data-idx="${idx}" data-policy="${policy.id}">
+              <span class="cond-label">
+                ${item.name}
+                ${item.veto ? '<span class="cond-tag" style="background:var(--bg-danger);color:var(--danger);border:1px solid var(--danger);">一票否决</span>' : ''}
+                <span class="cond-tag ${item.required ? 'required-tag' : 'optional-tag'}">${item.required ? '必选' : '可选'}</span>
+                <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
+              </span>
+            </label>
+          `;
+        }).join('')}
+      `).join('')}
+    </div>
+    <button class="btn btn-primary" onclick="generateReport('${policy.id}')" style="margin-top:16px;">生成诊断报告</button>
+  `;
+
+  // 恢复该政策已保存的勾选状态（P0-1.4 持久化：页面刷新或切换政策回来时生效）
+  const savedDiag = getDiagState();
+  (savedDiag.checked[id] || []).forEach(idx => {
+    const cb = document.querySelector(`.diag-check[data-policy="${id}"][data-idx="${idx}"]`);
+    if (cb) cb.checked = true;
+  });
+}
+
+function generateReport(policyId) {
+  const policy = POLICIES.find(p => p.id === policyId);
+  const checks = $$(`.diag-check[data-policy="${policyId}"]`);
+  let totalRequired = 0, metRequired = 0;
+  let totalOptional = 0, metOptional = 0;
+  let totalWeight = 0, metWeight = 0;
+  const gaps = [];
+  // 展平条件列表，与 loadDiagnosis 渲染顺序一致，按 DOM 索引直接取用（替代原双重循环逐项查找）
+  const flatItems = [];
+  policy.conditions.forEach(cat => cat.items.forEach(item => flatItems.push({ ...item, category: cat.category })));
+
+  checks.forEach((cb, i) => {
+    const foundItem = flatItems[i];
+    if (!foundItem) return;
+
+    totalWeight += foundItem.weight;
+    if (cb.checked) {
+      metWeight += foundItem.weight;
+      if (foundItem.required) metRequired++;
+      else metOptional++;
+    } else {
+      gaps.push(foundItem);
+    }
+    if (foundItem.required) totalRequired++;
+    else totalOptional++;
+  });
+
+  const score = totalWeight > 0 ? Math.round((metWeight / totalWeight) * 100) : 0;
+  const reqScore = totalRequired > 0 ? Math.round((metRequired / totalRequired) * 100) : 100;
+
+  const vetoGaps = gaps.filter(g => g.veto);
+  const hasVetoGap = vetoGaps.length > 0;
+
+  let tier, tierColor, suggestion;
+  if (hasVetoGap) {
+    tier = '存在一票否决条件不满足';
+    tierColor = 'var(--danger)';
+    suggestion = '以下条件为独立否决项，任一不满足即不具备申报资格。其他条件无论完成度如何，当前均不建议申报。请优先攻克以下一票否决条件。';
+  } else if (reqScore < 100) {
+    tier = '暂不具备申报条件';
+    tierColor = 'var(--danger)';
+    suggestion = '存在必选条件未满足，建议优先补齐以下标注为"关键缺口"的条件后再申报。';
+  } else if (score >= 85) {
+    tier = '申报条件成熟';
+    tierColor = 'var(--success)';
+    suggestion = '条件基本具备，建议启动申报材料准备工作，重点关注申报时间节点和材料清单。';
+  } else if (score >= 65) {
+    tier = '基本具备，建议补齐加分项';
+    tierColor = 'var(--warning)';
+    suggestion = '必选条件已通过，但存在较多可选条件未满足。建议在申报前集中补齐以提升评审竞争力。';
+  } else {
+    tier = '条件差距较大';
+    tierColor = 'var(--danger)';
+    suggestion = '建议先制定分阶段补齐计划，不宜仓促申报。可优先攻克必选条件中的关键缺口。';
+  }
+
+  const criticalGaps = gaps.filter(g => g.required && !g.veto);
+  const optionalGaps = gaps.filter(g => !g.required);
+
+  const today = new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric' });
+
+  $('#diagnosisReport').innerHTML = `
+    <div class="diagnosis-report">
+      <!-- 打印专用头部 -->
+      <div class="print-only" style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #1e3a5f;">
+        <div style="font-size:18px;font-weight:700;color:#1e3a5f;">政策通 — 企业申报条件诊断报告</div>
+        <div style="font-size:12px;color:#666;margin-top:4px;">目标政策：${policy.name}（${policy.issuingBody}）</div>
+        <div style="font-size:12px;color:#666;">生成日期：${today}</div>
+      </div>
+
+      <div class="report-score" style="color:${tierColor};">${tier}</div>
+      <div style="text-align:center;margin-bottom:8px;">
+        综合匹配度 <strong style="font-size:28px;color:${tierColor};">${score}%</strong>
+        &nbsp;|&nbsp; 必选条件通过率 <strong>${metRequired}/${totalRequired}</strong>
+        &nbsp;|&nbsp; 可选条件完成率 <strong>${metOptional}/${totalOptional}</strong>
+      </div>
+      <div style="text-align:center;color:var(--text-secondary);font-size:14px;margin-bottom:16px;">${suggestion}</div>
+
+      ${policy.alert ? `<div class="policy-alert ${policy.alert.level}" style="margin-bottom:16px;"><strong>⚠️ 政策重要变更</strong>：${policy.alert.text} <a href="${policy.alert.link}" target="_blank" rel="noopener">${policy.alert.linkLabel}</a></div>` : ''}
+
+      ${vetoGaps.length > 0 ? `
+      <div class="report-section">
+        <h4 style="color:var(--danger);">一票否决条件未满足（独立否决项 · ${vetoGaps.length} 项）</h4>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">这些条件单项即可否决申报资格，须最优先解决</div>
+        <ul>
+          ${vetoGaps.map(g => `<li class="gap-critical">[${g.category}] ${g.name} — ${g.description}</li>`).join('')}
+        </ul>
+      </div>
+      ` : ''}
+
+      ${criticalGaps.length > 0 ? `
+      <div class="report-section">
+        <h4 style="color:var(--danger);">关键缺口（必选条件未满足 · ${criticalGaps.length} 项）</h4>
+        <ul>
+          ${criticalGaps.map(g => `<li class="gap-critical">[${g.category}] ${g.name} — ${g.description}</li>`).join('')}
+        </ul>
+      </div>
+      ` : ''}
+
+      ${optionalGaps.length > 0 ? `
+      <div class="report-section">
+        <h4 style="color:var(--warning);">建议补齐（可选条件 · ${optionalGaps.length} 项）</h4>
+        <ul>
+          ${optionalGaps.map(g => `<li class="gap-important">[${g.category}] ${g.name} — ${g.description}</li>`).join('')}
+        </ul>
+      </div>
+      ` : ''}
+
+      ${gaps.length === 0 ? `
+      <div class="report-section" style="text-align:center;color:var(--success);font-weight:600;font-size:15px;">
+        全部条件已满足，建议尽快启动申报流程。
+      </div>
+      ` : ''}
+
+      <div class="report-section" style="margin-top:20px;padding-top:14px;border-top:1px solid var(--border);">
+        <h4>后续建议</h4>
+        <ol style="padding-left:20px;font-size:14px;color:var(--text-secondary);line-height:2;">
+          <li>将诊断报告中的关键缺口转化为具体的补齐任务清单，设定责任人和完成时间</li>
+          <li>对于涉及第三方证明的条件（如无事故证明、排污检测报告），提前预留取得周期（通常 2-4 周）</li>
+          <li>对于涉及体系认证的条件（如 ISO14001），评估认证周期（通常 3-6 个月）是否赶得上申报截止时间</li>
+          <li>建议打印此报告作为内部申报筹备会的讨论底稿</li>
+        </ol>
+      </div>
+
+      <div class="report-section" style="margin-top:12px;font-size:13px;color:var(--text-secondary);">
+        <h4>政策依据</h4>
+        <div>申报依据文件：<a href="${policy.source.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${policy.source.name}</a>（点击查看政府官网原文）</div>
+      </div>
+
+      <!-- 打印专用尾部 -->
+      <div class="print-only" style="margin-top:16px;padding-top:10px;border-top:1px solid #ccc;font-size:11px;color:#999;text-align:center;">
+        报告由「政策通」自动生成 · ${today} · 条件数据最后更新：${DATA_VERSION}
+      </div>
+
+      <!-- 导出按钮（打印时隐藏） -->
+      <div class="no-print" style="margin-top:16px;padding:12px 14px;background:var(--bg-info);border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="window.print()">打印 / 导出 PDF 报告</button>
+        <span style="font-size:12px;color:var(--text-secondary);">含诊断结果、缺口清单、日期戳和否决条件标记。打印时请选择「另存为 PDF」即可导出。</span>
+      </div>
+    </div>
+  `;
+
+  $('#diagnosisReport').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ============================================================
+// 键盘快捷键
+// ============================================================
+document.addEventListener('keydown', e => {
+  if (e.key === '1' && !e.target.closest('input, select')) {
+    $$('.tab-btn')[0].click();
+  } else if (e.key === '2' && !e.target.closest('input, select')) {
+    $$('.tab-btn')[1].click();
+  } else if (e.key === '3' && !e.target.closest('input, select')) {
+    $$('.tab-btn')[2].click();
+  }
+});
+
+// ============================================================
+// 标签4：培育规划（P5，P6 扩为 5 层 + 末两层并列方向）
+// 输入企业现状 → 判断梯度层位 → 输出「下一步申报什么 + 差距清单 + 节奏」
+// 依据：粤工信规字〔2024〕5 号（广东省细则）/ 工信部企业〔2026〕2 号 / 工信厅企业函〔2026〕117 号 / 财建〔2024〕148 号 / 工信部政法〔2023〕138 号
+// 差距判定复用 evaluatePolicyConditions（与智能匹配同源规则），层级名与链条视图一致
+// ============================================================
+const PLAN_LAYERS = [
+  { id: 0, label: '尚未入库（链条外）', next: { badge: '第 1 层', name: '创新型中小企业评价入库（广东省）', policyId: 'innovative', window: '广东省每年 1 批（2025 年：各地 7 月 15 日前报送推荐；珠海等市企业 6 月初前完成自评）', step: '先自查直通条件——高企/国家级技术创新示范企业等有效期内荣誉、省级以上科技奖励、省部级研发机构、新增股权融资 ≥500 万，满足任一项直接入库；无直通则走评分路径（评价 ≥60 分：创新能力 ≥20 分、成长性及专业化均 ≥15 分），建议从现在起留存研发费用归集台账——评分路径中研发占比与Ⅰ类知识产权分值最大。申报全程线上（培育平台 zjtx.miit.gov.cn），无需纸质材料' } },
+  { id: 1, label: '创新型中小企业', next: { badge: '第 2 层', name: '专精特新中小企业认定（广东省）', policyId: 'prov', window: '广东省每年 1 批（2025 年：广佛莞 10 月 15 日前、其他地市 9 月 25 日前报送推荐）', step: '广东认定四条件须同时满足：从事细分市场 ≥2 年、上年度研发费用 ≥100 万且占营收 ≥3%、营收 ≥1000 万（或近 2 年新增股权融资 ≥2000 万）、评价得分 ≥70 分或直通条件之一（省级科技奖励/研发均值 ≥1000 万/股权融资 ≥6000 万/「创客中国」全国 500 强）。评价指标 100 分：专业化 25 + 精细化 25 + 特色化 15（广东自主）+ 创新 35。创新型入库资质有效期 3 年，注意在有效期内申报' } },
+  { id: 2, label: '省级专精特新中小企业', next: { badge: '第 3 层', name: '专精特新「小巨人」企业认定', policyId: 'xjr', window: '每年 1 批（2026 第八批 4.25-5.25 线上填报 → 6.30 材料寄送截止）', step: '小巨人每年 1 批，材料建议提前半年准备：营收与研发费用的审计数据口径（近两年研发合计 ≥1200 万且每年占比 ≥3%）、Ⅰ类知识产权 ≥4 项、专精特新发展评价自评 ≥60 分' } },
+  { id: 3, label: '专精特新「小巨人」', next: [
+    { badge: '第 4 层 · 方向一', name: '重点「小巨人」（中央财政专项）', policyId: 'keygiant', window: '2024-2026 三年分三批次；2026 年度预申报已启动（广州市 1 月 25 日前报送），正式申报预计年中', step: '推荐制专项：先参加地方预申报摸底，由地方工信部门按名额评审推荐（非公开申报）。核心要件：「三新一强」推进计划 + 投资总额 >2000 万元（设备购置/研发投入/产学研/人才引育，土地厂房不计入）。奖补 600 万/家·三年（期初 50% + 期末绩效 50%），投资未达 2000 万收回资金——计划务必可兑现' },
+    { badge: '第 5 层 · 方向二', name: '制造业单项冠军（最高荣誉方向）', policyId: 'champion', window: '原则上每年 1 次；国家级遴选 2025 起暂无新通知（以工信部公告为准）', step: '小巨人可优先推荐。硬门槛：从事细分领域 ≥10 年（新产品 ≥5 年）、近 3 年平均主营收入 ≥4 亿元（省级以上专精特新可降至 2 亿）、申请产品市占率全球前 3（需权威第三方佐证）、生产技术或工艺国际先进。市占率佐证要严谨，不要凭感觉填报' }
+  ] },
+  { id: 4, label: '重点「小巨人」', next: null, top: '你已进入中央财政支持专项：财建〔2024〕148 号支持周期三年、分两次下达（期初 50% + 期末绩效 50%），按申报书承诺推进「三新一强」计划并配合年度绩效评价；投资未达 2000 万元将被收回资金。另一并列方向：制造业单项冠军（近 3 年平均主营 ≥4 亿、市占率全球前 3），如符合可关注国家级遴选批次。' },
+  { id: 5, label: '制造业单项冠军', next: null, top: '你已到梯度链条顶层：单项冠军证书有效期 3 年，有效期内每年 5 月 31 日前在培育平台更新企业信息，关注复核评价安排。另一并列方向：重点「小巨人」专项（中央奖补 600 万/家·三年），如未申报可关注批次预申报。' }
+];
+
+const LS_PLAN = 'zct_v1_plan';
+const PLAN_FIELD_IDS = {
+  level: 'pLevel', revenue: 'pRevenue', years: 'pYears', rd: 'pRD',
+  ipr: 'pIPR', accident: 'pAccident', mainRatio: 'pMainRatio', direct: 'pDirect', globalShare: 'pGlobalShare'
+};
+
+function savePlanState() {
+  const st = {};
+  Object.keys(PLAN_FIELD_IDS).forEach(k => { st[k] = document.getElementById(PLAN_FIELD_IDS[k]).value; });
+  storageSet(LS_PLAN, JSON.stringify(st));
+}
+
+function restorePlanState() {
+  try {
+    const saved = JSON.parse(storageGet(LS_PLAN) || 'null');
+    if (!saved) return;
+    Object.keys(PLAN_FIELD_IDS).forEach(k => {
+      const el = document.getElementById(PLAN_FIELD_IDS[k]);
+      if (el && saved[k] !== undefined && saved[k] !== '') el.value = saved[k];
+    });
+  } catch (e) { /* 历史数据损坏时静默降级，不阻塞页面 */ }
+}
+
+function getPlanProfile() {
+  return {
+    revenue: $('#pRevenue').value,
+    years: $('#pYears').value,
+    rd: $('#pRD').value,
+    ipr: $('#pIPR').value,
+    accident: $('#pAccident').value,
+    mainRatio: $('#pMainRatio').value,
+    direct: $('#pDirect').value,
+    globalShare: $('#pGlobalShare').value
+  };
+}
+
+function planGapMark(it) {
+  if (it.unverified) return ['maybe', '❓', '需人工核实'];
+  if (it.matched) return ['ok', '✅', '已达标'];
+  return ['no', '❌', '未达标'];
+}
+
+function runPlan() {
+  const levelSel = $('#pLevel');
+  if (!levelSel || !levelSel.value) {
+    $('#planResult').innerHTML = '<div class="card" style="color:var(--danger);">请先选择「已获得资质（选最高一级）」后再生成培育规划。</div>';
+    return;
+  }
+  const cur = PLAN_LAYERS[Number(levelSel.value)];
+  const targets = Array.isArray(cur.next) ? cur.next : (cur.next ? [cur.next] : null);
+  const itemDesc = (target, name) => {
+    const item = target.conditions.flatMap(c => c.items).find(i => i.name === name);
+    return item ? item.description : '';
+  };
+
+  let html = `
+    <div class="plan-card">
+      <h4><span class="plan-tier-badge">第 ${cur.id} 层 · ${cur.label}</span>当前层位</h4>
+      <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">判断依据：已获得资质 = 「${levelSel.selectedOptions[0].text}」。资质有效期提醒：创新型入库/省级认定 3 年、小巨人/单项冠军证书 3 年，均须关注到期复核安排。</div>
+    </div>`;
+
+  if (!targets) {
+    html += `
+      <div class="plan-card">
+        <h4>已到梯度顶层 · ${cur.label}</h4>
+        <div class="plan-window">${cur.top}</div>
+      </div>`;
+  } else {
+    html += targets.map(next => {
+      const target = POLICIES.find(p => p.id === next.policyId);
+      let gapsHtml;
+      if (target) {
+        const ev = evaluatePolicyConditions(target, getPlanProfile());
+        const noCount = ev.items.filter(i => i.auto && !i.unverified && !i.matched).length;
+        const maybeCount = ev.items.filter(i => i.unverified).length;
+        gapsHtml = ev.items.map(it => {
+          const [cls, mark] = planGapMark(it);
+          return `<div class="plan-gap ${cls}"><span class="plan-mark">${mark}</span><div><span class="plan-gap-name">${it.name}</span>${it.required ? '<span style="font-size:11px;color:var(--danger);margin-left:4px;">[必选]</span>' : ''}<div class="plan-gap-desc">${itemDesc(target, it.name)}</div></div></div>`;
+        }).join('') + `<div style="margin-top:8px;font-size:12px;color:var(--text-secondary);">小结：❌ 未达标 ${noCount} 项、❓ 需人工核实 ${maybeCount} 项（未填或选「不清楚」的必选项，建议到「自诊断」逐条核实）。</div>`;
+      } else {
+        gapsHtml = `<div style="font-size:13px;color:#92400e;padding:8px 12px;background:#fef9c3;border-left:3px solid #eab308;border-radius:4px;line-height:1.7;">该层级暂未收录独立条件条目，请以官方通知为准。</div>`;
+      }
+      return `
+        <div class="plan-card">
+          <h4><span class="plan-tier-badge">${next.badge || '下一层'}</span>下一目标：${next.name}</h4>
+          <div class="plan-window"><strong>申报窗口</strong>：${next.window}</div>
+          <div style="margin-bottom:6px;font-size:13px;color:var(--text-secondary);">差距清单（✅ 已达标 / ❌ 未达标 / ❓ 需人工核实）：</div>
+          ${gapsHtml}
+          <div class="plan-pace"><strong>节奏建议</strong>：${next.step}</div>
+          ${target ? `<div style="margin-top:10px;font-size:12.5px;color:var(--text-secondary);">查看政策详情：<button class="btn" style="padding:3px 10px;font-size:12px;" onclick="goPolicy('${target.id}')">${target.name}</button> <a href="${target.source.url}" target="_blank" rel="noopener" style="margin-left:8px;">政策原文（政府官网）</a></div>` : ''}
+        </div>`;
+    }).join('');
+  }
+
+  $('#planResult').innerHTML = html;
+  $('#planResult').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetPlan() {
+  $$('#tab-plan select').forEach(s => s.value = '');
+  $('#planResult').innerHTML = '';
+  storageRemove(LS_PLAN); // 重置时同步清除已保存的规划表单
+}
+
+// ============================================================
+// 状态持久化（P0-1.4）：匹配表单 + 诊断勾选，关闭浏览器不丢失
+// 存储不可用时（隐私模式/测试环境）静默降级，不影响页面功能
+// ============================================================
+const LS_MATCH = 'zct_v1_matchForm';
+const LS_DIAG = 'zct_v1_diag';
+
+function storageGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+function storageSet(key, val) { try { localStorage.setItem(key, val); } catch (e) { /* 存储不可用时静默降级 */ } }
+function storageRemove(key) { try { localStorage.removeItem(key); } catch (e) { /* 同上 */ } }
+
+// 匹配表单：字段 key → 元素 id 映射（key 与 getMatchProfile 返回值对应）
+const MATCH_FIELD_IDS = {
+  industry: 'mIndustry', type: 'mType', revenue: 'mRevenue', years: 'mYears',
+  rd: 'mRD', ipr: 'mIPR', accident: 'mAccident', emission: 'mEmission'
+};
+
+function saveMatchState() {
+  storageSet(LS_MATCH, JSON.stringify(getMatchProfile()));
+}
+
+function restoreMatchState() {
+  try {
+    const saved = JSON.parse(storageGet(LS_MATCH) || 'null');
+    if (!saved) return;
+    Object.keys(MATCH_FIELD_IDS).forEach(key => {
+      const el = document.getElementById(MATCH_FIELD_IDS[key]);
+      if (el && saved[key] !== undefined && saved[key] !== '') el.value = saved[key];
+    });
+    (saved.certs || []).forEach(c => {
+      const cb = document.querySelector(`.mCert[value="${c}"]`);
+      if (cb) cb.checked = true;
+    });
+  } catch (e) { /* 历史数据损坏时静默降级，不阻塞页面 */ }
+}
+
+// 诊断状态：{ sel: 当前选中政策, checked: { 政策id: [勾选索引...] } }
+// 勾选索引与 loadDiagnosis 渲染的 data-idx 一致，按政策分别保存，切换政策不丢失
+function getDiagState() {
+  try { return JSON.parse(storageGet(LS_DIAG)) || { sel: '', checked: {} }; }
+  catch (e) { return { sel: '', checked: {} }; }
+}
+
+function saveDiagCheck(policyId) {
+  const st = getDiagState();
+  st.checked[policyId] = Array.from(document.querySelectorAll(`.diag-check[data-policy="${policyId}"]:checked`))
+    .map(cb => Number(cb.dataset.idx));
+  storageSet(LS_DIAG, JSON.stringify(st));
+}
+
+function saveDiagSel(id) {
+  const st = getDiagState();
+  st.sel = id;
+  storageSet(LS_DIAG, JSON.stringify(st));
+}
+
+function restoreDiagState() {
+  const st = getDiagState();
+  if (!st.sel) return;
+  const sel = document.getElementById('diagPolicySelect');
+  if (sel && Array.from(sel.options).some(o => o.value === st.sel)) {
+    sel.value = st.sel;
+    loadDiagnosis(); // 内部会恢复该政策已保存的勾选状态
+  }
+}
+
+// 统一委托监听（change 事件冒泡，覆盖动态渲染的诊断勾选）
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.id === 'diagPolicySelect') { saveDiagSel(t.value); return; }
+  if (t.matches('#tab-match select, #tab-match .mCert')) { saveMatchState(); return; }
+  if (t.matches('#tab-plan select')) { savePlanState(); return; }
+  if (t.classList.contains('diag-check')) saveDiagCheck(t.dataset.policy);
+});
+
+// ===== 风格切换（5 套设计：a 政务金蓝 / b 深空科技 / c 水墨 / d 杂志 / e 玻璃） =====
+(function () {
+  var LS_STYLE = 'zct_v1_style';
+  var STYLES = ['a', 'b', 'c', 'd', 'e'];
+  function applyStyle(s, save) {
+    if (STYLES.indexOf(s) === -1) s = 'a';
+    document.body.dataset.style = s;
+    var btns = document.querySelectorAll('.sw-btn');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].classList.toggle('active', btns[i].dataset.style === s);
+    }
+    if (save) { try { localStorage.setItem(LS_STYLE, s); } catch (e) {} }
+  }
+  function initStyle() {
+    var saved = null;
+    try { saved = localStorage.getItem(LS_STYLE); } catch (e) {}
+    var btns = document.querySelectorAll('.sw-btn');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener('click', function () { applyStyle(this.dataset.style, true); });
+    }
+    applyStyle((saved && STYLES.indexOf(saved) !== -1) ? saved : 'a', false);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initStyle);
+  } else {
+    initStyle();
+  }
+})();
+
+</script>
+
+
+<!-- ===== 风格切换器（5 套独立设计） ===== -->
+<div class="style-switcher" id="styleSwitcher" role="group" aria-label="风格切换">
+  <button class="sw-btn" data-style="a" title="A 政务金蓝">A</button>
+  <button class="sw-btn" data-style="b" title="B 深空科技">B</button>
+  <button class="sw-btn" data-style="c" title="C 新中式水墨">C</button>
+  <button class="sw-btn" data-style="d" title="D 杂志编辑">D</button>
+  <button class="sw-btn" data-style="e" title="E 玻璃轻灵">E</button>
+</div>
+
+</body>
+</html>
