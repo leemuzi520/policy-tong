@@ -538,6 +538,10 @@ body {
   font-weight: 600;
   color: #f5e7b8;
 }
+/* 步骤行：标签与说明同行不拆行（窄屏也保持一行） */
+.methodology-banner .step-row { display: flex; align-items: flex-start; gap: 8px; margin: 5px 0; text-align: left; }
+.methodology-banner .step-row .step { flex-shrink: 0; }
+.methodology-banner .step-text { flex: 1; min-width: 0; }
 .methodology-banner .core { display: block; margin-top: 6px; font-size: 12px; opacity: 0.8; }
 
 /* ---- 移动端 A ---- */
@@ -559,7 +563,8 @@ body {
   .match-item { padding: 12px 14px; }
   .report-score { font-size: 26px; }
   .diagnosis-report { padding: 14px; }
-  .methodology-banner { flex-direction: column; padding: 14px 16px; gap: 10px; text-align: center; }
+  .methodology-banner { flex-direction: column; padding: 14px 16px; gap: 10px; text-align: left; }
+  .methodology-banner .step-row { font-size: 13px; line-height: 1.7; gap: 6px; }
   .style-switcher { top: auto; bottom: 12px; right: 12px; }
 }
 @media (max-width: 480px) {
@@ -1096,7 +1101,7 @@ body {
   [data-style="b"] .match-item { padding: 12px 14px; }
   [data-style="b"] .report-score { font-size: 28px; }
   [data-style="b"] .diagnosis-report { padding: 14px; }
-  [data-style="b"] .methodology-banner { flex-direction: column; padding: 14px 16px; gap: 10px; text-align: center; }
+  [data-style="b"] .methodology-banner { flex-direction: column; padding: 14px 16px; gap: 10px; text-align: left; }
   .style-switcher { top: auto; bottom: 12px; right: 12px; }
 }
 
@@ -1604,7 +1609,7 @@ body {
   [data-style="c"] .match-item { padding: 12px 14px; }
   [data-style="c"] .report-score { font-size: 30px; }
   [data-style="c"] .diagnosis-report { padding: 16px; }
-  [data-style="c"] .methodology-banner { flex-direction: column; padding: 14px 16px; gap: 10px; text-align: center; }
+  [data-style="c"] .methodology-banner { flex-direction: column; padding: 14px 16px; gap: 10px; text-align: left; }
   .style-switcher { top: auto; bottom: 12px; right: 12px; }
 }
 @media (max-width: 480px) {
@@ -2124,7 +2129,7 @@ body {
   [data-style="d"] .match-item { padding: 14px 8px; }
   [data-style="d"] .report-score { font-size: 32px; }
   [data-style="d"] .diagnosis-report { padding: 16px; }
-  [data-style="d"] .methodology-banner { flex-direction: column; padding: 16px; gap: 10px; text-align: center; }
+  [data-style="d"] .methodology-banner { flex-direction: column; padding: 16px; gap: 10px; text-align: left; }
   .style-switcher { top: auto; bottom: 12px; right: 12px; }
 }
 @media (max-width: 480px) {
@@ -2692,7 +2697,7 @@ body {
   [data-style="e"] .match-item { padding: 13px 15px; }
   [data-style="e"] .report-score { font-size: 32px; }
   [data-style="e"] .diagnosis-report { padding: 16px; }
-  [data-style="e"] .methodology-banner { flex-direction: column; padding: 16px; gap: 10px; text-align: center; }
+  [data-style="e"] .methodology-banner { flex-direction: column; padding: 16px; gap: 10px; text-align: left; }
   .style-switcher { top: auto; bottom: 92px; right: 12px; }
 }
 @media (max-width: 480px) {
@@ -2746,10 +2751,10 @@ body {
   <div class="methodology-banner" id="methodologyBanner">
     <div class="icon">⊿</div>
     <div class="text">
-      <strong>三步完成申报决策</strong><br>
-      <span class="step">① 逛政策库</span>——看每条政策的奖补、硬性门槛与官方原文<br>
-      <span class="step">② 填企业信息</span>——智能匹配出值得申报的政策与差距<br>
-      <span class="step">③ 自诊断</span>——逐条核验条件，生成可打印的申报诊断报告<br>
+      <strong>三步完成申报决策</strong>
+      <div class="step-row"><span class="step">① 逛政策库</span><span class="step-text">看每条政策的奖补、硬性门槛与官方原文</span></div>
+      <div class="step-row"><span class="step">② 填企业信息</span><span class="step-text">智能匹配出值得申报的政策与差距</span></div>
+      <div class="step-row"><span class="step">③ 自诊断</span><span class="step-text">逐条核验条件，生成可打印的申报诊断报告</span></div>
       <span class="core">核心方法论：政策不是玄学，是可拆解的逻辑树——把模糊的政策文本变成可执行的申报路线图。</span>
     </div>
   </div>
