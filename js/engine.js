@@ -1,4 +1,4 @@
-// 匹配引擎 + 数据层（2a.1 步骤 D，2026-08-03）
+// 匹配引擎 + 数据层（2a.1 步骤 D，2026-08-02）
 // 纯逻辑与纯数据，不碰 DOM；UI 渲染/事件/持久化在 app.js，字段定义在 fields.js。
 // 加载顺序（index.html）：data/*.js → fields.js → engine.js → app.js
 // 依赖：window.ZCT_DATA（data 文件挂载的政策数据）
@@ -7,7 +7,7 @@
 // ============================================================
 const DATA_VERSION = '2026-08-02';
 
-// 政策库：由 data/ 目录按部门汇总（2a.1 数据分离，2026-08-03）
+// 政策库：由 data/ 目录按部门汇总（2a.1 数据分离，2026-08-02）
 // 汇总后按 order 字段恢复原数组顺序；新增政策按部门写入 data/ 对应文件，order 取当前最大值+1
 const POLICIES = [
   ...(window.ZCT_DATA.national.most || []),
@@ -22,7 +22,8 @@ if (!(window.ZCT_DATA?.national?.most?.length > 0 && window.ZCT_DATA?.national?.
 const COLUMNS = [
   { id: "zjt", name: "专精特新梯度培育", desc: "5 层梯度链条：创新型 → 省级专精特新 → 小巨人 → 重点小巨人/单项冠军（末两层并列方向；创新型与省级按广东省细则，粤工信规字〔2024〕5 号）", countLabel: "5 条政策 + 5 层链条" },
   { id: "gxjs", name: "高新技术企业", desc: "国家级税收优惠资质体系：企业所得税减按 15% 征收", countLabel: "1 条政策" },
-  { id: "green", name: "绿色制造与循环利用", desc: "绿色制造体系评价 + 资源循环利用白名单", countLabel: "3 条政策" }
+  { id: "green", name: "绿色制造与循环利用", desc: "绿色制造体系评价 + 资源循环利用白名单", countLabel: "3 条政策" },
+  { id: "zjzj", name: "专项资金与项目支持", desc: "省级财政专项资金：企业技术改造、绿色循环发展等事后奖励/贴息/补贴", countLabel: "1 条政策" }
 ];
 
 // ============================================================
