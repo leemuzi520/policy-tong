@@ -3216,6 +3216,11 @@ body {
       </div>
     </div>
     <div id="planResult"></div>
+    <!-- 导出按钮（打印时隐藏） -->
+    <div class="no-print" style="margin-top:16px;padding:12px 14px;background:var(--bg-info);border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="window.print()">打印 / 导出 PDF 报告</button>
+      <span style="font-size:12px;color:var(--text-secondary);">含培育规划结果、差距清单和节奏建议。打印时请选择「另存为 PDF」即可导出。</span>
+    </div>
   </section>
 
 </main>
