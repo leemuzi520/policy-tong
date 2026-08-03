@@ -21,7 +21,7 @@ if (!(window.ZCT_DATA?.national?.most?.length > 0 && window.ZCT_DATA?.national?.
   console.error('[政策通] 数据文件未完整加载，POLICIES 可能为空。请检查 data/ 目录文件。');
 }
 const COLUMNS = [
-  { id: "zjt", name: "专精特新梯度培育", desc: "5 层梯度链条：创新型 → 省级专精特新 → 小巨人 → 重点小巨人/单项冠军（末两层并列方向；创新型与省级按广东省细则，粤工信规字〔2024〕5 号）", countLabel: "5 条政策 + 5 层链条" },
+  { id: "zjt", name: "专精特新梯度培育", desc: "5 层梯度链条：创新型 → 省级专精特新 → 小巨人 → 重点小巨人/单项冠军（末两层并列方向；创新型与省级按广东省细则，粤工信规字〔2024〕5 号）", countLabel: "6 条政策 + 5 层链条" },
   { id: "gxjs", name: "高新技术企业", desc: "国家级税收优惠资质体系：企业所得税减按 15% 征收", countLabel: "1 条政策" },
   { id: "green", name: "绿色制造与循环利用", desc: "绿色制造体系评价 + 资源循环利用白名单", countLabel: "3 条政策" },
   { id: "zjzj", name: "专项资金与项目支持", desc: "财政专项资金：省级技改/绿色循环/先进制造奖补 + 国家级超长期国债设备更新 + 中央预算内节能降碳投资补助", countLabel: "5 条政策" }
