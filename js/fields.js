@@ -1,4 +1,4 @@
-// 字段注册表（2a.1 步骤 C，2026-08-03）
+// 字段注册表（2a.1 步骤 C，2026-08-02）
 // 单源原则：字段定义只此一份，匹配表单渲染 / 规划表单渲染 / getMatchProfile / getPlanProfile /
 // MATCH_FIELD_IDS / PLAN_FIELD_IDS / 持久化键 全部由此派生。
 // 新增字段：只改此数组（以及政策数据里的 autoMatch 引用），其余位置不再手工维护。

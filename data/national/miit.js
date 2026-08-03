@@ -402,5 +402,69 @@ window.ZCT_DATA.national.miit.push(
       "实地核查 5 种情形（职工 ≤5 人 / 知产 0 / 年研发费用 <10 万 / 近三年严重违法失信或撤销编号 / 首次参评）；每批次按 ≥5% 比例集中随机抽查",
       "工信部企业〔2026〕2 号《优质中小企业梯度培育管理办法》第三十条：科技型与创新型合并新标准发布前，评价沿用 115 号办法 + 63 号文创新型评价细则"
     ]
+  },
+  {
+    id: "gjsf",
+    order: 17,
+    column: "gjpt",
+    name: "国家技术创新示范企业",
+    issuingBody: "工业和信息化部（会同财政部）",
+    level: "国家级",
+    deadline: "原则上每年 1 次（540 号文第三章）；最近批次为 2023 年度（2023-10-30 报送截止）；2024 年度起国家层面暂无新认定通知（截至 2026-08-03，以工信部最新公告为准）",
+    updated: "2026-08-03",
+    source: { name: "《技术创新示范企业认定管理办法（试行）》（工信部联科〔2010〕540 号，工信部/财政部 2010-09-13 印发）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" },
+    notice: { name: "《工业和信息化部办公厅关于组织开展2023年国家技术创新示范企业认定及国家技术创新示范企业复核评价工作的通知》（工信厅科函〔2023〕260 号，2023-10-09 发布）", url: "https://www.miit.gov.cn/jgsj/kjs/jscx/art/2023/art_e177228281514552bffa2caf3046b3cd.html", timeline: "2023 年度（最近批次）：2023-09-21 成文 → 10-09 发布 → 10-30 材料报送截止（广东：各地市 10-20 前报省工信厅制造业创新处，广州 ≤3 家、其他地市 ≤2 家）→ 2024-01-17 公布名单：68 家新认定、248 家复核通过、5 家撤销称号（工信部科函〔2024〕7 号）。2024 年度起国家层面暂未组织新认定（截至 2026-08-03 未检索到 2024/2025/2026 年度通知与名单），申报安排以工信部最新公告为准" },
+    basis: [
+      { name: "《工业和信息化部关于公布2023年国家技术创新示范企业名单和国家技术创新示范企业复核评价结果的通知》（工信部科函〔2024〕7 号，2024-01-17）", url: "https://www.miit.gov.cn/threestrategy/zcgh/zcfg/art/2024/art_38e449006d9f4bd8b49e50c327a94832.html" },
+      { name: "《广东省工业和信息化厅关于组织开展2023年国家技术创新示范企业认定及复核评价工作的通知》（2023-09-28）", url: "http://www.yangjiang.gov.cn/zfxxgkml/yjsgyhxxhj/gzdt/gzbg/content/post_743085.html" }
+    ],
+    summary: "工信部（会同财政部）认定的国家级企业创新荣誉（540 号文）：工业主要产业中技术创新能力较强、创新业绩显著、具有重要示范和导向作用的企业，原则上每年组织一次认定。认定链条与创新平台相关：申报前提之一是「已认定为省级以上企业技术中心」（第六条（三）），与省级企业技术中心、国家企业技术中心（[[国家企业技术中心]]）一脉相承。申报条件（第六条，须同时满足）：独立法人且财务管理制度健全、会计/纳税/银行信用良好；在国内建有科研、生产基地且中方拥有控制权；已认定为省级以上企业技术中心；技术创新成果通过实施技术改造取得较显著成效；生产经营规模——从业人员 ≥300 人、年销售收入 ≥3000 万元、资产总额 ≥4000 万元。认定标准（第七条六项，须同时满足）：①核心竞争能力和领先地位——掌握核心技术并具有自主知识产权、技术水平居行业领先、积极主导或参与国际/国家/行业标准制定；②持续创新能力和研发投入——研发投入占年销售收入比例 ≥3%，有健全研发机构或与大学/科研机构长期稳定合作；③行业带动作用和自主品牌；④盈利能力和管理水平——近 3 年连续盈利、财务状况良好、建有较完善的知识产权管理体系和质量保证体系；⑤应用新技术能力——积极实施技术改造、具有重大科技成果转化能力、节能减排降耗有较强示范作用；⑥创新发展战略和创新文化。程序（第三章）：企业向省级工信部门申报 → 省级联合同级财政部门审查推荐（推荐名额：省 ≤3 家、已开展省级认定的 ≤4 家，计划单列市/新疆生产建设兵团/央企各 1 家，260 号文）→ 工信部委托中介机构或组织专家初评 → 会同财政部综合审查或实地考察 → 公示 15 个工作日 → 集中认定授牌。动态管理（第四章）：每三年复核评价一次（2023 年复核：248 家通过、5 家撤销称号，工信部科函〔2024〕7 号），不合格撤销称号并摘牌；企业每年 4 月 30 日前上报上年度技术创新发展情况；弄虚作假除撤销称号外，暂停所在省（区、市、计划单列市）下一年度申报。⚠️ 时效：最近批次为 2023 年度，2024 年度起国家层面暂未组织新认定（截至 2026-08-03），以工信部最新公告为准。",
+    subsidy: "无中央统一资金奖补。政策价值：国家级创新平台资质与荣誉背书（行业示范效应、招投标与融资加分）；部分省市对获评企业给予一次性奖励（如贵州：国家级 100 万元、省级 50 万元，黔经信〔2014〕52 号），以属地现行政策为准",
+    applicableIndustries: ["制造业（通用）","电子信息","生物与新医药","航空航天","新材料","新能源与节能","资源与环境","先进制造与自动化","汽车","化工","建材","电力","钢铁","有色","石化","机械","消费品","高技术服务"],
+    conditions: [
+      {
+        category: "申报基本条件（540 号文第六条，须同时满足）",
+        items: [
+          { name: "在中国境内注册、独立法人资格，财务管理制度健全", required: true, weight: 3, autoMatch: "type", rule: () => true, description: "第六条（一）：具有独立法人资格，财务管理制度健全；表单四种企业类型均为依法设立独立法人，此条件自动通过；会计信用、纳税信用和银行信用良好需人工核实（国家企业信用信息公示系统、信用中国）", basis: { name: "540 号文第六条（一）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
+          { name: "在国内建有科研、生产基地且中方拥有控制权", required: true, weight: 3, description: "第六条（二）；外资参股但中方控股/中方实际控制的企业通常符合，需按股权结构人工核实", basis: { name: "540 号文第六条（二）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
+          { name: "已认定为省级以上企业技术中心", required: true, weight: 3, description: "第六条（三）；含省级企业技术中心和国家企业技术中心（后者见政策库「国家企业技术中心」）；企业技术中心认定与有效情况需人工核实", basis: { name: "540 号文第六条（三）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
+          { name: "技术创新成果通过实施技术改造取得较显著成效", required: true, weight: 2, description: "第六条（四）；需提供技术改造项目与创新成果佐证材料", basis: { name: "540 号文第六条（四）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
+          { name: "生产经营规模：从业人员 ≥300 人、年销售收入 ≥3000 万元、资产总额 ≥4000 万元", required: true, weight: 3, autoMatch: "revenue", rule: v => v === ">4亿" || v === "1亿-4亿" || v === "5000万-1亿" ? true : v === "2000万-5000万" ? undefined : false, description: "第六条（五）：表单营收档「2000万-5000万」跨 3000 万元分界无法精确判断，需人工核年销售收入与从业人员数、资产总额（表单无后两字段）；<500 万/500 万-2000 万明确不满足", basis: { name: "540 号文第六条（五）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } }
+        ]
+      },
+      {
+        category: "认定基本标准（540 号文第七条，须同时满足）",
+        items: [
+          { name: "掌握核心技术并具有自主知识产权，技术水平居行业领先", required: true, weight: 3, autoMatch: "ipr", rule: v => v === "6-15" || v === ">15" ? true : v === "1-5" ? undefined : false, description: "第七条（一）：核心技术领先无法仅凭知产数量判定，1-5 件时需人工核实是否掌握行业领先核心技术；0 件明确不满足", basis: { name: "540 号文第七条（一）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
+          { name: "积极主导或参与国际、国家或行业技术标准制定", required: true, weight: 2, description: "第七条（一）；需提供标准制定佐证（标准文本、参与证明等）", basis: { name: "540 号文第七条（一）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
+          { name: "研发投入占年销售收入比例 ≥3%", required: true, weight: 3, autoMatch: "rd", rule: v => v === "3%-5%" || v === "5%-8%" || v === ">8%", description: "第七条（二）：研发投入占年销售收入比例 3% 以上；以审计报告研发费用口径核实", basis: { name: "540 号文第七条（二）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
+          { name: "建有健全研发机构或与大学/科研机构长期稳定合作", required: true, weight: 2, description: "第七条（二）；需提供研发机构设立文件或产学研合作协议", basis: { name: "540 号文第七条（二）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
+          { name: "在行业发展中具有较强带动性，形成有知名度的自主品牌", required: true, weight: 2, description: "第七条（三）；需提供品牌知名度佐证（商标注册、行业排名等）", basis: { name: "540 号文第七条（三）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
+          { name: "近 3 年连续盈利、财务状况良好", required: true, weight: 2, description: "第七条（四）；以近三年审计报告核实", basis: { name: "540 号文第七条（四）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
+          { name: "建有较完善的知识产权管理体系和质量保证体系", required: true, weight: 2, autoMatch: "cert", rule: v => v.includes("ISO9001"), description: "第七条（四）：ISO9001 认证可佐证质量保证体系部分，知识产权管理体系需人工核实（如贯标/知识产权管理体系认证）", basis: { name: "540 号文第七条（四）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
+          { name: "积极实施技术改造，具有重大科技成果转化能力，节能减排降耗有较强示范作用", required: true, weight: 2, description: "第七条（五）；需提供技改项目、成果转化与节能降耗佐证", basis: { name: "540 号文第七条（五）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
+          { name: "把技术创新和自主品牌创新作为经营发展战略的重要内容", required: true, weight: 1, description: "第七条（六）；需提供企业发展战略与创新规划文件", basis: { name: "540 号文第七条（六）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } }
+        ]
+      },
+      {
+        category: "认定程序与动态管理（540 号文第三章/第四章 + 260 号文）",
+        items: [
+          { name: "按属地推荐名额申报（省级工信部门联合同级财政审查推荐）", required: true, weight: 1, description: "第三章 + 260 号文：推荐名额——各省 ≤3 家、已开展省级认定的 ≤4 家，计划单列市/新疆生产建设兵团/中央企业各 1 家；广东转发（2023-09-28）：广州 ≤3 家、其他地市 ≤2 家，各地市 10 月 20 日前报省工信厅（制造业创新处），省属企业在注册地申报", basis: { name: "260 号文推荐要求", url: "https://www.miit.gov.cn/jgsj/kjs/jscx/art/2023/art_e177228281514552bffa2caf3046b3cd.html" } },
+          { name: "申报材料齐全（申报书、基本情况表、技术创新评价指标、上年度审计报告等）", required: true, weight: 1, description: "第三章 + 260 号文：纸质版一式两份、电子版光盘一份（广东纸质一式三份）；材料含《技术创新示范企业申报书》《企业基本情况表》《企业技术创新评价指标》（创新机制 30 分 + 技术与人才 30 分 + 产出与效益 40 分）及经会计师事务所审计的上年度会计报表", basis: { name: "260 号文材料要求", url: "https://www.miit.gov.cn/jgsj/kjs/jscx/art/2023/art_e177228281514552bffa2caf3046b3cd.html" } },
+          { name: "每三年接受复核评价，合格确认、不合格撤销称号", required: true, weight: 1, description: "第四章动态管理：每三年评价一次，合格者予以确认，不合格者撤销称号并摘牌；2023 年复核评价：248 家通过、5 家撤销称号（工信部科函〔2024〕7 号）", basis: { name: "540 号文第四章 · 工信部科函〔2024〕7 号", url: "https://www.miit.gov.cn/threestrategy/zcgh/zcfg/art/2024/art_38e449006d9f4bd8b49e50c327a94832.html" } },
+          { name: "每年 4 月 30 日前上报上年度技术创新发展情况", required: true, weight: 1, description: "第四章动态管理：示范企业须于每年 4 月 30 日前上报上年度技术创新发展情况；弄虚作假的，除撤销批复文件和称号外，暂停其所在省（区、市、计划单列市）下一年度的申报工作", basis: { name: "540 号文第四章", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } }
+        ]
+      }
+    ],
+    changesTitle: "时效性说明",
+    changesNote: "依据工信部联科〔2010〕540 号 + 工信厅科函〔2023〕260 号 + 工信部科函〔2024〕7 号",
+    changes: [
+      "最近批次为 2023 年度（2023-10-30 报送截止，2024-01-17 公布 68 家新认定名单）；2024 年度起国家层面暂未组织新认定（截至 2026-08-03 未检索到 2024/2025/2026 年度通知与名单），申报安排以工信部最新公告为准",
+      "认定机制（540 号文第三章）：每年组织 1 次；申报前提之一是「已认定为省级以上企业技术中心」（第六条（三））——与省级企业技术中心、国家企业技术中心形成创新平台认定链条",
+      "推荐名额（260 号文）：各省 ≤3 家（已开展省级认定的 ≤4 家），计划单列市、新疆生产建设兵团、中央企业各 1 家；广东各地市：广州 ≤3 家、其他地市 ≤2 家",
+      "动态管理（第四章）：每三年复核评价一次——2023 年复核 248 家通过、5 家撤销称号（工信部科函〔2024〕7 号）；企业每年 4 月 30 日前上报上年度技术创新发展情况",
+      "弄虚作假：撤销批复文件和称号，并暂停其所在省（区、市、计划单列市）下一年度的申报工作（540 号文第四章）"
+    ],
+    tips: "这是「认荣誉不奖钱」的国家级创新平台资质：无中央统一资金奖补，价值在国家级荣誉背书与创新平台链条——申报前提之一是已认定为省级以上企业技术中心（第六条（三）），与国家企业技术中心（研发经费 ≥3000 万门槛）同链条，中小企业通常从省级企业技术中心起步。申报硬门槛（第六条）：营收 ≥3000 万、从业 ≥300 人、资产 ≥4000 万 + 省级以上企业技术中心 + 研发占比 ≥3%；第七条六项认定标准须同时满足，材料要求实证（核心技术、标准制定、品牌、连续盈利、技改与节能降耗佐证）。名额制是核心竞争点：每省 ≤3 家（广东：广州 ≤3、其他地市 ≤2），属地工信部门先遴选，不是报了就评——建议先与属地工信部门沟通本年度是否有申报安排。⚠️ 时效：最近批次为 2023 年度（2023-10-30 截止），2024 年度起国家层面暂未组织新认定（截至 2026-08-03），申报安排以工信部最新公告为准，谨防不良中介借「2026 年度申报」名义收费。获评后非一劳永逸：每三年复核评价一次（2023 年 5 家被撤销称号），每年 4 月 30 日前上报上年度技术创新发展情况。"
   }
 );
