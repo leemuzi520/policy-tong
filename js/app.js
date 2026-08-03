@@ -1,5 +1,5 @@
 // ============================================================
-// UI 交互层（2a.1 步骤 D，2026-08-03）：渲染 / 事件 / 持久化
+// UI 交互层（2a.1 步骤 D，2026-08-02）：渲染 / 事件 / 持久化
 // 依赖：fields.js（字段注册表）、engine.js（POLICIES/COLUMNS/PLAN_LAYERS/evaluatePolicyConditions）
 // ============================================================
 
@@ -181,7 +181,7 @@ function goPolicy(id) {
   if (card) card.scrollIntoView({ behavior: 'smooth' });
 }
 
-// 从匹配结果跳转到自诊断并预选政策（2026-08-03 P1-2，黄条直达按钮）
+// 从匹配结果跳转到自诊断并预选政策（2026-08-02 P1-2，黄条直达按钮）
 function goDiag(id) {
   const btn = [...$$('.tab-btn')].find(b => b.dataset.tab === 'diagnose');
   if (btn) btn.click();
@@ -203,6 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
   restoreMatchState();
   restoreDiagState();
   restorePlanState();
+  // 字段联动：加载后补一次，规划表单空字段自动带入匹配表单已填值（跨刷新也生效）
+  syncMatchToPlan();
 });
 $('#policySearch')?.addEventListener('input', renderPolicyList);
 $('#filterLevel')?.addEventListener('change', renderPolicyList);
@@ -223,7 +225,7 @@ function getMatchProfile() {
 // 逐条件评估公共函数（智能匹配 runMatch 与培育规划 runPlan 共用，规则单源，避免两处判定分叉）
 // 返回：score（已核验内达成率）/ coverage（已核验覆盖）/ insufficient + 聚合数组 + items（逐条明细，供培育规划差距清单）
 
-// 申报窗口紧迫度（2026-08-03 P1-1）：数据驱动，无 batches 字段的政策不渲染
+// 申报窗口紧迫度（2026-08-02 P1-1）：数据驱动，无 batches 字段的政策不渲染
 // 取最近一个未截止批次：≤7 天红色、≤30 天橙色、更远绿色；批次全截止则不显示（避免过期误导）
 function windowUrgencyHTML(policy) {
   if (!policy.batches || !policy.batches.length) return '';
@@ -854,6 +856,19 @@ function resetPlan() {
 }
 
 // ============================================================
+// 字段联动（遗留事项 7，2026-08-03）：匹配表单已填同 key 字段 → 规划表单自动带入
+// 只填规划表单空字段，不覆盖用户已填值（无覆盖误伤）；不同 key 字段天然隔离
+// （同 key 由字段注册表 match+plan 双标志派生，见 fields.js，不手工维护映射）
+// ============================================================
+function syncMatchToPlan() {
+  FIELDS.filter(f => f.match && f.plan).forEach(f => {
+    const mEl = document.getElementById(f.id);
+    const pEl = document.getElementById('p' + f.id.slice(1));
+    if (mEl && pEl && mEl.value !== '' && pEl.value === '') pEl.value = mEl.value;
+  });
+}
+
+// ============================================================
 // 状态持久化（P0-1.4）：匹配表单 + 诊断勾选，关闭浏览器不丢失
 // 存储不可用时（隐私模式/测试环境）静默降级，不影响页面功能
 // ============================================================
@@ -919,7 +934,7 @@ function restoreDiagState() {
 document.addEventListener('change', e => {
   const t = e.target;
   if (t.id === 'diagPolicySelect') { saveDiagSel(t.value); return; }
-  if (t.matches('#tab-match select, #tab-match .mCert')) { saveMatchState(); return; }
+  if (t.matches('#tab-match select, #tab-match .mCert')) { saveMatchState(); syncMatchToPlan(); return; }
   if (t.matches('#tab-plan select')) { savePlanState(); return; }
   if (t.classList.contains('diag-check')) saveDiagCheck(t.dataset.policy);
 });
