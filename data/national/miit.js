@@ -1,5 +1,5 @@
 // 政策数据：工信部门国家级（由 index.html 汇总为 POLICIES）
-// 来源：index.html 2a.1 数据分离（2026-08-03，纯搬家，内容未改）
+// 来源：index.html 2a.1 数据分离（2026-08-02，纯搬家，内容未改）
 window.ZCT_DATA = window.ZCT_DATA || {};
 window.ZCT_DATA.national = window.ZCT_DATA.national || {};
 window.ZCT_DATA.national.miit = window.ZCT_DATA.national.miit || [];
@@ -110,7 +110,7 @@ window.ZCT_DATA.national.miit.push(
     issuingBody: "工信部",
     level: "国家级",
     deadline: "每年 3-6 月地方申报（各省组织）· 省级 7 月 31 日前推荐至工信部（13 号文第十二条）· 9-11 月国家评审公示",
-    updated: "2026-08-03",
+    updated: "2026-08-02",
     source: { name: "《绿色工厂梯度培育及管理暂行办法》（工信部节〔2024〕13 号）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_aab179dea60b4b77a05070e796c4c994.html" },
     notice: { name: "《关于公布绿色工厂、绿色工业园区（2025年度）名单的通知》（工信厅节函〔2026〕97 号）", url: "https://www.miit.gov.cn/jgsj/jns/gzdt/art/2026/art_ff0367abfedd4a4d86d56599878d2ff3.html", timeline: "2026-03-18 公布：新培育绿色工厂 2038 家、绿色工业园区 128 家；动态管理调整：132 家绿色工厂移出名单、92 家变更名称。年度节奏（13 号文）：各省 3-6 月组织申报 → 省级 7 月 31 日前推荐 → 国家评审、公示 15 日 → 年底公布名单" },
     summary: "国家级绿色制造体系的核心荣誉，梯度培育「国家/省/市三级」逐级推荐（13 号文）。无直接资金补贴，但入选后享受环保分级管控豁免、错峰生产豁免、政府优先采购、绿色信贷与绿色债券等融资支持（2025-11-20 两部门绿色金融通知）等政策红利，部分省市另有 20-50 万一次性奖励（如福州 20 万、宿州 30 万、广州黄埔/山东平度 50 万，省市区可叠加，以当地政策为准）。2026 年度起按新版《绿色工厂评价通则》GB/T 36132-2025 评价：新五化指标体系（能源低碳化、资源高效化、生产洁净化、产品绿色化、用地集约化），定量指标权重占比高达 60%，以「基准值/引领值」量化评分。硬门槛：依法取得排污许可证、近三年无较大及以上事故、四体系管理认证（质量/环境/能源/职业健康安全，通则第 6 章）。动态管理有进有出：获评后每年 4 月 15 日前填报动态管理表（13 号文第十六条）。适合能耗管理水平较好的制造业企业。",
@@ -175,7 +175,7 @@ window.ZCT_DATA.national.miit.push(
     issuingBody: "工信部",
     level: "国家级",
     deadline: "自愿申请制、无固定批次：企业编制《综合利用行业规范公告申请书》经工业节能与绿色发展管理平台提交，省级工信部门核实后报工信部，工信部组织专家复审、公示无异议后公告（42 号公告监督管理条款）。2026-07-30 起仅再生利用企业可申请（20 号公告废止梯次利用条款）",
-    updated: "2026-08-03",
+    updated: "2026-08-02",
     alert: {
       level: "danger",
       text: "2026-07-30 工信部第 20 号公告：废止《综合利用行业规范条件（2024 年本）》「梯次利用」条款，不再开展「梯次利用」企业公告管理，100 家梯次利用企业已移出名单；仅再生利用企业可申请公告，废旧动力电池不得用于电动自行车等禁止领域（73 号令第二十二条）。",
@@ -314,5 +314,93 @@ window.ZCT_DATA.national.miit.push(
       }
     ],
     tips: "这是推荐制专项，不是公开申报：先参加地方预申报摸底，再由地方按名额评审推荐（2026 第三批流程：企业填报 → 市级初审 → 省级评审，省级环节含材料初审、专家评审答辩、实地核查）。奖补绩效挂钩：推进计划投资未达 2000 万元会被收回资金，投资计划务必可兑现——不要为拿奖补虚报投资。申报全程免费，不得委托第三方中介机构代理申报。2024-2026 三年三批次申报已全部结束，入选企业正在三年实施期；下一轮支持以工信部最新通知为准，谨防不良中介借新批次名义行骗。"
+  },
+  {
+    id: "kjxqy",
+    order: 15,
+    column: "zjt",
+    name: "科技型中小企业评价入库",
+    issuingBody: "工信部中小企业局（2023 年机构改革后组织实施）· 评价办法制定：科技部/财政部/税务总局",
+    level: "国家级",
+    deadline: "2026 年度：全国系统开放 2026-06-01 至 08-31；广东分 3 批（6-8 月每月一批，批次截止=当月最后一日），8 月 31 日全面停止填报",
+    batches: [
+      { label: "2026 年度·广东第 3 批（最后一批）", date: "2026-08-31" }
+    ],
+    updated: "2026-08-03",
+    source: { name: "《科技型中小企业评价办法》（国科发政〔2017〕115 号，科技部/财政部/税务总局 2017-05-03 印发）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" },
+    notice: { name: "《工业和信息化部中小企业局关于开展2026年度科技型中小企业评价工作的通知》（工企业函〔2026〕160 号）", url: "https://zjtx.miit.gov.cn/zxqySy/tzggView?id=0b50ccb0a4584f2b8878a4ec33fd1444", timeline: "2026-06-01 发布；评价系统开放 2026-06-01 至 08-31；广东转发粤科函产字〔2026〕1055 号（2026-06-08）：分 3 批（6-8 月每月一批，批次截止=当月最后一日），10 月 15 日前完成全部批次公示" },
+    basis: [
+      { name: "《广东省科学技术厅转发〈工业和信息化部中小企业局关于开展2026年度科技型中小企业评价工作的通知〉的通知》（粤科函产字〔2026〕1055 号）", url: "https://www.zhuhai.gov.cn/zhskjcxj/content/post_3916026.html" },
+      { name: "《佛山市科学技术局关于开展2026年科技型中小企业评价工作的通知》", url: "https://fskjj.foshan.gov.cn/gkmlpt/content/7/7174/post_7174068.html" }
+    ],
+    summary: "国家级评价入库（非认定、无证书：进入全国科技型中小企业信息库并获入库登记编号）。入库是申报专精特新中小企业的基础（160 号文：有效期内的科技型中小企业可申报专精特新中小企业）。谁能报：境内（不含港澳台）注册居民企业 + 职工 ≤500 人、年销售收入 ≤2 亿、资产总额 ≤2 亿 + 产品服务不属于禁止/限制/淘汰类 + 上一年及当年无重大事故、未列入经营异常和严重违法失信名单。怎么过（二选一）：① 直通确认（第八条）：有效期内高企证书 / 近五年国家级科技奖励排名前三 / 省部级以上研发机构 / 近五年主导制定国际·国家·行业标准，满足任一；② 综合评价 ≥60 分（满分 100：科技人员指标 20 分 + 研发投入指标 50 分二选一 + 科技成果指标 30 分），且科技人员指标得分 ≠0（即占比 ≥10%）。2026 年度评价由工信部中小企业局组织实施（2023 年机构改革划转），登录优质中小企业梯度培育平台（zjtx.miit.gov.cn）线上填报、全流程网上办理，不得通过第三方机构申报；广东分 3 批（6-8 月每月一批）。入库编号有效期一年，每年 3 月底前须更新信息并重新自主评价。",
+    subsidy: "无中央直接奖补。核心价值：研发费用加计扣除 100%（该优惠 2023 年起对全部符合条件企业普惠，非科技型中小企业专属）+ 申报专精特新中小企业的基础（160 号文）+ 部分省市对首次入库有奖励（以属地政策为准）",
+    applicableIndustries: ["制造业（通用）","电子信息","生物与新医药","航空航天","新材料","新能源与节能","资源与环境","先进制造与自动化","汽车","化工","消费品"],
+    conditions: [
+      {
+        category: "基础合规（115 号文第六条，须同时满足）",
+        items: [
+          { name: "境内注册居民企业（不含港澳台）", required: true, weight: 3, description: "第六条（一）：在中国境内（不包括港、澳、台地区）注册的居民企业", basis: { name: "115 号文第六条（一）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
+          { name: "职工 ≤500 人、年销售收入 ≤2 亿、资产总额 ≤2 亿", required: true, weight: 3, autoMatch: "revenue", rule: v => { if (!v) return undefined; if (v === ">4亿") return false; if (v === "1亿-4亿") return undefined; return true; }, description: "第六条（二）：表单营收「>4 亿」明确超 2 亿上限判不满足；「1 亿-4 亿」跨 2 亿分界无法精确判断，需人工核营收与职工数/资产总额（表单无职工数、资产总额字段）", basis: { name: "115 号文第六条（二）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
+          { name: "产品和服务不属于国家禁止、限制、淘汰类", required: true, weight: 2, description: "第六条（三）：企业提供的产品和服务不属于国家规定的禁止、限制和淘汰类", basis: { name: "115 号文第六条（三）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
+          { name: "上一年及当年无重大事故，未列入经营异常/严重违法失信名单", required: true, weight: 3, veto: true, autoMatch: "accident", rule: v => v === "无", description: "第六条（四）：表单口径「近三年无事故」严于办法「上一年及当年」，从严判断；经营异常/严重违法失信名单需人工核验（国家企业信用信息公示系统、信用中国）", basis: { name: "115 号文第六条（四）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } }
+        ]
+      },
+      {
+        category: "评价路径（二选一：直通确认 或 综合评价 ≥60 分）",
+        anyOf: true,
+        paths: [
+          {
+            name: "直通确认（第八条，满足下列 4 项任一）",
+            anyOf: true,
+            items: [
+              { name: "拥有有效期内高新技术企业资格证书", required: true, weight: 5, description: "第八条（一）：企业拥有有效期内高新技术企业资格证书", basis: { name: "115 号文第八条（一）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
+              { name: "近五年内获得国家级科技奖励且排名前三", required: true, weight: 5, description: "第八条（二）：企业近五年内获得过国家级科技奖励，并在获奖单位中排在前三名", basis: { name: "115 号文第八条（二）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
+              { name: "拥有经认定的省部级以上研发机构", required: true, weight: 5, description: "第八条（三）：企业拥有经认定的省部级以上研发机构", basis: { name: "115 号文第八条（三）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
+              { name: "近五年内主导制定国际标准、国家标准或行业标准", required: true, weight: 5, description: "第八条（四）：企业近五年内主导制定过国际标准、国家标准或行业标准", basis: { name: "115 号文第八条（四）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } }
+            ]
+          },
+          {
+            name: "评分路径（综合评价 ≥60 分，且科技人员指标 ≠0 分）",
+            scoreBased: true,
+            minScore: 60,
+            minParts: { "科技人员": 1 },
+            items: [
+              { name: "① 科技人员占职工总数比例", part: "科技人员", scoreOptions: [
+                  { label: "A ≥30%", score: 20 }, { label: "B 25%-30%", score: 16 }, { label: "C 20%-25%", score: 12 },
+                  { label: "D 15%-20%", score: 8 }, { label: "E 10%-15%", score: 4 }, { label: "F <10%", score: 0 }],
+                description: "第七条科技人员指标（20 分）：按科技人员数占职工总数比例分档；10% 以下为 0 分（对应第六条（五）「科技人员指标得分不得为 0 分」，即占比须 ≥10%）；科技人员含在职、兼职、临时聘用（兼职/临时聘用全年累计工作 ≥6 个月）", basis: { name: "115 号文第七条科技人员指标", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
+              { name: "② 研发费用占销售收入比例（或占成本费用比例，二选一）", part: "研发投入", scoreOptions: [
+                  { label: "A ≥6%", score: 50 }, { label: "B 5%-6%", score: 40 }, { label: "C 4%-5%", score: 30 },
+                  { label: "D 3%-4%", score: 20 }, { label: "E 2%-3%", score: 10 }, { label: "F <2%", score: 0 }],
+                description: "第七条研发投入指标（50 分），两项选择其一评分：① 研发费用占销售收入比例（本表档位）；② 研发费用占成本费用支出比例：≥30% 50 分 / 25%-30% 40 / 20%-25% 30 / 15%-20% 20 / 10%-15% 10 / <10% 0，企业可择高分项；研发费用按财税〔2015〕119 号归集", basis: { name: "115 号文第七条研发投入指标", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
+              { name: "③ 与主要产品（服务）相关的有效知识产权", part: "科技成果", scoreOptions: [
+                  { label: "A Ⅰ类 ≥1 项", score: 30 }, { label: "B Ⅱ类 ≥4 项", score: 24 }, { label: "C Ⅱ类 3 项", score: 18 },
+                  { label: "D Ⅱ类 2 项", score: 12 }, { label: "E Ⅱ类 1 项", score: 6 }, { label: "F 无", score: 0 }],
+                description: "第七条科技成果指标（30 分）：与主要产品（服务）相关、在有效期内、无争议或纠纷的知识产权；Ⅰ类=发明专利、植物新品种、国家级农作物品种、国家新药、国家一级中药保护品种、集成电路布图设计专有权；Ⅱ类=实用新型、外观设计、软件著作权", basis: { name: "115 号文第七条科技成果指标", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } }
+            ]
+          }
+        ]
+      },
+      {
+        category: "申报要求（160 号文 + 粤科函产字〔2026〕1055 号）",
+        items: [
+          { name: "登录优质中小企业梯度培育平台线上填报", required: true, weight: 2, description: "160 号文：登录 zjtx.miit.gov.cn「科技型中小企业」评价系统注册并填报，上传加盖公章的佐证材料，全流程网上办理、无需书面材料", basis: { name: "160 号文申报要求", url: "https://zjtx.miit.gov.cn/zxqySy/tzggView?id=0b50ccb0a4584f2b8878a4ec33fd1444" } },
+          { name: "不得通过第三方中介机构申报", required: true, weight: 2, description: "160 号文：企业须保证填报内容真实合法有效，不得通过第三方中介机构申报；弄虚作假取消本年度评价资格，三年内不得参与评价", basis: { name: "160 号文有关要求", url: "https://zjtx.miit.gov.cn/zxqySy/tzggView?id=0b50ccb0a4584f2b8878a4ec33fd1444" } },
+          { name: "广东分 3 批填报（批次截止=当月最后一日）", required: true, weight: 1, description: "1055 号转发：广东 6-8 月每月一批，批次截止为当月最后一日（6.30 / 7.31 / 8.31），8 月 31 日全面停止填报；各地市在批次截止后 5 个工作日内完成审核推荐（部分地市提前，如东莞每批当月 25 日）", basis: { name: "粤科函产字〔2026〕1055 号批次安排", url: "https://www.zhuhai.gov.cn/zhskjcxj/content/post_3916026.html" } },
+          { name: "实地核查与集中抽查（省级工作程序）", required: false, weight: 1, description: "160 号文：职工 ≤5 人、知识产权 0、年度研发费用 <10 万、近三年严重违法失信或撤销入库编号、首次参评的企业须在公示前实地核查；每批次入库后按 ≥5% 比例集中随机抽查（抽查原则上不含有效期内创新型/专精特新及持有效高企证书直接确认的企业）", basis: { name: "160 号文核查与抽查", url: "https://zjtx.miit.gov.cn/zxqySy/tzggView?id=0b50ccb0a4584f2b8878a4ec33fd1444" } }
+        ]
+      }
+    ],
+    changesTitle: "2026 年度评价要点",
+    changesNote: "依据工企业函〔2026〕160 号 + 广东转发粤科函产字〔2026〕1055 号；评价条件仍按 2017 年 115 号办法执行，无门槛变化",
+    changes: [
+      "2023 年机构改革后评价组织实施由科技部划转工信部中小企业局，2024 年度起通知由工信部发布（2026 年度：工企业函〔2026〕160 号）",
+      "2026 年度系统开放 2026-06-01 至 08-31；广东分 3 批（6-8 月每月一批，批次截止=当月最后一日），8 月 31 日全面停止填报",
+      "全流程线上办理：登录优质中小企业梯度培育平台（zjtx.miit.gov.cn）填报，无需报送书面材料",
+      "不得通过第三方中介机构申报；弄虚作假取消本年度评价资格、三年内不得参与评价",
+      "实地核查 5 种情形（职工 ≤5 人 / 知产 0 / 年研发费用 <10 万 / 近三年严重违法失信或撤销编号 / 首次参评）；每批次按 ≥5% 比例集中随机抽查",
+      "工信部企业〔2026〕2 号《优质中小企业梯度培育管理办法》第三十条：科技型与创新型合并新标准发布前，评价沿用 115 号办法 + 63 号文创新型评价细则"
+    ]
   }
 );
