@@ -396,6 +396,7 @@ function renderPathCategory(cat, policy, nextInput, nextItem) {
                 <strong>${item.name}</strong>（满分 ${maxScore} 分）
                 <span class="cond-tag required-tag">计分项</span>
                 <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
+                ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${item.basis.name}</a></div>` : ''}
               </div>
               <div style="margin-top:6px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:4px;">
                 ${item.scoreOptions.map((opt, oi) => `
@@ -421,6 +422,7 @@ function renderPathCategory(cat, policy, nextInput, nextItem) {
               ${item.name}
               <span class="cond-tag required-tag">必选</span>
               <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
+              ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${item.basis.name}</a></div>` : ''}
             </span>
           </label>`;
       }).join('');
