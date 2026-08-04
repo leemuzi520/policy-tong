@@ -12,6 +12,7 @@ window.ZCT_DATA.national.miit.push(
     issuingBody: "工信部",
     level: "国家级",
     deadline: "每年 1 批 · 2026 第八批 4.25-5.25 填报",
+    effort: "Heavy",
     updated: "2026-08-02",
     source: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" },
     notice: { name: "《关于开展 2026 年度专精特新「小巨人」企业认定和复核工作的通知》（工信厅企业函〔2026〕117 号）", url: "https://wap.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_83857a4773ac4583bd1540eeb78bcbcb.html", timeline: "2026 第八批：4.25-5.25 线上填报 → 5.25-6.30 省级初核推荐 → 6.30 材料寄送截止" },
@@ -110,6 +111,7 @@ window.ZCT_DATA.national.miit.push(
     issuingBody: "工信部",
     level: "国家级",
     deadline: "每年 3-6 月地方申报（各省组织）· 省级 7 月 31 日前推荐至工信部（13 号文第十二条）· 9-11 月国家评审公示",
+    effort: "Heavy",
     updated: "2026-08-02",
     source: { name: "《绿色工厂梯度培育及管理暂行办法》（工信部节〔2024〕13 号）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_aab179dea60b4b77a05070e796c4c994.html" },
     notice: { name: "《关于公布绿色工厂、绿色工业园区（2025年度）名单的通知》（工信厅节函〔2026〕97 号）", url: "https://www.miit.gov.cn/jgsj/jns/gzdt/art/2026/art_ff0367abfedd4a4d86d56599878d2ff3.html", timeline: "2026-03-18 公布：新培育绿色工厂 2038 家、绿色工业园区 128 家；动态管理调整：132 家绿色工厂移出名单、92 家变更名称。年度节奏（13 号文）：各省 3-6 月组织申报 → 省级 7 月 31 日前推荐 → 国家评审、公示 15 日 → 年底公布名单" },
@@ -175,6 +177,8 @@ window.ZCT_DATA.national.miit.push(
     issuingBody: "工信部",
     level: "国家级",
     deadline: "自愿申请制、无固定批次：企业编制《综合利用行业规范公告申请书》经工业节能与绿色发展管理平台提交，省级工信部门核实后报工信部，工信部组织专家复审、公示无异议后公告（42 号公告监督管理条款）。2026-07-30 起仅再生利用企业可申请（20 号公告废止梯次利用条款）",
+    is_rolling: true,
+    effort: "Medium",
     updated: "2026-08-02",
     alert: {
       level: "danger",
@@ -234,6 +238,7 @@ window.ZCT_DATA.national.miit.push(
     issuingBody: "工信部",
     level: "国家级",
     deadline: "原则上每年 1 次；国家级遴选 2025-2026 暂无新通知（以工信部公告为准）",
+    effort: "Heavy",
     updated: "2026-08-01",
     source: { name: "《制造业单项冠军企业认定管理办法》（工信部政法〔2023〕138 号）", url: "http://gxj.anshan.gov.cn/html/GXJ/202310/0169830047576117.html" },
     notice: { name: "《关于开展 2024 年制造业单项冠军企业遴选认定和复核评价工作的通知》（工信厅政法函〔2024〕328 号）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_af92d3d91e2342cd91b2221c9348580b.html", timeline: "最近一次国家级遴选（2024 年）：培育平台 excellent-ent.cn 线上填报，2024-10-27 前报送；2025 年起暂无国家级遴选新通知" },
@@ -271,6 +276,7 @@ window.ZCT_DATA.national.miit.push(
     issuingBody: "财政部 · 工业和信息化部",
     level: "国家级",
     deadline: "2024-2026 三年分三批次；第三批（2026 年度）遴选推荐已于 2026 年上半年完成（广东 2026-02-09 启动、3 月上旬省级评审），本批次申报窗口已结束、入选企业进入三年实施期；后续支持以工信部最新通知为准",
+    effort: "Medium",
     updated: "2026-08-02",
     source: { name: "《财政部 工业和信息化部关于进一步支持专精特新中小企业高质量发展的通知》（财建〔2024〕148 号）", url: "https://www.miit.gov.cn/jgsj/qyj/bszn/art/2024/art_afa307276f6e40e58b8bc651b1d4cf32.html" },
     notice: { name: "《广州市工业和信息化局关于做好新一轮第三批重点「小巨人」企业遴选推荐工作的通知》（2026-02-12）", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html", timeline: "第三批遴选推荐：广东 2026-02-09 发文（粤工信融资函〔2026〕5 号），广州 2026-02-12 发文，各区 2026-03-06 前报送，工信部 3 月上旬完成省级评审；预申报（摸底）为 2026-01-25 前（广州 gxj.gz.gov.cn/content/post_10609188）。本批次已结束，下一轮以工信部最新通知为准" },
@@ -323,6 +329,7 @@ window.ZCT_DATA.national.miit.push(
     issuingBody: "工信部中小企业局（2023 年机构改革后组织实施）· 评价办法制定：科技部/财政部/税务总局",
     level: "国家级",
     deadline: "2026 年度：全国系统开放 2026-06-01 至 08-31；广东分 3 批（6-8 月每月一批，批次截止=当月最后一日），8 月 31 日全面停止填报",
+    effort: "Easy",
     batches: [
       { label: "2026 年度·广东第 3 批（最后一批）", date: "2026-08-31" }
     ],
@@ -411,6 +418,7 @@ window.ZCT_DATA.national.miit.push(
     issuingBody: "工业和信息化部（会同财政部）",
     level: "国家级",
     deadline: "原则上每年 1 次（540 号文第三章）；最近批次为 2023 年度（2023-10-30 报送截止）；2024 年度起国家层面暂无新认定通知（截至 2026-08-03，以工信部最新公告为准）",
+    effort: "Heavy",
     updated: "2026-08-03",
     source: { name: "《技术创新示范企业认定管理办法（试行）》（工信部联科〔2010〕540 号，工信部/财政部 2010-09-13 印发）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" },
     notice: { name: "《工业和信息化部办公厅关于组织开展2023年国家技术创新示范企业认定及国家技术创新示范企业复核评价工作的通知》（工信厅科函〔2023〕260 号，2023-10-09 发布）", url: "https://www.miit.gov.cn/jgsj/kjs/jscx/art/2023/art_e177228281514552bffa2caf3046b3cd.html", timeline: "2023 年度（最近批次）：2023-09-21 成文 → 10-09 发布 → 10-30 材料报送截止（广东：各地市 10-20 前报省工信厅制造业创新处，广州 ≤3 家、其他地市 ≤2 家）→ 2024-01-17 公布名单：68 家新认定、248 家复核通过、5 家撤销称号（工信部科函〔2024〕7 号）。2024 年度起国家层面暂未组织新认定（截至 2026-08-03 未检索到 2024/2025/2026 年度通知与名单），申报安排以工信部最新公告为准" },
@@ -475,6 +483,7 @@ window.ZCT_DATA.national.miit.push(
     issuingBody: "工业和信息化部",
     level: "国家级",
     deadline: "每 2 年认定一次（93 号文第九条）· 最近批次为 2023 年第六批（省级 2023-08-31 前报送截止）· 第七批认定安排以工信部通知为准（截至 2026-08-04 未检索到第七批通知/名单）",
+    effort: "Medium",
     updated: "2026-08-04",
     // 无 batches：认定无固定批次日期（每 2 年一次，批次由工信部通知），不渲染紧迫度（数据驱动，防过期误导）
     source: { name: "《国家级工业设计中心认定管理办法》（工信部政法〔2023〕93 号，2023-07-07 成文，废止 2012 年 422 号试行办法）", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" },
@@ -557,6 +566,7 @@ window.ZCT_DATA.national.miit.push(
     issuingBody: "工业和信息化部（产业政策与法规司）",
     level: "国家级",
     deadline: "遴选机制持续开展（101 号文第十六条「开展示范推广」）· 最近批次为 2023 年第五批（2023-05-31 省级报送截止）· 2024 年起国家层面暂无新遴选通知（截至 2026-08-04，以工信部公告为准）",
+    effort: "Medium",
     updated: "2026-08-04",
     // 无 batches：无固定批次日期（批次由工信部通知），不渲染紧迫度（数据驱动，防过期误导）
     source: { name: "《关于进一步促进服务型制造发展的指导意见》（工信部联政法〔2020〕101 号，十五部门 2020-06-30 成文）", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2020/art_6e2411a497f34aabb9091dba3e542129.html" },
@@ -620,6 +630,7 @@ window.ZCT_DATA.national.miit.push(
     issuingBody: "工业和信息化部（科技司）",
     level: "国家级",
     deadline: "年度征集制（2024 年起每年 1 批）· 最近批次为 2025 年度：2025-12-15 部级报送截止，名单已于 2026-06-26 公布（82 项）· 2026 年度征集安排以工信部通知为准（截至 2026-08-05 未检索到）",
+    effort: "Easy",
     updated: "2026-08-05",
     // 无 batches：征集批次由工信部年度通知确定，不渲染紧迫度（数据驱动，防过期误导）
     source: { name: "《工业和信息化部办公厅关于集中组织开展典型案例征集工作的通知》（工信厅办函〔2025〕476 号，2025-11-15 成文，物联网赋能行业发展典型案例为 14 类之一）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_529cd59e4e864dadb51d299d9d797315.html" },

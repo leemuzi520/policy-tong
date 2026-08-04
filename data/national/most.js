@@ -12,6 +12,7 @@ window.ZCT_DATA.national.most.push(
     issuingBody: "科技部 / 财政部 / 税务总局",
     level: "国家级",
     deadline: "每年 3 批次（各省组织）· 2026 广东：6.26 / 8.5 / 9.4 材料截止",
+    effort: "Heavy",
     // 批次日期（903/1359 号文）：供匹配页申报窗口紧迫度计算；8.5 / 9.4 为 1359 号文延长后日期
     batches: [
       { label: "第一批", date: "2026-06-26" },

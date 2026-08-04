@@ -163,3 +163,56 @@ function evaluatePolicyConditions(policy, profile) {
 
   return { totalWeight, verifiedWeight, matchedWeight, score, coverage, insufficient, failedRequired, failedVeto, unverifiedRequired, unverifiedVeto, matchedItems, unmatchedOptional, items };
 }
+
+// ============================================================
+// 2b.2 三维评分（2026-08-05）：Fit(50%) + Timing(25%) + Effort(25%)
+// 设计参考：国际竞品 financing-starts-now 三维加权模型（[[知识库/国际竞品与最佳实践#实践 4]]）
+// 单源：effort 档位与分数定义在 fields.js POLICY_FIELDS（window.ZCT_FIELDS）
+// ============================================================
+
+// Timing 分段评分（国际竞品实践 5）：<14天=20 / <30天=50 / <90天=80 / <180天=95 / ≥180天=100 / 滚动=90
+// 数据来源优先级：batches（取最近未截止批次，与 windowUrgencyHTML 同口径）→ deadlineDate → is_rolling → 无
+// 返回 { has }：无可用截止数据时 has=false，Timing 维度不参与加权（「无 deadline 政策兜底不崩」）
+function getTimingInfo(policy, now = new Date()) {
+  const deadlineMs = dateStr => {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    return new Date(y, m - 1, d, 23, 59, 59).getTime() - now.getTime();
+  };
+  let date = null;
+  if (policy.batches && policy.batches.length) {
+    const upcoming = policy.batches
+      .filter(b => deadlineMs(b.date) > 0)
+      .sort((a, b) => deadlineMs(a.date) - deadlineMs(b.date));
+    if (upcoming.length) date = upcoming[0].date;
+  } else if (policy.deadlineDate && deadlineMs(policy.deadlineDate) > 0) {
+    date = policy.deadlineDate;
+  }
+  if (date) {
+    const days = Math.ceil(deadlineMs(date) / 86400000);
+    const score = days < 14 ? 20 : days < 30 ? 50 : days < 90 ? 80 : days < 180 ? 95 : 100;
+    const label = days < 14 ? '非常紧迫' : days < 30 ? '紧迫' : days < 90 ? '较从容' : '从容';
+    return { has: true, days, date, score, label };
+  }
+  if (policy.is_rolling) return { has: true, rolling: true, score: 90, label: '滚动申报' };
+  return { has: false, label: '窗口未定' };
+}
+
+// Effort 档位分数与短标签（单源：fields.js POLICY_FIELDS；缺省中档 70 兜底，防数据缺失崩）
+function getEffortInfo(policy) {
+  const def = (window.ZCT_FIELDS?.POLICY_FIELDS || []).find(f => f.key === 'effort');
+  const level = policy.effort || 'Medium';
+  const opt = def?.options?.find(o => o[0] === level);
+  return { level, score: def?.score?.[level] ?? 70, label: opt ? opt[1].split('（')[0] : '中' };
+}
+
+// 三维加权总分：Fit(50%) + Timing(25%) + Effort(25%)；缺失维度按剩余维度权重归一化，
+// 避免「窗口未定」政策因未知维度被无谓拉低（如 100 分制下 0.5+0.25+0.25 满分为 100）
+function scorePolicy(policy, profile, now = new Date()) {
+  const ev = evaluatePolicyConditions(policy, profile);
+  const timing = getTimingInfo(policy, now);
+  const effort = getEffortInfo(policy);
+  const W = { fit: 0.5, timing: 0.25, effort: 0.25 };
+  const denom = W.fit + (timing.has ? W.timing : 0) + W.effort;
+  const total = Math.round((ev.score * W.fit + (timing.has ? timing.score * W.timing : 0) + effort.score * W.effort) / denom);
+  return { ...ev, fit: ev.score, timing, effort, total };
+}

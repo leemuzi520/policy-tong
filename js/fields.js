@@ -46,6 +46,17 @@ const FIELDS = [
   { key: 'certs', id: 'mCert', label: '现有认证（多选）', tier: 'advanced', match: true, plan: false, type: 'checkbox', options: [['ISO9001', 'ISO9001'], ['ISO14001', 'ISO14001'], ['ISO50001', 'ISO50001'], ['ISO45001', 'ISO45001（含旧证 OHSAS18001）']] }
 ];
 
+// ===== 政策侧字段注册（2b.2 三维评分，2026-08-05）=====
+// 非表单字段（不进匹配/规划表单）：供 data/ 政策数据录入与 UI/算法展示单源引用。
+// 新增政策字段只改此处 + 数据文件，UI 与评分自动生效。
+// 结构：key / label / type（date=YYYY-MM-DD、boolean、enum）/ note（录入口径）/
+//       options（enum 档位 [value, text]）/ score（enum 档位分数，Timing/Effort 维度用）
+const POLICY_FIELDS = [
+  { key: 'deadlineDate', label: '最近截止日期', type: 'date', note: '最近未截止批次截止日（YYYY-MM-DD）；无固定窗口的政策留空（Timing 缺省不参与加权），有 batches 的政策由 batches 自动取最近未截止批次，无需重复填' },
+  { key: 'is_rolling', label: '滚动申报', type: 'boolean', note: 'true = 滚动申报无固定截止（Timing 按 90 分计）；有批次/有固定窗口的填 false' },
+  { key: 'effort', label: '申报成本', type: 'enum', note: '按材料复杂度三档：Easy 常规材料 / Medium 需专项审计或第三方报告 / Heavy 大量佐证 + 专家/现场核查', options: [['Easy', '低（常规申报材料）'], ['Medium', '中（需专项审计/第三方报告）'], ['Heavy', '高（大量佐证材料+专家/现场核查）']], score: { Easy: 90, Medium: 70, Heavy: 50 } }
+];
+
 // ===== 派生：表单元素 id 映射（key → id，旧逻辑单点替换）=====
 // 匹配表单：注册表原样；规划表单：'p' + id.slice(1)（如 mRevenue → pRevenue）
 const MATCH_FIELD_IDS = Object.fromEntries(FIELDS.filter(f => f.match && f.type !== 'checkbox').map(f => [f.key, f.id]));
@@ -99,4 +110,4 @@ function toggleAdvFields() {
   if (btn) btn.textContent = collapsed ? '展开进阶指标（' + FIELDS.filter(f => f.match && f.tier === 'advanced').length + ' 项）▾' : '收起进阶指标 ▴';
 }
 
-window.ZCT_FIELDS = { FIELDS, MATCH_FIELD_IDS, PLAN_FIELD_IDS, renderFormFields, toggleAdvFields };
+window.ZCT_FIELDS = { FIELDS, POLICY_FIELDS, MATCH_FIELD_IDS, PLAN_FIELD_IDS, renderFormFields, toggleAdvFields };

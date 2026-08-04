@@ -40,6 +40,22 @@ function populateIndustryFilter() {
 // 政策库专栏（P4：按政策体系分专栏；链条视图归属专精特新专栏）
 // ============================================================
 
+// 政策卡片三维标签（2b.2，2026-08-05）：effort 档位 + 截止状态；数据缺失兜底显示
+function effortTagHTML(p) {
+  const info = getEffortInfo(p);
+  const color = info.level === 'Easy' ? 'var(--success)' : info.level === 'Heavy' ? 'var(--danger)' : 'var(--warning)';
+  const bg = info.level === 'Easy' ? 'var(--bg-success)' : info.level === 'Heavy' ? 'var(--bg-danger)' : 'var(--bg-warning)';
+  return `<span class="tag" style="background:${bg};color:${color};border:1px solid ${color};" title="申报成本：材料复杂度档位">成本 ${info.label}</span>`;
+}
+function timingTagHTML(p) {
+  const t = getTimingInfo(p);
+  if (!t.has) return `<span class="tag" style="color:var(--text-secondary);border:1px solid var(--border);" title="无固定窗口，以官方通知为准">${t.label}</span>`;
+  if (t.rolling) return `<span class="tag" style="background:var(--bg-success);color:var(--success);border:1px solid var(--success);" title="滚动申报、无固定截止">滚动申报</span>`;
+  const color = t.days <= 14 ? 'var(--danger)' : t.days <= 30 ? 'var(--warning)' : 'var(--success)';
+  const bg = t.days <= 14 ? 'var(--bg-danger)' : t.days <= 30 ? 'var(--bg-warning)' : 'var(--bg-success)';
+  return `<span class="tag" style="background:${bg};color:${color};border:1px solid ${color};" title="距最近未截止批次 ${t.date} 剩 ${t.days} 天">剩 ${t.days} 天</span>`;
+}
+
 function policyCardHtml(p) {
   return `
     <div class="policy-card" id="card-${p.id}">
@@ -52,6 +68,8 @@ function policyCardHtml(p) {
           <span class="tag tag-level">${p.level}</span>
           <span class="tag tag-body">${p.issuingBody.split(' / ')[0]}</span>
           <span class="tag tag-deadline">${p.deadline}</span>
+          ${effortTagHTML(p)}
+          ${timingTagHTML(p)}
         </div>
       </div>
       <div class="policy-card-body">
@@ -259,15 +277,15 @@ function runMatch() {
     // 行业匹配检查（数据里没有用「全部」通配的政策，无需特殊处理）
     const industryMatch = policy.applicableIndustries.includes(profile.industry);
 
-    // 逐条件评估（公共函数，见 evaluatePolicyConditions；规则单源与培育规划共用）
-    const ev = evaluatePolicyConditions(policy, profile);
-    const { matchedItems, failedRequired, failedVeto, unmatchedOptional, unverifiedRequired, unverifiedVeto } = ev;
-    const score = ev.score;
-    const coverage = ev.coverage;
-    const insufficient = ev.insufficient;
+    // 三维评分（2b.2，2026-08-05）：Fit 50% + Timing 25% + Effort 25%；缺失维度按剩余维度权重归一化
+    const sp = scorePolicy(policy, profile);
+    const { matchedItems, failedRequired, failedVeto, unmatchedOptional, unverifiedRequired, unverifiedVeto } = sp;
+    const score = sp.total;
+    const coverage = sp.coverage;
+    const insufficient = sp.insufficient;
     const hasFailRequired = failedRequired.length > 0;
     const hasFailVeto = failedVeto.length > 0;
-    const hasUnverifiedRequired = ev.unverifiedRequired.length > 0;
+    const hasUnverifiedRequired = sp.unverifiedRequired.length > 0;
 
     // 一票否决条件确认未通过 → 直接归为不通过
     // 其他必选条件确认未通过 → 降为低匹配
@@ -306,6 +324,9 @@ function runMatch() {
       industryMatch,
       insufficient,
       coverage,
+      fit: sp.fit,
+      timing: sp.timing,
+      effort: sp.effort,
       matchedItems,
       failedRequired,
       failedVeto,
@@ -338,6 +359,12 @@ function runMatch() {
           </span>
         </div>
         <div class="match-detail" style="margin-top:10px;">
+          <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--text-secondary);margin-bottom:6px;">
+            <span>匹配 <strong style="color:var(--text-primary);">${r.fit}</strong></span>
+            <span>时效 <strong style="color:${r.timing.has ? (r.timing.days <= 14 ? 'var(--danger)' : r.timing.days <= 30 ? 'var(--warning)' : 'var(--success)') : 'var(--text-secondary)'};">${r.timing.has ? r.timing.score : '—'}</strong>${r.timing.has ? `（${r.timing.label}${r.timing.days ? `，剩 ${r.timing.days} 天` : ''}）` : `（${r.timing.label}）`}</span>
+            <span>成本 <strong style="color:var(--text-primary);">${r.effort.label}</strong>（${r.effort.score}）</span>
+            <span style="color:var(--text-secondary);">三维总分 ${r.score}%</span>
+          </div>
           ${windowUrgencyHTML(r.policy)}
           ${r.policy.alert ? `<div style="color:var(--danger);margin-bottom:6px;padding:8px 12px;background:var(--bg-danger);border-left:3px solid var(--danger);border-radius:4px;"><strong>⚠️ 政策重要变更</strong>：${r.policy.alert.text} <a href="${r.policy.alert.link}" target="_blank" rel="noopener" style="color:var(--danger);font-weight:600;">${r.policy.alert.linkLabel}</a></div>` : ''}
           ${r.insufficient ? `<div style="color:var(--warning);margin-bottom:6px;padding:8px 12px;background:var(--bg-warning);border-radius:4px;">已核验条件不足（覆盖 ${Math.round(r.coverage * 100)}%），暂无法评估匹配度。建议填写更多企业信息，或到「自诊断」逐条核实。</div>` : ''}
