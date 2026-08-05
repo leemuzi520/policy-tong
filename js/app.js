@@ -356,6 +356,27 @@ function windowUrgencyHTML(policy) {
   return `<div style="color:${color};font-weight:600;margin-bottom:6px;padding:8px 12px;background:${bg};border-radius:4px;">⏰ 申报窗口：${b.label}（${b.date}）材料截止，${tip}</div>`;
 }
 
+// 2b.3 近失配恢复区块（2026-08-07）：触发时渲染在匹配结果列表顶部
+// 候选来自 engine.nearMissRecovery（放松数 → 档位 → 总分排序，最多 5 个）
+function nearMissHTML(cands) {
+  return `
+  <div class="card" style="margin-bottom:14px;background:var(--bg-info);border:1px solid var(--primary-light);">
+    <div style="font-weight:600;color:var(--primary);margin-bottom:4px;">💡 近失配恢复：没有政策达到推荐档位，以下是「最接近的匹配」</div>
+    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">已按约束影响面从小到大逐级放松必选条件重算（一票否决条件为硬性资格线，不参与放松）。放松仅为评估假设——实际申报前仍需补齐差距。</div>
+    ${cands.map(c => `
+      <div style="padding:8px 10px;margin-bottom:8px;background:var(--card);border:1px solid var(--border);border-radius:6px;">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+          <span style="font-weight:600;">${c.policy.name}</span>
+          <span style="font-size:12px;color:${c.tier === 'high' ? 'var(--success)' : 'var(--warning)'};">放松 ${c.relaxCount} 项必选条件后匹配度 <strong>${c.score}%</strong>（${c.tier === 'high' ? '达推荐申报档' : '达部分匹配档'}）</span>
+        </div>
+        <div style="font-size:12.5px;color:var(--text-secondary);margin-top:6px;line-height:1.8;">
+          ${c.gaps.map(g => `差距：<strong>${g.name}</strong>——${g.desc}${g.want ? `（您当前：${g.want}）` : ''}`).join('<br>')}
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;">建议：优先补齐上述差距后再申报；差距条件较多时，可 <button class="btn" style="padding:2px 8px;font-size:11px;" onclick="goDiag('${c.policy.id}')">去自诊断逐条核实</button> 确认是否满足其他未量化条件。</div>
+      </div>`).join('')}
+  </div>`;
+}
+
 function runMatch() {
   const profile = getMatchProfile();
 
@@ -424,15 +445,27 @@ function runMatch() {
       failedVeto,
       unverifiedRequired,
       unverifiedVeto,
-      unmatchedOptional
+      unmatchedOptional,
+      // 近失配恢复依赖（2026-08-07）：逐条件明细 + 权重（放松重算用）
+      items: sp.items,
+      matchedWeight: sp.matchedWeight,
+      verifiedWeight: sp.verifiedWeight
     };
   });
 
   // 按匹配度排序
   results.sort((a, b) => b.score - a.score);
 
+  // 2b.3 近失配恢复（2026-08-07）：除「信息不足」档（insufficient=medium，需补数据而非放松）外
+  // 全部结果落到 low/veto 档时触发，按约束影响面从小到大逐级放松必选条件重算，返回最接近匹配并标注差异
+  const eva = results.filter(r => !r.insufficient);
+  const nearMiss = eva.length > 0 && eva.every(r => r.tier === 'low' || r.tier === 'veto')
+    ? nearMissRecovery(results, profile)
+    : [];
+
   const container = $('#matchResults');
   container.innerHTML = '<h3 style="margin-bottom:14px;font-size:16px;">匹配结果（按匹配度从高到低）</h3>' +
+    (nearMiss.length ? nearMissHTML(nearMiss) : '') +
     results.map((r, i) => `
       <div class="match-item ${r.tier}">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
