@@ -5,7 +5,7 @@
 
 // 数据版本：任何政策数据变更后更新此值（同步更新自诊断报告页脚日期戳）
 // ============================================================
-const DATA_VERSION = '2026-08-05';
+const DATA_VERSION = '2026-08-05'; // 环境时钟口径：同日第二次数据变更（2b.3 deadlineDate 4 条），沿用同日戳
 
 // 政策库：由 data/ 目录按部门汇总（2a.1 数据分离，2026-08-02）
 // 汇总后按 order 字段恢复原数组顺序；新增政策按部门写入 data/ 对应文件，order 取当前最大值+1
@@ -217,4 +217,39 @@ function scorePolicy(policy, profile, now = new Date()) {
   const denom = W.fit + (timing.has ? W.timing : 0) + W.effort;
   const total = Math.round((ev.score * W.fit + (timing.has ? timing.score * W.timing : 0) + effort.score * W.effort) / denom);
   return { ...ev, fit: ev.score, timing, effort, total };
+}
+
+// ============================================================
+// 2b.3 全文检索 + 申报窗口月份（2026-08-06）：纯逻辑，供筛选栏/时间轴共用单源
+// ============================================================
+
+// 归一化文本：小写 + 去首尾空白 + 去全部空白（中文分句空格不影响命中）
+function normText(s) {
+  return String(s || '').toLowerCase().trim().replace(/\s+/g, '');
+}
+
+// 全文检索：政策名 + 发文机关 + 条件描述（category + items 的 name/description）
+// paths 二选一路径结构须展平（xjr/kjxqy/greenfactory/gysjzx/gdgczx 均含）；summary/tips 不在检索范围（需求口径）
+function policyMatchesSearch(policy, term) {
+  const t = normText(term);
+  if (!t) return true;
+  if (normText(policy.name).includes(t) || normText(policy.issuingBody).includes(t)) return true;
+  return policy.conditions.some(cat => {
+    if (normText(cat.category).includes(t)) return true;
+    const items = cat.paths
+      ? cat.paths.flatMap(path => (path.name ? [path.name] : []).concat(path.items || []))
+      : (cat.items || []);
+    return items.some(it => normText(it.name).includes(t) || normText(it.description).includes(t));
+  });
+}
+
+// 申报窗口月份（YYYY-MM 集合）：batches 未来批次 + deadlineDate（未来），与 getTimingInfo 同口径
+// 供 #filterMonth 选项与时间轴共用；滚动申报/窗口未定政策返回空数组（归时间轴「滚动/未定」区）
+function policyWindowMonths(policy, now = new Date()) {
+  const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const today = ymd(now);
+  const months = new Set();
+  (policy.batches || []).forEach(b => { if (b.date >= today) months.add(b.date.slice(0, 7)); });
+  if (policy.deadlineDate && policy.deadlineDate >= today) months.add(policy.deadlineDate.slice(0, 7));
+  return [...months].sort();
 }

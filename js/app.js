@@ -36,6 +36,26 @@ function populateIndustryFilter() {
   $('#filterIndustry').innerHTML = '<option value="">全部行业</option>' + industryOptionsHTML();
 }
 
+// 2b.3 多维筛选（2026-08-06）：部门按发文机关动态收集；申报月份按 policyWindowMonths 动态生成（滚动/未定政策不入月份选项，归时间轴专区）
+function populateDeptFilter() {
+  const depts = [...new Set(POLICIES.map(p => p.issuingBody))].sort();
+  $('#filterDept').innerHTML = '<option value="">全部部门</option>' +
+    depts.map(d => `<option value="${d}">${d}</option>`).join('');
+}
+
+// 2b.3 级别筛选动态化：静态选项原只有国家级/省级，第 4 批市级政策（city.js）需「市级」选项才能按级别筛到
+function populateLevelFilter() {
+  const levels = ['国家级', '省级', '市级'].filter(lv => POLICIES.some(p => p.level === lv));
+  $('#filterLevel').innerHTML = '<option value="">全部级别</option>' +
+    levels.map(lv => `<option value="${lv}">${lv}</option>`).join('');
+}
+
+function populateMonthFilter() {
+  const months = [...new Set(POLICIES.flatMap(p => policyWindowMonths(p)))].sort();
+  $('#filterMonth').innerHTML = '<option value="">全部月份</option>' +
+    months.map(m => `<option value="${m}">${Number(m.slice(0, 4))} 年 ${Number(m.slice(5, 7))} 月</option>`).join('');
+}
+
 // ============================================================
 // 政策库专栏（P4：按政策体系分专栏；链条视图归属专精特新专栏）
 // ============================================================
@@ -53,7 +73,7 @@ function timingTagHTML(p) {
   if (t.rolling) return `<span class="tag" style="background:var(--bg-success);color:var(--success);border:1px solid var(--success);" title="滚动申报、无固定截止">滚动申报</span>`;
   const color = t.days <= 14 ? 'var(--danger)' : t.days <= 30 ? 'var(--warning)' : 'var(--success)';
   const bg = t.days <= 14 ? 'var(--bg-danger)' : t.days <= 30 ? 'var(--bg-warning)' : 'var(--bg-success)';
-  return `<span class="tag" style="background:${bg};color:${color};border:1px solid ${color};" title="距最近未截止批次 ${t.date} 剩 ${t.days} 天">剩 ${t.days} 天</span>`;
+  return `<span class="tag" style="background:${bg};color:${color};border:1px solid ${color};" title="距最近未截止批次 ${t.date} 剩 ${t.days} 天">距截止 ${t.days} 天</span>`;
 }
 
 function policyCardHtml(p) {
@@ -123,22 +143,31 @@ function policyCardHtml(p) {
 }
 
 function renderPolicyList() {
-  const searchTerm = ($('#policySearch')?.value || '').toLowerCase();
+  const searchTerm = ($('#policySearch')?.value || '').trim();
   const levelFilter = ($('#filterLevel')?.value || '');
   const industryFilter = ($('#filterIndustry')?.value || '');
+  const deptFilter = ($('#filterDept')?.value || '');
+  const monthFilter = ($('#filterMonth')?.value || '');
+  const sortMode = ($('#filterSort')?.value || '');
 
   const filtered = POLICIES.filter(p => {
-    const matchSearch = !searchTerm ||
-      p.name.toLowerCase().includes(searchTerm) ||
-      p.issuingBody.toLowerCase().includes(searchTerm);
+    const matchSearch = policyMatchesSearch(p, searchTerm); // 2b.3 全文检索：政策名 + 发文机关 + 条件描述
     const matchLevel = !levelFilter || p.level === levelFilter;
     const matchIndustry = !industryFilter || p.applicableIndustries.includes(industryFilter);
-    return matchSearch && matchLevel && matchIndustry;
+    const matchDept = !deptFilter || p.issuingBody === deptFilter;
+    const matchMonth = !monthFilter || policyWindowMonths(p).includes(monthFilter);
+    return matchSearch && matchLevel && matchIndustry && matchDept && matchMonth;
   });
+
+  // 2b.3 排序：专栏分组不变、组内按截止日升序（滚动/无窗口排尾）；默认路径恒等现状
+  const sortCards = cards => sortMode === 'deadline'
+    ? cards.slice().sort((a, b) =>
+        (getTimingInfo(a).date || '9999-99-99').localeCompare(getTimingInfo(b).date || '9999-99-99') || a.order - b.order)
+    : cards;
 
   const container = $('#policyList');
   container.innerHTML = COLUMNS.map(col => {
-    const cards = filtered.filter(p => p.column === col.id);
+    const cards = sortCards(filtered.filter(p => p.column === col.id));
     if (cards.length === 0) return ''; // 过滤后空专栏整块隐藏（含其链条视图）
     return `
       <div class="policy-column" data-column="${col.id}">
@@ -185,9 +214,65 @@ function renderGradientChain() {
     </div>`;
 }
 
+// 2b.3 申报时间轴（2026-08-06）：未来 12 个月申报窗口一览 + 滚动申报/窗口未定分区
+// 独立渲染不与筛选/搜索联动（29 条固定全量，避免每击键重算）；点击政策复用 goPolicy（跳转前清空筛选）
+function renderTimeline() {
+  const body = $('#timelineBody');
+  if (!body) return;
+  const now = new Date();
+  const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const pad = n => String(n).padStart(2, '0');
+  const today = ymd(now);
+
+  // 未来 12 个月（当月起）
+  const months = [];
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    months.push({ key: `${d.getFullYear()}-${pad(d.getMonth() + 1)}`, label: `${d.getFullYear()} 年 ${d.getMonth() + 1} 月` });
+  }
+
+  // 申报事件：batches 未来批次 + 未来 deadlineDate（与 policyWindowMonths 同口径）
+  const events = [];
+  POLICIES.forEach(p => {
+    (p.batches || []).forEach(b => { if (b.date >= today) events.push({ month: b.date.slice(0, 7), p, date: b.date, note: b.label }); });
+    if (p.deadlineDate && p.deadlineDate >= today) events.push({ month: p.deadlineDate.slice(0, 7), p, date: p.deadlineDate, note: '' });
+  });
+
+  const byMonth = months.map(mo => ({
+    ...mo,
+    list: events.filter(e => e.month === mo.key).sort((a, b) => a.date.localeCompare(b.date))
+  }));
+  const withEvent = new Set(events.map(e => e.p.id));
+  const rolling = POLICIES.filter(p => p.is_rolling);
+  const undecided = POLICIES.filter(p => !p.is_rolling && !withEvent.has(p.id));
+
+  const itemBtn = e => `<button type="button" class="timeline-item" title="${e.p.name}｜${e.date}${e.note ? '｜' + e.note : ''}" onclick="goPolicy('${e.p.id}')">${e.p.name}（${e.date.slice(5)}）</button>`;
+
+  body.innerHTML =
+    `<div class="timeline-grid">` +
+    byMonth.map(mo => `
+      <div class="timeline-month">
+        <div class="timeline-month-title">${mo.label}</div>
+        ${mo.list.map(itemBtn).join('') || '<span class="timeline-empty">暂无申报窗口</span>'}
+      </div>`).join('') +
+    `</div>` +
+    (rolling.length ? `<div class="timeline-zone"><b>滚动申报（随时可报）</b>：${rolling.map(p => `<button type="button" class="timeline-item" style="display:inline-block;width:auto;" onclick="goPolicy('${p.id}')">${p.name}</button>`).join('')}</div>` : '') +
+    (undecided.length ? `<div class="timeline-zone"><b>窗口未定（${undecided.length} 条）</b>：${undecided.map(p => p.name).join('、')}，以官方通知为准</div>` : '');
+}
+
+function toggleTimeline() {
+  const body = $('#timelineBody');
+  if (!body) return;
+  const hidden = body.hasAttribute('hidden');
+  if (hidden) body.removeAttribute('hidden'); else body.setAttribute('hidden', '');
+  const btn = $('#windowTimeline .timeline-toggle');
+  if (btn) btn.textContent = hidden ? '📅 申报窗口时间轴 · 未来 12 个月 ▴' : '📅 申报窗口时间轴 · 未来 12 个月 ▾';
+}
+
 function goPolicy(id) {
-  // 清空浏览筛选（搜索/层级/行业）：筛选状态下目标政策卡可能被过滤掉，导致 card 为 null 崩溃
-  ['policySearch', 'filterLevel', 'filterIndustry'].forEach(key => {
+  // 清空浏览筛选（搜索/部门/层级/行业/月份）：筛选状态下目标政策卡可能被过滤掉，导致 card 为 null 崩溃
+  // 2b.3：filterSort 不清——排序不影响卡片是否渲染
+  ['policySearch', 'filterDept', 'filterLevel', 'filterIndustry', 'filterMonth'].forEach(key => {
     const el = $(`#${key}`);
     if (el) el.value = '';
   });
@@ -214,6 +299,10 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFormFields('matchFormFields', 'match');
   renderFormFields('planFormFields', 'plan');
   populateIndustryFilter();
+  populateLevelFilter();
+  populateDeptFilter();
+  populateMonthFilter();
+  renderTimeline();
   renderGradientChain();
   renderPolicyList();
   populateDiagSelect();
@@ -227,6 +316,9 @@ document.addEventListener('DOMContentLoaded', () => {
 $('#policySearch')?.addEventListener('input', renderPolicyList);
 $('#filterLevel')?.addEventListener('change', renderPolicyList);
 $('#filterIndustry')?.addEventListener('change', renderPolicyList);
+$('#filterDept')?.addEventListener('change', renderPolicyList);
+$('#filterMonth')?.addEventListener('change', renderPolicyList);
+$('#filterSort')?.addEventListener('change', renderPolicyList);
 
 // ============================================================
 // 标签2：智能匹配

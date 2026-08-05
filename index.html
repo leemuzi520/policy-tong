@@ -2729,6 +2729,27 @@ body {
   .column-desc { min-width: 0; }
   .column-count { white-space: nowrap; flex-shrink: 0; }
 }
+
+/* ===== 2b.3 申报时间轴（政策库顶部折叠块，2026-08-06）===== */
+.timeline-block { margin-bottom: 18px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.timeline-toggle { width: 100%; text-align: left; padding: 10px 14px; background: none; border: none; font: inherit; font-size: 14px; font-weight: 600; color: var(--primary); cursor: pointer; }
+.timeline-toggle:hover { color: var(--primary-light); }
+.timeline-body { padding: 12px 14px; border-top: 1px solid var(--border); }
+.timeline-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.timeline-month { border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 10px; background: var(--bg); min-width: 0; }
+.timeline-month-title { font-size: 12px; font-weight: 600; color: var(--primary); margin-bottom: 6px; }
+.timeline-item { display: block; width: 100%; text-align: left; font-size: 12px; padding: 3px 6px; margin: 2px 0; border: 1px solid var(--border); border-radius: 4px; background: var(--card); color: var(--text); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.timeline-item:hover { border-color: var(--accent); color: var(--primary); }
+.timeline-empty { font-size: 12px; color: var(--text-secondary); }
+.timeline-zone { margin-top: 10px; font-size: 12px; color: var(--text-secondary); }
+.timeline-zone b { color: var(--text); }
+
+/* 2b.3 多维筛选：五套主题统一允许筛选栏换行（五套主题块均只定义 flex 不定义 wrap，此条位置靠后 + [data-style] 特异性 0,2,0 持平 → 全主题生效）*/
+.filter-bar, [data-style] .filter-bar { flex-wrap: wrap; }
+/* 2b.3 筛选 select 限宽：发文机关长名称（如「广东省工业和信息化厅」）不撑爆筛选栏，桌面保持一行；短名称按内容宽度不受影响 */
+.filter-bar select { max-width: 200px; }
+/* 2b.3 搜索框下限 200→120：6 控件同行时 flex 收缩空间不足（原下限导致 filterSort 换行），下限降低后桌面保持一行 */
+.filter-bar input { min-width: 120px; }
 </style>
 </head>
 <body data-style="a">
@@ -2776,15 +2797,27 @@ body {
 
   <!-- ========== 标签1：政策库 ========== -->
   <section class="tab-panel active" id="tab-browse">
+    <div class="timeline-block no-print" id="windowTimeline">
+      <button type="button" class="timeline-toggle" onclick="toggleTimeline()">📅 申报窗口时间轴 · 未来 12 个月 ▾</button>
+      <div class="timeline-body" id="timelineBody" hidden></div>
+    </div>
     <div class="filter-bar">
-      <input type="text" id="policySearch" placeholder="搜索政策名称或发文机关...">
+      <input type="text" id="policySearch" placeholder="搜索政策名称、发文机关或条件描述...">
+      <select id="filterDept">
+        <option value="">全部部门</option>
+      </select>
       <select id="filterLevel">
         <option value="">全部级别</option>
-        <option value="国家级">国家级</option>
-        <option value="省级">省级</option>
       </select>
       <select id="filterIndustry">
         <option value="">全部行业</option>
+      </select>
+      <select id="filterMonth">
+        <option value="">全部月份</option>
+      </select>
+      <select id="filterSort">
+        <option value="">默认排序</option>
+        <option value="deadline">按截止日升序</option>
       </select>
     </div>
     <div id="policyList"></div>

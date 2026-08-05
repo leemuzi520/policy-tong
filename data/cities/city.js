@@ -48,6 +48,7 @@ window.ZCT_DATA.city.push(
     issuingBody: "东莞市工业和信息化局",
     level: "市级",
     deadline: "项目库入库制、每年 1 批：2026 年度入库 2025-09-01~9-22 已截止（资助计划 2026-04 已公示）；2027 年度入库预计 2026 年 9 月启动（收 2025 年度完工投入项目）",
+    deadlineDate: "2026-09-30", // 2b.3 推算：deadline 文本「2027 年度入库预计 2026 年 9 月启动」，月粒度取当月最后一天；通知发布后按实际截止更新
     effort: "Medium",
     updated: "2026-08-05",
     source: { name: "《东莞市工业和信息化产业发展专项资金企业技术改造和创新项目管理实施细则》（东工信〔2023〕24 号）", url: "https://www.dg.gov.cn/dgzsj/gkmlpt/content/4/4428/post_4428764.html" },
@@ -84,6 +85,7 @@ window.ZCT_DATA.city.push(
     issuingBody: "佛山市工业和信息化局",
     level: "市级",
     deadline: "2026-04-01 至 12-31 按月申报（每月月底截止当期，当月申报当月受理）；入库备案 2026-07-01 至 12-31 分批受理、先到先得（额度有限）；合同/发票/支付凭证/验收报告须在 2025-09-07 至 2027-09-06 期间",
+    deadlineDate: "2026-12-31", // 2b.3 明确：deadline 文本「2026-04-01 至 12-31 按月申报（每月月底截止当期）」，取当年申报期最后窗口月末
     effort: "Medium",
     updated: "2026-08-05",
     source: { name: "《佛山市中小企业数字化转型城市试点专项资金项目实施细则》（佛工信〔2026〕1 号）", url: "https://www.foshan.gov.cn/gfxwj/sbmgfxwj/fssgyhxxhj/content/post_6943866.html" },
