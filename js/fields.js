@@ -64,12 +64,14 @@ const PLAN_FIELD_IDS = Object.fromEntries(FIELDS.filter(f => f.plan).map(f => [f
 
 // ===== 渲染：生成匹配/规划表单字段（替换原静态 HTML，结构/文案/元素 id 与旧版一致）=====
 // scope: 'match'（含基础/进阶折叠）或 'plan'（无折叠）
-function renderFormFields(containerId, scope) {
+// idPrefix: 容器级前缀（Phase 3.2 路线图复用 match 渲染时传 'rm'，避免 advFold 折叠块 id 冲突；
+//           折叠按钮 toggleAdvFields(prefix) 按前缀定位）
+function renderFormFields(containerId, scope, idPrefix = '') {
   const container = document.getElementById(containerId);
   if (!container) return;
   const fields = FIELDS.filter(f => f[scope] && f[scope] !== false);
   const group = fs => fs.map(f => {
-    const elId = scope === 'plan' ? 'p' + f.id.slice(1) : f.id;
+    const elId = scope === 'plan' ? 'p' + f.id.slice(1) : idPrefix + f.id; // 前缀在前：rm + mIndustry → rmmIndustry（与 getRoadmapProfile 同口径）
     const label = scope === 'plan' ? (f.planLabel || f.label) : f.label;
     if (f.type === 'checkbox') {
       return `<div class="form-group"><label>${label}</label><div style="display:flex;flex-wrap:wrap;gap:8px;padding-top:6px;">` +
@@ -94,16 +96,16 @@ function renderFormFields(containerId, scope) {
   const basic = fields.filter(f => f.tier === 'basic');
   const adv = fields.filter(f => f.tier === 'advanced');
   container.innerHTML = `<div class="form-grid">${group(basic)}</div>` +
-    `<div class="form-fold collapsed" id="advFold"><button type="button" class="form-fold-toggle" onclick="toggleAdvFields()">展开进阶指标（${adv.length} 项）▾</button><div class="form-grid form-adv">${group(adv)}</div></div>`;
+    `<div class="form-fold collapsed" id="${idPrefix}advFold"><button type="button" class="form-fold-toggle" onclick="toggleAdvFields('${idPrefix}')">展开进阶指标（${adv.length} 项）▾</button><div class="form-grid form-adv">${group(adv)}</div></div>`;
   // 动态字段选项（industry：与筛选栏同源）
   if (fields.some(f => f.dynamic)) {
-    const el = document.getElementById('mIndustry');
+    const el = document.getElementById(idPrefix + 'mIndustry');
     if (el) el.innerHTML = '<option value="">请选择</option>' + window.industryOptionsHTML();
   }
 }
 
-function toggleAdvFields() {
-  const fold = document.getElementById('advFold');
+function toggleAdvFields(prefix = '') {
+  const fold = document.getElementById(prefix + 'advFold');
   if (!fold) return;
   const collapsed = fold.classList.toggle('collapsed');
   const btn = fold.querySelector('.form-fold-toggle');

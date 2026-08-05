@@ -2750,6 +2750,32 @@ body {
 .filter-bar select { max-width: 200px; }
 /* 2b.3 搜索框下限 200→120：6 控件同行时 flex 收缩空间不足（原下限导致 filterSort 换行），下限降低后桌面保持一行 */
 .filter-bar input { min-width: 120px; }
+
+/* ===== Phase 3.2 申报路线图（2026-08-05）：三层递进时间轴 + 分区卡片 ===== */
+.roadmap-timeline { display: flex; gap: 8px; margin-bottom: 14px; }
+.rm-seg { flex: 1; display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border); }
+.rm-seg-title { font-weight: 700; font-size: 13px; color: var(--primary); }
+.rm-seg-desc { font-size: 11px; color: var(--text-secondary); }
+.rm-near { background: var(--bg-success); border-color: var(--success); }
+.rm-mid { background: var(--bg-warning); border-color: var(--warning); }
+.rm-long { background: var(--bg-info); border-color: var(--primary-light); }
+.roadmap-section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; }
+.roadmap-sec-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.roadmap-badge { font-size: 12px; font-weight: 700; letter-spacing: 0.5px; padding: 3px 10px; border-radius: 4px; background: var(--primary); color: #f5e7b8; }
+.rm-near-sec .roadmap-badge { background: var(--success); }
+.rm-mid-sec .roadmap-badge { background: var(--warning); }
+.rm-long-sec .roadmap-badge { background: var(--primary); }
+.rm-veto-sec .roadmap-badge { background: var(--danger); }
+.rm-ins-sec .roadmap-badge { background: var(--text-secondary); }
+.roadmap-sec-desc { font-size: 12px; color: var(--text-secondary); flex: 1; }
+.roadmap-count { font-size: 12px; color: var(--text-secondary); }
+.roadmap-item { border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; }
+.roadmap-empty { font-size: 12.5px; color: var(--text-secondary); padding: 6px 0; }
+@media (max-width: 640px) { .roadmap-timeline { flex-direction: column; } }
+
+/* ===== Phase 3.3 申报作战手册（2026-08-05）：复用诊断报告版式 ===== */
+.manual .report-section ul { padding-left: 20px; }
+.manual .report-section li { margin-bottom: 6px; line-height: 1.8; }
 </style>
 </head>
 <body data-style="a">
@@ -2778,6 +2804,7 @@ body {
   <button class="tab-btn" data-tab="match">智能匹配</button>
   <button class="tab-btn" data-tab="diagnose">自诊断</button>
   <button class="tab-btn" data-tab="plan">培育规划</button>
+  <button class="tab-btn" data-tab="roadmap">申报路线图</button>
 </nav>
 
 <!-- ===== 主内容 ===== -->
@@ -2825,8 +2852,15 @@ body {
 
   <!-- ========== 标签2：智能匹配 ========== -->
   <section class="tab-panel" id="tab-match">
+    <div class="card no-print" style="margin-bottom:14px;">
+      <div class="card-header">✨ 渐进式问卷 — 只答关键问题，快速找到可申报政策</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">先回答几个核心问题（行业/规模/成立年限），系统会先淘汰一批政策，再追问「剩余政策最需要的字段」——通常 5-8 个问题即可收敛（设计参考 FörderFunke 自适应问卷）。想一次填完，可直接用下方完整表单。</div>
+      <button class="btn btn-primary" onclick="renderProgressive()" style="margin-right:8px;">开始渐进式问卷</button>
+      <button class="btn" onclick="progReset()">重置问卷</button>
+      <div id="progressiveBox"></div>
+    </div>
     <div class="card no-print">
-      <div class="card-header">企业基本信息</div>
+      <div class="card-header">企业基本信息（完整表单）</div>
       <div id="matchFormFields"></div>
       <button class="btn btn-primary" onclick="runMatch()" style="margin-top:16px;">开始匹配</button>
       <button class="btn btn-secondary" onclick="resetMatch()" style="margin-top:16px;margin-left:8px;">重置</button>
@@ -2845,6 +2879,7 @@ body {
       </div>
       <div id="diagnosisChecklist" class="no-print"></div>
       <div id="diagnosisReport"></div>
+      <div id="manualBox" class="no-print"></div>
     </div>
   </section>
 
@@ -2867,6 +2902,22 @@ body {
       <button class="btn btn-primary" onclick="window.print()">打印 / 导出 PDF 报告</button>
       <span style="font-size:12px;color:var(--text-secondary);">含培育规划结果、差距清单和节奏建议。打印时请选择「另存为 PDF」即可导出。</span>
     </div>
+  </section>
+
+  <!-- ========== 标签5：申报路线图（Phase 3.2） ========== -->
+  <section class="tab-panel" id="tab-roadmap">
+    <div class="card no-print">
+      <div class="card-header">申报路线图 — 输入企业画像，输出 1-3 年三层递进申报规划</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;padding:10px 14px;background:#eff6ff;border-left:4px solid var(--primary-light);border-radius:6px;">
+        三层递进（参考企蒜蒜「初算→精算→深算」分层）：<strong>近期可申报（0-6 月，满足度 ≥70% 无缺口）→ 中期可冲刺（6-12 月，缺 1-2 个关键条件）→ 长期培育（1-3 年，系统性建设 / 资质递进）</strong>。评分口径 = 三维评分（Fit 50% + Timing 25% + Effort 25%），申报窗口消费各政策截止数据。本表单与「智能匹配」为同一套画像字段（自动联动，填任一处即可，本表单不持久化）。
+      </div>
+      <div id="roadmapFormFields"></div>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="runRoadmap()">生成申报路线图</button>
+        <button class="btn" onclick="resetRoadmap()">清空重填</button>
+      </div>
+    </div>
+    <div id="roadmapResult"></div>
   </section>
 
 </main>

@@ -316,3 +316,126 @@ function nearMissRecovery(results, profile) {
     (a.tier === b.tier ? b.score - a.score : a.tier === 'high' ? -1 : 1));
   return cands.slice(0, 5);
 }
+
+// ============================================================
+// Phase 3.1 渐进式问卷（2026-08-05）：自适应问卷（Akinator-Style）
+// 设计参考：FörderFunke matching engine 自适应问卷（[[知识库/国际竞品与最佳实践#实践 9]]）
+// 流程：先问 3 个核心字段（行业/规模/成立年限）→ 硬淘汰（行业不匹配 / 必选与一票否决已确认不满足）→
+//       分析剩余政策条件依赖 → 追问「被最多政策需要且未问」的字段 → 收敛（剩余 ≤5 或无可问字段）
+// 核心字段与选项均来自 fields.js 注册表（window.ZCT_FIELDS），无硬编码词表
+// 返回 { done, remaining, eliminated, nextKey, nextCount }；done=true 时 remaining 为收敛结果
+// ============================================================
+function progressiveCoreKeys() {
+  const core = ['industry', 'revenue', 'years'];
+  const fields = window.ZCT_FIELDS?.FIELDS || [];
+  return core.filter(k => fields.some(f => f.key === k && f.match));
+}
+
+function progressiveStep(profile, askedKeys) {
+  const remaining = POLICIES.filter(p => {
+    // 硬淘汰 1：适用行业不匹配（applicableIndustries 非空的政策才生效）
+    if (profile.industry && p.applicableIndustries.length && !p.applicableIndustries.includes(profile.industry)) return false;
+    // 硬淘汰 2：必选/一票否决条件已确认不满足（未核验不淘汰，引导补数据而非误杀）
+    const r = evaluatePolicyConditions(p, profile);
+    return r.failedRequired.length === 0 && r.failedVeto.length === 0;
+  });
+  const eliminated = POLICIES.length - remaining.length;
+  const asked = new Set(askedKeys);
+  // 核心字段优先追问（industry → revenue → years），未答且未问过的
+  const coreNext = progressiveCoreKeys().find(k => !asked.has(k) && !profile[k]);
+  if (coreNext) return { done: false, remaining, eliminated, nextKey: coreNext, nextCount: null };
+  // 收敛：剩余 ≤5 或没有可问字段
+  const fields = (window.ZCT_FIELDS?.FIELDS || []).filter(f => f.match && f.type !== 'checkbox');
+  const askable = fields.filter(f => !asked.has(f.key) && !profile[f.key]);
+  if (remaining.length <= 5 || askable.length === 0) {
+    return { done: true, remaining, eliminated, nextKey: null, nextCount: 0 };
+  }
+  // 追问：被最多剩余政策依赖的未问字段（autoMatch 引用计数，含 paths 子项）
+  const demand = {};
+  remaining.forEach(p => p.conditions.forEach(cat => {
+    const items = cat.paths ? cat.paths.flatMap(pt => pt.items || []) : (cat.items || []);
+    items.forEach(it => { if (it.autoMatch && askable.some(f => f.key === it.autoMatch)) demand[it.autoMatch] = (demand[it.autoMatch] || 0) + 1; });
+  }));
+  const best = Object.entries(demand).sort((a, b) => b[1] - a[1])[0];
+  return { done: !best, remaining, eliminated, nextKey: best ? best[0] : null, nextCount: best ? best[1] : 0 };
+}
+
+// ============================================================
+// Phase 3.2 申报路线图（2026-08-05）：三层递进 + 三维评分
+// 设计参考：企蒜蒜「初算→精算→深算」三层框架（[[知识库/政策通 竞品分析报告#竞品 3]]）
+//           + financing-starts-now Fit/Timing/Effort 三维排序（[[知识库/国际竞品与最佳实践#实践 4]]）
+// 分层规则（最小可用版，消费 2b.2 三维评分 + 2b.3 申报窗口期）：
+//   近期可申报（0-6 月）：无否决 + 无必选缺口 + fit ≥70（缺口已清零，窗口 180 天内/滚动/未定均可行动）
+//   中期可冲刺（6-12 月）：无否决 + 缺 1-2 个关键必选条件（缺口有明确补齐路径，按缺口数升序）
+//   长期培育（1-3 年）：无否决的其余（缺 ≥3 条件或需前置资质/系统性建设）
+//   否决政策独立列出（一票否决 = 硬性资格线，任何时间线都不具备资格）
+//   信息不足不参与分层（先补数据，与近失配触发口径一致：insufficient 需补数据而非规划）
+// 返回 { near, mid, long, vetoed, insufficient } 四组 scorePolicy 结果
+// ============================================================
+function buildRoadmap(profile, now = new Date()) {
+  const layers = { near: [], mid: [], long: [], vetoed: [], insufficient: [] };
+  POLICIES.forEach(p => {
+    const r = Object.assign(scorePolicy(p, profile, now), { policy: p }); // 挂 policy 供 UI 渲染（政策名/详情跳转）
+    if (r.failedVeto.length) { layers.vetoed.push(r); return; }
+    if (r.insufficient) { layers.insufficient.push(r); return; }
+    const gapCount = r.failedRequired.length;
+    if (r.fit >= 70 && gapCount === 0) { layers.near.push(r); return; }
+    if (gapCount <= 2) { layers.mid.push(r); return; }
+    layers.long.push(r);
+  });
+  layers.near.sort((a, b) => b.total - a.total);
+  layers.mid.sort((a, b) => a.failedRequired.length - b.failedRequired.length || b.total - a.total);
+  layers.long.sort((a, b) => a.failedRequired.length - b.failedRequired.length || b.total - a.total);
+  layers.vetoed.sort((a, b) => b.total - a.total);
+  layers.insufficient.sort((a, b) => b.coverage - a.coverage);
+  return layers;
+}
+
+// ============================================================
+// Phase 3.3 申报作战手册数据辅助（2026-08-05）
+// 材料清单：通用材料 + 条件描述中含外部佐证关键词（报告/证明/证书/审计/检测等）的专项提示
+// 时间节点倒推：截止日 → 逆推 8/4/2/1 周筹备节点；滚动申报/窗口未定给对应口径
+// ============================================================
+const MANUAL_COMMON_MATERIALS = [
+  '企业营业执照副本（加盖公章）',
+  '法定代表人身份证明',
+  '近两年财务审计报告（由具执业资质的会计师事务所出具）',
+  '纳税证明 / 完税证明（税务部门出具）',
+  '申报书 / 申请表（按官方通知模板填写）',
+  '真实性承诺书（法定代表人签字 + 盖章）'
+];
+
+// 专项佐证提示：条件描述中需要外部出具材料的条件（需用户逐条备齐对应佐证）
+function extractSupportDocs(policy) {
+  const kw = /报告|证明|证书|审计|检测|评估|备案|登记|批复|认定书/;
+  const hits = [];
+  policy.conditions.forEach(cat => {
+    const items = cat.paths ? cat.paths.flatMap(pt => pt.items || []) : (cat.items || []);
+    items.forEach(it => {
+      if (it.description && kw.test(it.description)) hits.push({ name: it.name, desc: it.description, basis: it.basis });
+    });
+  });
+  return hits;
+}
+
+// 时间节点倒推：{ rolling | undecided | { date, steps:[{when,todo}] } }
+function manualTimeline(policy, now = new Date()) {
+  const t = getTimingInfo(policy, now);
+  if (t.rolling) return { rolling: true };
+  if (!t.has) return { undecided: true };
+  const fmt = d => `${d.getFullYear()} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日`;
+  const at = days => {
+    const d = new Date(t.date);
+    d.setDate(d.getDate() - days);
+    return fmt(d);
+  };
+  return {
+    date: fmt(new Date(t.date)),
+    steps: [
+      { when: `截止前 8 周（${at(56)}）`, todo: '启动专项审计 / 第三方报告（如需）；确认申报书关键数据口径（营收、研发费用）' },
+      { when: `截止前 4 周（${at(28)}）`, todo: '收集认证证书、检测报告、无事故证明等佐证材料（注意证明类材料有效期）' },
+      { when: `截止前 2 周（${at(14)}）`, todo: '申报材料初稿完成；内部审批、用章、负责人签字' },
+      { when: `截止前 1 周（${at(7)}）`, todo: '系统填报 + 附件上传（截止当日 17:00 前提交；留意地市推荐截止早于省级）' }
+    ]
+  };
+}

@@ -298,6 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 2a.1 步骤 C：字段表单由注册表渲染（须在 populate 之前，选项就绪后才能 restore）
   renderFormFields('matchFormFields', 'match');
   renderFormFields('planFormFields', 'plan');
+  renderFormFields('roadmapFormFields', 'match', 'rm'); // Phase 3.2 路线图像画表单（rm 前缀避免折叠块 id 冲突）
   populateIndustryFilter();
   populateLevelFilter();
   populateDeptFilter();
@@ -312,6 +313,12 @@ document.addEventListener('DOMContentLoaded', () => {
   restorePlanState();
   // 字段联动：加载后补一次，规划表单空字段自动带入匹配表单已填值（跨刷新也生效）
   syncMatchToPlan();
+  // Phase 3.2：匹配表单已填值带入路线图像画表单（空字段，不覆盖用户已填）
+  (window.ZCT_FIELDS.FIELDS).filter(f => f.match && f.type !== 'checkbox').forEach(f => {
+    const mEl = document.getElementById(f.id);
+    const rEl = document.getElementById('rm' + f.id);
+    if (mEl && rEl && mEl.value !== '' && rEl.value === '') rEl.value = mEl.value;
+  });
 });
 $('#policySearch')?.addEventListener('input', renderPolicyList);
 $('#filterLevel')?.addEventListener('change', renderPolicyList);
@@ -787,6 +794,9 @@ function generateReport(policyId) {
 
   const today = new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric' });
 
+  // Phase 3.3：挂载作战手册数据（渲染按钮在报告尾部）
+  manualData = { policy, vetoGaps, criticalGaps, optionalGaps };
+
   $('#diagnosisReport').innerHTML = `
     <div class="diagnosis-report">
       <!-- 打印专用头部 -->
@@ -890,6 +900,7 @@ function generateReport(policyId) {
       <!-- 导出按钮（打印时隐藏） -->
       <div class="no-print" style="margin-top:16px;padding:12px 14px;background:var(--bg-info);border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
         <button class="btn btn-primary" onclick="window.print()">打印 / 导出 PDF 报告</button>
+        <button class="btn btn-primary" onclick="renderManual()" style="margin-left:6px;">📋 生成申报作战手册</button>
         <span style="font-size:12px;color:var(--text-secondary);">含诊断结果、缺口清单、日期戳和否决条件标记。打印时请选择「另存为 PDF」即可导出。</span>
       </div>
     </div>
@@ -910,6 +921,8 @@ document.addEventListener('keydown', e => {
     $$('.tab-btn')[2].click();
   } else if (e.key === '4' && !e.target.closest('input, select')) {
     $$('.tab-btn')[3].click();
+  } else if (e.key === '5' && !e.target.closest('input, select')) {
+    $$('.tab-btn')[4].click(); // Phase 3.2 申报路线图
   }
 });
 
@@ -1089,9 +1102,290 @@ document.addEventListener('change', e => {
   const t = e.target;
   if (t.id === 'diagPolicySelect') { saveDiagSel(t.value); return; }
   if (t.matches('#tab-match select, #tab-match .mCert')) { saveMatchState(); syncMatchToPlan(); return; }
+  if (t.matches('#tab-roadmap select, #tab-roadmap .mCert')) { saveMatchState(); return; } // Phase 3.2 画像表单与匹配表单同键持久化
   if (t.matches('#tab-plan select')) { savePlanState(); return; }
   if (t.classList.contains('diag-check')) saveDiagCheck(t.dataset.policy);
 });
+
+// ============================================================
+// Phase 3.1 渐进式问卷 UI（2026-08-05）：自适应问卷（FörderFunke 实践 9）
+// 状态机：progState.asked（已问字段）/ progState.answers（已答值）
+// 每问一题 → 硬淘汰统计实时展示 → 收敛后出三维评分结果 + 一键带入完整表单
+// ============================================================
+let progState = { asked: [], answers: {} };
+
+function progFieldOptionsHTML(key) {
+  const f = (window.ZCT_FIELDS.FIELDS).find(x => x.key === key);
+  if (!f) return '';
+  if (f.dynamic) return '<option value="">请选择</option>' + window.industryOptionsHTML();
+  return '<option value="">请选择</option>' + f.options.map(o => {
+    const [v, t] = Array.isArray(o) ? o : [o, o];
+    return `<option value="${v}">${t}</option>`;
+  }).join('');
+}
+
+function renderProgressive() {
+  const box = $('#progressiveBox');
+  if (!box) return;
+  const profile = Object.assign({}, progState.answers);
+  const step = progressiveStep(profile, progState.asked);
+  const f = step.nextKey ? (window.ZCT_FIELDS.FIELDS).find(x => x.key === step.nextKey) : null;
+
+  if (step.done) {
+    const results = step.remaining.map(p => Object.assign(scorePolicy(p, profile), { policy: p })).sort((a, b) => b.total - a.total);
+    box.innerHTML = `
+      <div style="margin-top:4px;">
+        <div style="padding:8px 12px;background:var(--bg-success);border:1px solid var(--success);border-radius:6px;font-size:13px;color:var(--success);margin-bottom:10px;">
+          ✅ 问卷完成：已淘汰 <strong>${step.eliminated}</strong> 条政策，剩余 <strong>${step.remaining.length}</strong> 条值得关注（按三维评分排序）
+        </div>
+        ${results.length === 0 ? '<div style="font-size:13px;color:var(--text-secondary);">当前信息下没有政策可通过硬性筛选——可重置问卷，或到下方完整表单补填「不清楚」的选项。</div>' : results.map(r => {
+          const [cls, label, color] = resultTierInfo(r);
+          return `
+          <div class="match-item ${cls}" style="margin-bottom:8px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+              <div>
+                <span class="match-score ${cls}">${r.total}%</span>
+                <span style="font-weight:600;">${r.policy.name}</span>
+                <span style="font-size:12px;color:var(--text-secondary);margin-left:8px;">${r.policy.issuingBody}</span>
+              </div>
+              <span style="font-size:12px;padding:4px 10px;border-radius:12px;font-weight:500;background:${color === 'var(--success)' ? 'var(--bg-success)' : color === 'var(--warning)' ? 'var(--bg-warning)' : 'var(--bg-danger)'};color:${color};">${label}</span>
+            </div>
+            <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--text-secondary);margin-top:8px;">
+              <span>匹配 <strong>${r.fit}</strong></span>
+              <span>时效 <strong>${r.timing.has ? r.timing.score : '—'}</strong>（${r.timing.label}）</span>
+              <span>成本 <strong>${r.effort.label}</strong>（${r.effort.score}）</span>
+            </div>
+            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn" style="padding:2px 10px;font-size:12px;" onclick="goPolicy('${r.policy.id}')">政策详情</button>
+              <button class="btn" style="padding:2px 10px;font-size:12px;" onclick="goDiag('${r.policy.id}')">去自诊断核实</button>
+            </div>
+          </div>`;
+        }).join('')}
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="progFillForm()">一键带入完整表单（可继续用全部字段精调）</button>
+          <button class="btn" onclick="progReset()">重新开始问卷</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  box.innerHTML = `
+    <div style="margin-top:4px;">
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">第 ${progState.asked.length + 1} 问 · 已淘汰 <strong>${step.eliminated}</strong> 条政策 · 剩余 <strong>${step.remaining.length}</strong> 条可申报候选</div>
+      <div style="font-weight:600;font-size:14px;margin-bottom:4px;">${f ? f.label : ''}</div>
+      ${step.nextCount ? `<div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">这一项被剩余候选中的 ${step.nextCount} 条政策引用为条件——回答后继续缩小范围（FörderFunke 自适应追问）</div>` : '<div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">回答后继续缩小范围</div>'}
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <select id="progSel" style="min-width:220px;">${progFieldOptionsHTML(step.nextKey)}</select>
+        <button class="btn btn-primary" onclick="progNext()">下一步</button>
+        <button class="btn" onclick="progSkip()">跳过此题</button>
+      </div>
+    </div>`;
+}
+
+function progNext() {
+  const key = progressiveStep(Object.assign({}, progState.answers), progState.asked).nextKey;
+  const val = $('#progSel')?.value || '';
+  if (val !== '') progState.answers[key] = val;
+  progState.asked.push(key);
+  renderProgressive();
+}
+
+function progSkip() {
+  progState.asked.push(progressiveStep(Object.assign({}, progState.answers), progState.asked).nextKey);
+  renderProgressive();
+}
+
+function progReset() {
+  progState = { asked: [], answers: {} };
+  renderProgressive();
+}
+
+// 已答字段带入完整匹配表单（复用 MATCH_FIELD_IDS 注册表；certs 多选不在此列）
+function progFillForm() {
+  Object.keys(progState.answers).forEach(k => {
+    const id = MATCH_FIELD_IDS[k];
+    if (id) { const el = document.getElementById(id); if (el) el.value = progState.answers[k]; }
+  });
+  saveMatchState();
+  syncMatchToPlan();
+  $('#matchFormFields').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ============================================================
+// Phase 3.2 申报路线图 UI（2026-08-05）：三层递进（企蒜蒜分层 + 三维评分）
+// 画像 = 匹配表单 ∪ 路线图表单（mergeProfiles：任一处填了都能用，匹配表单优先）
+// ============================================================
+function getRoadmapProfile() {
+  const p = {};
+  (window.ZCT_FIELDS.FIELDS).filter(f => f.match && f.type !== 'checkbox').forEach(f => {
+    const el = document.getElementById('rm' + f.id);
+    if (el) p[f.key] = el.value;
+  });
+  const lvl = document.getElementById('rmmLevel');
+  if (lvl) p.level = lvl.value === '' ? undefined : Number(lvl.value);
+  p.certs = Array.from(document.querySelectorAll('#tab-roadmap .mCert:checked')).map(cb => cb.value);
+  return p;
+}
+
+// b 的非空值覆盖 a（画像并集，避免空串覆盖已填值）
+function mergeProfiles(a, b) {
+  const out = Object.assign({}, a);
+  Object.keys(b).forEach(k => {
+    if (b[k] !== undefined && b[k] !== null && b[k] !== '') out[k] = b[k];
+  });
+  return out;
+}
+
+// 档位标签（与 runMatch 同款语义；渐进式收敛结果与路线图结果共用）
+function resultTierInfo(r) {
+  if (r.failedVeto.length) return ['veto', '存在一票否决条件不满足', 'var(--danger)'];
+  if (r.failedRequired.length) return ['low', '暂不建议申报', 'var(--danger)'];
+  if (r.insufficient) return ['medium', '信息不足，暂无法评估', 'var(--warning)'];
+  if (r.score >= 75) return ['high', '推荐申报', 'var(--success)'];
+  if (r.score >= 50) return ['medium', '部分匹配，需补齐', 'var(--warning)'];
+  return ['low', '暂不建议申报', 'var(--danger)'];
+}
+
+function rmTimingText(r) {
+  const t = r.timing;
+  if (t.rolling) return '滚动申报';
+  if (t.has) return `${t.label}（剩 ${t.days} 天）`;
+  return '窗口未定';
+}
+
+function rmItemHTML(r, summary) {
+  return `
+    <div class="roadmap-item">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+        <span style="font-weight:600;">${r.policy.name}</span>
+        <span style="font-size:12px;color:var(--text-secondary);">三维 <strong>${r.total}%</strong>｜匹配 ${r.fit}｜时效 ${r.timing.has ? r.timing.score : '—'}（${rmTimingText(r)}）｜成本 ${r.effort.label}</span>
+      </div>
+      <div style="font-size:12.5px;color:var(--text-secondary);margin-top:4px;line-height:1.7;">${summary}</div>
+      <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn" style="padding:2px 8px;font-size:11px;" onclick="goPolicy('${r.policy.id}')">政策详情</button>
+        <button class="btn" style="padding:2px 8px;font-size:11px;" onclick="goDiag('${r.policy.id}')">去自诊断核实</button>
+      </div>
+    </div>`;
+}
+
+function runRoadmap() {
+  const profile = mergeProfiles(getMatchProfile(), getRoadmapProfile());
+  if (!profile.industry && !profile.type && !profile.years) {
+    $('#roadmapResult').innerHTML = '<div class="card" style="color:var(--danger);">请至少填写行业、企业类型和成立年限后再生成路线图（两处表单任填其一，互为补充）。</div>';
+    return;
+  }
+  const layers = buildRoadmap(profile);
+  const section = (title, desc, items, summaryFn, cls, emptyText) => `
+    <div class="roadmap-section ${cls}">
+      <div class="roadmap-sec-head">
+        <span class="roadmap-badge">${title}</span>
+        <span class="roadmap-sec-desc">${desc}</span>
+        <span class="roadmap-count">${items.length} 条</span>
+      </div>
+      ${items.length ? items.map(r => rmItemHTML(r, summaryFn(r))).join('') : `<div class="roadmap-empty">${emptyText}</div>`}
+    </div>`;
+
+  $('#roadmapResult').innerHTML = `
+    <div class="roadmap">
+      <div class="roadmap-timeline no-print">
+        <div class="rm-seg rm-near"><span class="rm-seg-title">近期 · 0-6 月</span><span class="rm-seg-desc">满足度 ≥70% 无缺口</span></div>
+        <div class="rm-seg rm-mid"><span class="rm-seg-title">中期 · 6-12 月</span><span class="rm-seg-desc">缺 1-2 个关键条件</span></div>
+        <div class="rm-seg rm-long"><span class="rm-seg-title">长期 · 1-3 年</span><span class="rm-seg-desc">系统性培育 / 资质递进</span></div>
+      </div>
+      ${section('近期可申报（0-6 月）', '条件满足度 ≥70% 且无必选缺口——建议启动申报材料准备', layers.near, r => `已满足条件 <strong>${r.matchedItems.length}</strong> 项，无必选缺口；申报窗口：${rmTimingText(r)}。`, 'rm-near-sec', '当前画像暂无「近期可申报」政策')}
+      ${section('中期可冲刺（6-12 月）', '缺 1-2 个关键必选条件——按缺口制定补齐计划（时间来得及）', layers.mid, r => `缺口 <strong>${r.failedRequired.length}</strong> 项：${r.failedRequired.join('、')}。建议 1-2 个月内补齐后按近期档申报。`, 'rm-mid-sec', '当前画像暂无「中期可冲刺」政策')}
+      ${section('长期培育（1-3 年）', '缺口 ≥3 项或需前置资质/系统性建设——纳入年度培育计划', layers.long, r => `缺口 <strong>${r.failedRequired.length}</strong> 项${r.unverifiedRequired.length ? `＋待核实 ${r.unverifiedRequired.length} 项` : ''}，需分阶段补齐；结合专精特新梯度递进规划（见「培育规划」标签）。`, 'rm-long-sec', '当前画像暂无「长期培育」政策')}
+      ${section('暂不具备资格（一票否决）', '任一否决项未满足即不可申报——先攻克硬性资格线再谈规划', layers.vetoed, r => `否决项：<strong>${r.failedVeto.join('、')}</strong>。`, 'rm-veto-sec', '')}
+      ${section('信息不足（先补数据）', '已核验覆盖 <15%——先到「智能匹配/自诊断」补充企业数据再规划', layers.insufficient, r => `已核验覆盖 <strong>${Math.round(r.coverage * 100)}%</strong>，暂无法评估条件满足度。`, 'rm-ins-sec', '')}
+    </div>`;
+  $('#roadmapResult').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetRoadmap() {
+  $$('#tab-roadmap select').forEach(s => s.value = '');
+  $$('#tab-roadmap .mCert:checked').forEach(cb => cb.checked = false);
+  $('#roadmapResult').innerHTML = '';
+}
+
+// ============================================================
+// Phase 3.3 申报作战手册（2026-08-05）：锁定目标政策 → 五模块执行手册
+// 本质：把咨询口述内容结构化可复用（项目开发计划 3.3）
+// 数据来源：自诊断报告（generateReport 挂 manualData）+ 政策数据（source/notice/basis）
+// ============================================================
+let manualData = null;
+
+// 关键风险点（来自 49 家企业申报经验的通用退件原因，写死为经验库）
+const MANUAL_RISKS = [
+  '材料缺章 / 未盖章扫描件——材料退件第一大原因，装订前逐份检查',
+  '审计报告机构资质不符（机构成立不足 3 年或注会/税务师占比不足）——委托前先核中介机构资质',
+  '数据口径不一致（研发费用：税务口径 vs 高新口径 vs 统计口径）——评审重点核查三表一致性',
+  '错过地市 / 区县推荐截止——常早于省级截止 1-4 周，以属地通知为准',
+  '系统填报截止当日 17:00 前提交，逾期系统关闭不可补报',
+  '证明类佐证过期（检测报告通常 1 年内有效、无事故证明 3 个月内出具）——申报前核对有效期'
+];
+
+function renderManual() {
+  const box = $('#manualBox');
+  if (!box || !manualData) return;
+  const { policy, vetoGaps, criticalGaps, optionalGaps } = manualData;
+  const docs = extractSupportDocs(policy);
+  const tl = manualTimeline(policy);
+  const gapUl = (list, cls) => list.map(g =>
+    `<li class="${cls}">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">政策依据：${g.basis.name}</a>` : ''}</li>`).join('');
+
+  box.innerHTML = `
+  <div class="diagnosis-report manual">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
+      <h3 style="margin:0;">📋 申报作战手册 — ${policy.name}</h3>
+      <span style="font-size:12px;color:var(--text-secondary);">由「政策通」按当前诊断结果生成 · ${DATA_VERSION}</span>
+    </div>
+    <div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:14px;">本手册把「资深顾问口述的申报要点」结构化：按 条件缺口 → 材料清单 → 时间倒推 → 风险点 → 官方链接 五个模块执行。生成日期：${new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric' })}</div>
+
+    <div class="report-section">
+      <h4>① 条件缺口清单（按紧急度排序）</h4>
+      ${vetoGaps.length ? `<div style="color:var(--danger);font-weight:600;margin-bottom:6px;">一票否决（${vetoGaps.length} 项）——先解决，否则一切白做</div><ul>${gapUl(vetoGaps, 'gap-critical')}</ul>` : ''}
+      ${criticalGaps.length ? `<div style="color:var(--danger);font-weight:600;margin-bottom:6px;">关键必选缺口（${criticalGaps.length} 项）</div><ul>${gapUl(criticalGaps, 'gap-critical')}</ul>` : ''}
+      ${optionalGaps.length ? `<div style="color:var(--warning);font-weight:600;margin-bottom:6px;">可选条件（${optionalGaps.length} 项，影响评审竞争力）</div><ul>${gapUl(optionalGaps, 'gap-important')}</ul>` : ''}
+      ${!vetoGaps.length && !criticalGaps.length && !optionalGaps.length ? '<div style="color:var(--success);font-weight:600;">全部条件已满足——按下方时间表启动申报。</div>' : ''}
+    </div>
+
+    <div class="report-section">
+      <h4>② 材料清单</h4>
+      <div style="margin-bottom:8px;"><strong>通用材料</strong>（各申报通用）：</div>
+      <ul>${MANUAL_COMMON_MATERIALS.map(m => `<li>${m}</li>`).join('')}</ul>
+      ${docs.length ? `<div style="margin-bottom:8px;margin-top:10px;"><strong>专项佐证提示</strong>（${docs.length} 项条件要求外部材料——逐条核对备齐）：</div>
+      <ul>${docs.map(d => `<li><strong>${d.name}</strong>——${d.desc}${d.basis ? ` <a href="${d.basis.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">（政策依据）</a>` : ''}</li>`).join('')}</ul>` : ''}
+    </div>
+
+    <div class="report-section">
+      <h4>③ 时间节点倒推</h4>
+      ${tl.rolling ? '<div>该政策为滚动申报、无固定截止——建议按「4-6 周筹备周期」倒推启动，避免材料仓促。</div>' :
+        tl.undecided ? '<div>当前无固定申报窗口（以官方通知为准）——建议先按缺口清单补齐条件，并订阅官方通知渠道。</div>' :
+        `<div style="margin-bottom:8px;">截止日：<strong>${tl.date}</strong>。倒推节点（第三方证明类材料建议提前 8 周启动）：</div><ul>${tl.steps.map(s => `<li><strong>${s.when}</strong> — ${s.todo}</li>`).join('')}</ul>`}
+    </div>
+
+    <div class="report-section">
+      <h4>④ 关键风险点（常见退件原因）</h4>
+      <ul>${MANUAL_RISKS.map(r => `<li>${r}</li>`).join('')}</ul>
+      ${policy.alert ? `<div class="policy-alert ${policy.alert.level}" style="margin-top:8px;"><strong>⚠️ 政策重要变更</strong>：${policy.alert.text} <a href="${policy.alert.link}" target="_blank" rel="noopener">${policy.alert.linkLabel}</a></div>` : ''}
+    </div>
+
+    <div class="report-section">
+      <h4>⑤ 官方链接</h4>
+      <div style="line-height:2;">
+        <div>政策原文：<a href="${policy.source.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${policy.source.name}（政府官网）</a></div>
+        ${policy.notice ? `<div>申报通知：<a href="${policy.notice.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${policy.notice.name}（政府官网）</a>${policy.notice.timeline ? `<div style="font-size:12px;color:var(--text-secondary);">${policy.notice.timeline}</div>` : ''}</div>` : ''}
+        ${(policy.basis || []).map(b => `<div>评价细则依据：<a href="${b.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${b.name}</a></div>`).join('')}
+      </div>
+    </div>
+
+    <div class="no-print" style="margin-top:16px;padding:12px 14px;background:var(--bg-info);border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="window.print()">打印 / 导出 PDF 手册</button>
+      <span style="font-size:12px;color:var(--text-secondary);">含五模块完整手册，可直接作为内部筹备会底稿。</span>
+    </div>
+  </div>`;
+  box.scrollIntoView({ behavior: 'smooth' });
+}
 
 // ===== 风格切换（5 套设计：a 政务金蓝 / b 深空科技 / c 水墨 / d 杂志 / e 玻璃） =====
 (function () {
