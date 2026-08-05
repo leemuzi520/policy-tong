@@ -86,7 +86,7 @@ function evaluatePolicyConditions(policy, profile) {
         if (path.scoreBased) {
           // 评分路径需逐档自评（自诊断标签），表单无法自动算分 → 恒未核验，引导去自诊断核实
           unverifiedRequired.push(label);
-          items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: false, unverified: true });
+          items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: false, unverified: true, weight: pathWeight });
           return;
         }
         const canAutoCheck = !!path.autoMatch && profile[path.autoMatch] !== undefined && profile[path.autoMatch] !== '';
@@ -98,18 +98,18 @@ function evaluatePolicyConditions(policy, profile) {
           if (verdict === true) {
             matchedWeight += pathWeight;
             matchedItems.push(label);
-            items.push({ name: label, category: cat.category, required: true, veto: false, matched: true, auto: true, unverified: false });
+            items.push({ name: label, category: cat.category, required: true, veto: false, matched: true, auto: true, unverified: false, weight: pathWeight, autoMatch: path.autoMatch });
           } else if (verdict === undefined) {
             // 「不清楚」三态：归未核验而非未通过
             unverifiedRequired.push(label);
-            items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: true, unverified: true });
+            items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: true, unverified: true, weight: pathWeight, autoMatch: path.autoMatch });
           } else {
             failedRequired.push(label);
-            items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: true, unverified: false });
+            items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: true, unverified: false, weight: pathWeight, autoMatch: path.autoMatch });
           }
         } else {
           unverifiedRequired.push(label);
-          items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: false, unverified: true });
+          items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: false, unverified: true, weight: pathWeight });
         }
       });
       return; // 该类别的子项由自诊断逐条渲染，匹配/规划页不展开
@@ -151,7 +151,7 @@ function evaluatePolicyConditions(policy, profile) {
         if (!item.required) unmatchedOptional.push(item.name);
       }
 
-      items.push({ name: item.name, category: cat.category, required: item.required, veto: item.veto, matched, auto: canAutoCheck, unverified: !canAutoCheck || verdict === undefined });
+      items.push({ name: item.name, category: cat.category, required: item.required, veto: item.veto, matched, auto: canAutoCheck, unverified: !canAutoCheck || verdict === undefined, weight: item.weight, autoMatch: item.autoMatch });
     });
   });
 
@@ -252,4 +252,67 @@ function policyWindowMonths(policy, now = new Date()) {
   (policy.batches || []).forEach(b => { if (b.date >= today) months.add(b.date.slice(0, 7)); });
   if (policy.deadlineDate && policy.deadlineDate >= today) months.add(policy.deadlineDate.slice(0, 7));
   return [...months].sort();
+}
+
+// ============================================================
+// 2b.3 近失配恢复（2026-08-07）：全部结果落到 low/veto 档时的兜底建议
+// 触发：runMatch 全结果无 high/medium（信息不足属 medium 档，不触发——先补数据而非放松）
+// 放松规则：仅「已核验确认未通过的普通必选条件」可放松——一票否决为事实性硬伤（事故/排放等）
+//   不可放松须正面攻破；未核验条件不在 failedRequired 内（引导去自诊断）；paths 类整路径失败
+//   在 items 无对应条目（label 非条件名），自动排除
+// 放松顺序：按约束影响面从小到大——条件维度 autoMatch 在全部政策中的出现次数，
+//   出现越少影响面越小越优先放松；同一政策内多个失败条件按影响面升序前缀逐级放松
+// 重算口径：假设放松条件满足 → matchedWeight += 其 weight → 分档规则与 runMatch 同款
+//   （industry 不匹配封顶 69 中档；≥75 高 / ≥50 中 / <50 低）
+// 差异标注：放松条件名 + 条件描述（含要求值）+ 用户当前档位文本（fields 注册表反向查）
+// 返回：按「放松数 → 放松后档位 → 放松后总分」排序的候选（最多 5 个），无可放松候选返回 []
+// 算法参考：financing-starts-now near-miss recovery（[[知识库/国际竞品与最佳实践#实践 2]]）
+function nearMissRecovery(results, profile) {
+  // 约束影响面：维度 autoMatch → 全部政策中该维度条件出现次数（含 paths 类子项）
+  const freq = {};
+  POLICIES.forEach(p => p.conditions.forEach(cat => {
+    const items = cat.paths ? cat.paths.flatMap(pt => pt.items || []) : (cat.items || []);
+    items.forEach(it => { if (it.autoMatch) freq[it.autoMatch] = (freq[it.autoMatch] || 0) + 1; });
+  }));
+  // 用户当前档位文本（fields 注册表 [value, text] 反向查；checkbox/未填返回空串不渲染）
+  const labelOf = key => {
+    const f = (window.ZCT_FIELDS?.FIELDS || []).find(x => x.key === key);
+    if (!f) return '';
+    const v = profile[key];
+    const opt = (f.options || []).find(o => (Array.isArray(o) ? o[0] : o) === v);
+    return opt ? (Array.isArray(opt) ? opt[1] : opt) : '';
+  };
+  const cands = [];
+  results.forEach(r => {
+    // 一票否决未通过：放松普通必选不消除否决，仍不具备资格 → 不参与放松
+    if (r.failedVeto.length) return;
+    // 可放松条件：failedRequired 中能命中 items 且 auto 已核验的（未核验/unverified 不在 failedRequired）
+    const relaxable = r.failedRequired
+      .map(name => r.items.find(it => it.name === name && it.auto))
+      .filter(Boolean)
+      .sort((a, b) => (freq[a.autoMatch] ?? 99) - (freq[b.autoMatch] ?? 99) || a.weight - b.weight);
+    // 前缀逐级放松：放松前 k 个影响面最小的条件，求最少放松数达到 medium 及以上
+    let addW = 0;
+    for (let k = 1; k <= relaxable.length; k++) {
+      addW += relaxable[k - 1].weight;
+      const s = Math.round((r.matchedWeight + addW) / r.verifiedWeight * 100);
+      const tier = r.industryMatch
+        ? (s >= 75 ? 'high' : s >= 50 ? 'medium' : 'low')
+        : (s >= 50 ? 'medium' : 'low'); // 行业不匹配封顶中档（与 runMatch 同款，得分本身无意义）
+      if (tier === 'high' || tier === 'medium') {
+        cands.push({
+          policy: r.policy,
+          relaxCount: k,
+          tier,
+          score: r.industryMatch ? s : Math.min(s, 69),
+          gaps: relaxable.slice(0, k).map(it => ({ name: it.name, desc: it.description, want: labelOf(it.autoMatch) }))
+        });
+        break; // 该政策取最少放松数
+      }
+    }
+  });
+  cands.sort((a, b) =>
+    a.relaxCount - b.relaxCount ||
+    (a.tier === b.tier ? b.score - a.score : a.tier === 'high' ? -1 : 1));
+  return cands.slice(0, 5);
 }
