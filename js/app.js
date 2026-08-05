@@ -356,7 +356,7 @@ function windowUrgencyHTML(policy) {
   return `<div style="color:${color};font-weight:600;margin-bottom:6px;padding:8px 12px;background:${bg};border-radius:4px;">⏰ 申报窗口：${b.label}（${b.date}）材料截止，${tip}</div>`;
 }
 
-// 2b.3 近失配恢复区块（2026-08-07）：触发时渲染在匹配结果列表顶部
+// 2b.3 近失配恢复区块（2026-08-05）：触发时渲染在匹配结果列表顶部
 // 候选来自 engine.nearMissRecovery（放松数 → 档位 → 总分排序，最多 5 个）
 function nearMissHTML(cands) {
   return `
@@ -446,7 +446,7 @@ function runMatch() {
       unverifiedRequired,
       unverifiedVeto,
       unmatchedOptional,
-      // 近失配恢复依赖（2026-08-07）：逐条件明细 + 权重（放松重算用）
+      // 近失配恢复依赖（2026-08-05）：逐条件明细 + 权重（放松重算用）
       items: sp.items,
       matchedWeight: sp.matchedWeight,
       verifiedWeight: sp.verifiedWeight
@@ -456,7 +456,7 @@ function runMatch() {
   // 按匹配度排序
   results.sort((a, b) => b.score - a.score);
 
-  // 2b.3 近失配恢复（2026-08-07）：除「信息不足」档（insufficient=medium，需补数据而非放松）外
+  // 2b.3 近失配恢复（2026-08-05）：除「信息不足」档（insufficient=medium，需补数据而非放松）外
   // 全部结果落到 low/veto 档时触发，按约束影响面从小到大逐级放松必选条件重算，返回最接近匹配并标注差异
   const eva = results.filter(r => !r.insufficient);
   const nearMiss = eva.length > 0 && eva.every(r => r.tier === 'low' || r.tier === 'veto')
