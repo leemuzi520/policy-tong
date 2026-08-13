@@ -56,6 +56,14 @@ function populateMonthFilter() {
     months.map(m => `<option value="${m}">${Number(m.slice(0, 4))} 年 ${Number(m.slice(5, 7))} 月</option>`).join('');
 }
 
+// 2b.4 地区筛选（2026-08-13）：选项与匹配表单 region 字段同源（fields.js），避免两处词表分叉
+function populateRegionFilter() {
+  const f = (window.ZCT_FIELDS.FIELDS).find(x => x.key === 'region');
+  if (!f) return;
+  $('#filterRegion').innerHTML = '<option value="">全部地区</option>' +
+    f.options.map(o => { const [v, t] = Array.isArray(o) ? o : [o, o]; return `<option value="${v}">${t}</option>`; }).join('');
+}
+
 // ============================================================
 // 政策库专栏（P4：按政策体系分专栏；链条视图归属专精特新专栏）
 // ============================================================
@@ -146,6 +154,7 @@ function renderPolicyList() {
   const searchTerm = ($('#policySearch')?.value || '').trim();
   const levelFilter = ($('#filterLevel')?.value || '');
   const industryFilter = ($('#filterIndustry')?.value || '');
+  const regionFilter = ($('#filterRegion')?.value || '');
   const deptFilter = ($('#filterDept')?.value || '');
   const monthFilter = ($('#filterMonth')?.value || '');
   const sortMode = ($('#filterSort')?.value || '');
@@ -154,9 +163,11 @@ function renderPolicyList() {
     const matchSearch = policyMatchesSearch(p, searchTerm); // 2b.3 全文检索：政策名 + 发文机关 + 条件描述
     const matchLevel = !levelFilter || p.level === levelFilter;
     const matchIndustry = !industryFilter || p.applicableIndustries.includes(industryFilter);
+    // 2b.4 地区筛选：无 regions 限制的政策（省级/国家级，全省/全国适用）始终通过；市级政策按 regions 匹配
+    const matchRegion = !regionFilter || !p.regions || !p.regions.length || p.regions.includes(regionFilter);
     const matchDept = !deptFilter || p.issuingBody === deptFilter;
     const matchMonth = !monthFilter || policyWindowMonths(p).includes(monthFilter);
-    return matchSearch && matchLevel && matchIndustry && matchDept && matchMonth;
+    return matchSearch && matchLevel && matchIndustry && matchRegion && matchDept && matchMonth;
   });
 
   // 2b.3 排序：专栏分组不变、组内按截止日升序（滚动/无窗口排尾）；默认路径恒等现状
@@ -272,7 +283,7 @@ function toggleTimeline() {
 function goPolicy(id) {
   // 清空浏览筛选（搜索/部门/层级/行业/月份）：筛选状态下目标政策卡可能被过滤掉，导致 card 为 null 崩溃
   // 2b.3：filterSort 不清——排序不影响卡片是否渲染
-  ['policySearch', 'filterDept', 'filterLevel', 'filterIndustry', 'filterMonth'].forEach(key => {
+  ['policySearch', 'filterDept', 'filterLevel', 'filterIndustry', 'filterRegion', 'filterMonth'].forEach(key => {
     const el = $(`#${key}`);
     if (el) el.value = '';
   });
@@ -302,6 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
   populateIndustryFilter();
   populateLevelFilter();
   populateDeptFilter();
+  populateRegionFilter();
   populateMonthFilter();
   renderTimeline();
   renderGradientChain();
@@ -323,6 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
 $('#policySearch')?.addEventListener('input', renderPolicyList);
 $('#filterLevel')?.addEventListener('change', renderPolicyList);
 $('#filterIndustry')?.addEventListener('change', renderPolicyList);
+$('#filterRegion')?.addEventListener('change', renderPolicyList);
 $('#filterDept')?.addEventListener('change', renderPolicyList);
 $('#filterMonth')?.addEventListener('change', renderPolicyList);
 $('#filterSort')?.addEventListener('change', renderPolicyList);
@@ -363,6 +376,14 @@ function windowUrgencyHTML(policy) {
   return `<div style="color:${color};font-weight:600;margin-bottom:6px;padding:8px 12px;background:${bg};border-radius:4px;">⏰ 申报窗口：${b.label}（${b.date}）材料截止，${tip}</div>`;
 }
 
+// 2b.4 档位词（2026-08-13 方案 B）：tier → 主判定文案（展示层单源，卡片主视觉与匹配页头部共用）
+function r2tierLabel(tier, insufficient) {
+  if (tier === 'high') return '推荐申报';
+  if (tier === 'medium') return insufficient ? '信息不足，暂无法评估' : '部分匹配，需补齐';
+  if (tier === 'veto') return '存在一票否决条件不满足';
+  return '暂不建议申报';
+}
+
 // 2b.3 近失配恢复区块（2026-08-05）：触发时渲染在匹配结果列表顶部
 // 候选来自 engine.nearMissRecovery（放松数 → 档位 → 总分排序，最多 5 个）
 function nearMissHTML(cands) {
@@ -396,6 +417,9 @@ function runMatch() {
   const results = POLICIES.map(policy => {
     // 行业匹配检查（数据里没有用「全部」通配的政策，无需特殊处理）
     const industryMatch = policy.applicableIndustries.includes(profile.industry);
+    // 2b.4 区域匹配（2026-08-13）：市级政策按 regions 元数据限定适用地区；
+    // 企业所在地未填或政策无 regions（省级/国家级，全省/全国适用）→ 视为匹配
+    const regionMatch = !profile.region || !policy.regions || !policy.regions.length || policy.regions.includes(profile.region);
 
     // 三维评分（2b.2，2026-08-05）：Fit 50% + Timing 25% + Effort 25%；缺失维度按剩余维度权重归一化
     const sp = scorePolicy(policy, profile);
@@ -403,6 +427,10 @@ function runMatch() {
     const score = sp.total;
     const coverage = sp.coverage;
     const insufficient = sp.insufficient;
+    // 2b.4 核验进度（2026-08-13 方案 B）：已核验权重 / 可自动判断权重
+    // 供 high 档门槛与「已核验 X/Y 项必选」展示（对标 Atom Grants 2.0「证据不足不参与定档」）
+    const autoCheckable = autoCheckableWeight(policy);
+    const progress = autoCheckable > 0 ? sp.verifiedWeight / autoCheckable : 0;
     const hasFailRequired = failedRequired.length > 0;
     const hasFailVeto = failedVeto.length > 0;
     const hasUnverifiedRequired = sp.unverifiedRequired.length > 0;
@@ -426,7 +454,13 @@ function runMatch() {
     } else if (!industryMatch) {
       tier = 'medium';
       adjustedScore = Math.min(score, 69);
-    } else if (score >= 75) {
+    } else if (!regionMatch) {
+      // 2b.4 区域不匹配：与行业不匹配同口径（soft 降档 + 提示，不硬否决——项目或子公司可能落在政策适用市）
+      tier = 'medium';
+      adjustedScore = Math.min(score, 69);
+    } else if (score >= 75 && progress >= 0.7) {
+      // 2b.4 核验进度门槛（2026-08-13 方案 B）：可自动判断权重已核验 <70% → 不达推荐申报档
+      // 只填少量字段时「已核验内全对」也能算出高分，进度门槛避免虚高误导（progress 不足则落入下方 medium/low）
       tier = 'high';
       adjustedScore = score;
     } else if (score >= 50) {
@@ -437,13 +471,21 @@ function runMatch() {
       adjustedScore = score;
     }
 
+    // 档位词主判定（2b.4 展示层：主视觉从百分比改为档位词，分数降为辅助——对标 GrantIQ verdict + blockers）
+    const verdictLabel = r2tierLabel(tier, insufficient);
+
     return {
       policy,
       score: adjustedScore,
       tier,
+      verdictLabel,
       industryMatch,
+      regionMatch,
       insufficient,
       coverage,
+      progress,
+      requiredTotal: sp.requiredTotal,
+      verifiedRequired: sp.verifiedRequired,
       fit: sp.fit,
       timing: sp.timing,
       effort: sp.effort,
@@ -477,22 +519,14 @@ function runMatch() {
       <div class="match-item ${r.tier}">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
           <div>
-            <span class="match-score ${r.tier}">${r.score}%</span>
+            <span class="match-score ${r.tier}">${r.verdictLabel}</span>
             <span style="font-weight:600;">${r.policy.name}</span>
             <span style="font-size:12px;color:var(--text-secondary);margin-left:8px;">${r.policy.issuingBody}</span>
           </div>
-          <span style="font-size:12px;padding:4px 10px;border-radius:12px;font-weight:500;
-            ${r.tier === 'high' ? 'background:var(--bg-success);color:var(--success);' : ''}
-            ${r.tier === 'medium' ? 'background:var(--bg-warning);color:var(--warning);' : ''}
-            ${r.tier === 'low' ? 'background:var(--bg-danger);color:var(--danger);' : ''}
-            ${r.tier === 'veto' ? 'background:var(--bg-danger);color:var(--danger);border:1px solid var(--danger);' : ''}
-          ">
-            ${r.tier === 'high' ? '推荐申报' : r.tier === 'medium' ? (r.insufficient ? '信息不足，暂无法评估' : '部分匹配，需补齐') : r.tier === 'veto' ? '存在一票否决条件不满足' : '暂不建议申报'}
-          </span>
         </div>
         <div class="match-detail" style="margin-top:10px;">
           <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--text-secondary);margin-bottom:6px;">
-            <span>匹配 <strong style="color:var(--text-primary);">${r.fit}</strong></span>
+            <span>已核验匹配度 <strong style="color:var(--text-primary);">${r.fit}%</strong><span style="font-size:11px;">（仅基于已核验信息）</span></span>
             <span>时效 <strong style="color:${r.timing.has ? (r.timing.days <= 14 ? 'var(--danger)' : r.timing.days <= 30 ? 'var(--warning)' : 'var(--success)') : 'var(--text-secondary)'};">${r.timing.has ? r.timing.score : '—'}</strong>${r.timing.has ? `（${r.timing.label}${r.timing.days ? `，剩 ${r.timing.days} 天` : ''}）` : `（${r.timing.label}）`}</span>
             <span>成本 <strong style="color:var(--text-primary);">${r.effort.label}</strong>（${r.effort.score}）</span>
             <span style="color:var(--text-secondary);">三维总分 ${r.score}%</span>
@@ -501,11 +535,12 @@ function runMatch() {
           ${r.policy.alert ? `<div style="color:var(--danger);margin-bottom:6px;padding:8px 12px;background:var(--bg-danger);border-left:3px solid var(--danger);border-radius:4px;"><strong>⚠️ 政策重要变更</strong>：${r.policy.alert.text} <a href="${r.policy.alert.link}" target="_blank" rel="noopener" style="color:var(--danger);font-weight:600;">${r.policy.alert.linkLabel}</a></div>` : ''}
           ${r.insufficient ? `<div style="color:var(--warning);margin-bottom:6px;padding:8px 12px;background:var(--bg-warning);border-radius:4px;">已核验条件不足（覆盖 ${Math.round(r.coverage * 100)}%），暂无法评估匹配度。建议填写更多企业信息，或到「自诊断」逐条核实。</div>` : ''}
           ${!r.industryMatch ? '<div style="color:var(--danger);margin-bottom:4px;">注意：行业不完全匹配，仍可参考条件差距</div>' : ''}
+          ${!r.regionMatch ? `<div style="color:var(--danger);margin-bottom:4px;">注意：该政策适用范围为【${r.policy.regions.join(' / ')}】，与企业所在地不匹配（若项目/子公司在该市实施仍可参考条件差距）</div>` : ''}
           ${r.failedVeto.length > 0 ? `<div style="color:var(--danger);font-weight:600;margin-bottom:6px;padding:8px 12px;background:var(--bg-danger);border-radius:4px;">一票否决条件未通过（独立否决项，任一不满足即不具备申报资格）：${r.failedVeto.join('、')}</div>` : ''}
           ${r.unverifiedVeto.length > 0 ? `<div style="color:var(--warning);margin-bottom:6px;padding:8px 12px;background:var(--bg-warning);border-radius:4px;">一票否决条件无法自动判断，须人工核实（任一不满足即不具备申报资格）：${r.unverifiedVeto.join('、')} <button class="btn btn-primary" style="margin-left:8px;padding:2px 10px;font-size:12px;" onclick="goDiag('${r.policy.id}')">去自诊断核实</button></div>` : ''}
           ${r.matchedItems.length > 0 ? `<div style="margin-bottom:4px;">已匹配条件（${r.matchedItems.length} 项）：${r.matchedItems.join('、')}</div>` : ''}
           ${r.failedRequired.length > 0 ? `<div style="color:var(--danger);margin-bottom:4px;">未通过的必选条件：${r.failedRequired.join('、')}</div>` : ''}
-          ${r.unverifiedRequired.length > 0 ? `<div style="color:var(--warning);margin-bottom:4px;">以下必选条件无法自动判断，建议在自诊断中逐条核实：${r.unverifiedRequired.join('、')} <button class="btn btn-primary" style="margin-left:8px;padding:2px 10px;font-size:12px;" onclick="goDiag('${r.policy.id}')">去自诊断核实</button></div>` : ''}
+          ${r.unverifiedRequired.length > 0 ? `<div style="color:var(--warning);margin-bottom:6px;padding:8px 12px;background:var(--bg-warning);border-radius:4px;">已核验必选条件 <strong>${r.verifiedRequired}/${r.requiredTotal}</strong> 项 · 还有 <strong>${r.unverifiedRequired.length}</strong> 项必选未核实（无法自动判断或尚未填写），建议在自诊断中逐条核实：${r.unverifiedRequired.join('、')} <button class="btn btn-primary" style="margin-left:8px;padding:2px 10px;font-size:12px;" onclick="goDiag('${r.policy.id}')">去自诊断核实</button></div>` : ''}
           ${r.unmatchedOptional.length > 0 ? `<div style="margin-bottom:4px;">未匹配的可选条件（${r.unmatchedOptional.length} 项）：${r.unmatchedOptional.join('、')}</div>` : ''}
           <div style="font-size:12px;color:var(--text-secondary);">提示：自动匹配仅覆盖部分可量化条件，建议在"自诊断"标签中逐条手动核实以获得精确结果。</div>
         </div>
@@ -701,7 +736,10 @@ function generateReport(policyId) {
   const pathReasons = [];
   pathCats.forEach(cat => {
     totalRequired++; // 路径类整体计 1 条必选
-    totalWeight += cat.paths.reduce((s, p) => s + p.items.reduce((t, i) => t + i.weight, 0), 0);
+    // 评分路径子项无 weight：分母按满分（pathMax 同口径）计入，分子按实际得分（见下）——2026-08-13 修复 NaN
+    totalWeight += cat.paths.reduce((s, p) => s + (p.scoreBased
+      ? p.items.reduce((t, i) => t + Math.max(...i.scoreOptions.map(o => o.score)), 0)
+      : p.items.reduce((t, i) => t + i.weight, 0)), 0);
     const subMet = [];
     cat.paths.forEach(path => {
       const pathIdx = [];
@@ -1163,6 +1201,7 @@ function renderProgressive() {
         }).join('')}
         <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
           <button class="btn btn-primary" onclick="progFillForm()">一键带入完整表单（可继续用全部字段精调）</button>
+          <button class="btn" onclick="progPrev()">← 上一步修改答案</button>
           <button class="btn" onclick="progReset()">重新开始问卷</button>
         </div>
       </div>`;
@@ -1176,6 +1215,7 @@ function renderProgressive() {
       ${step.nextCount ? `<div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">这一项被剩余候选中的 ${step.nextCount} 条政策引用为条件——回答后继续缩小范围（FörderFunke 自适应追问）</div>` : '<div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">回答后继续缩小范围</div>'}
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
         <select id="progSel" style="min-width:220px;">${progFieldOptionsHTML(step.nextKey)}</select>
+        ${progState.asked.length > 0 ? '<button class="btn" onclick="progPrev()">← 上一步</button>' : ''}
         <button class="btn btn-primary" onclick="progNext()">下一步</button>
         <button class="btn" onclick="progSkip()">跳过此题</button>
       </div>
@@ -1192,6 +1232,13 @@ function progNext() {
 
 function progSkip() {
   progState.asked.push(progressiveStep(Object.assign({}, progState.answers), progState.asked).nextKey);
+  renderProgressive();
+}
+
+// 2026-08-13：上一步——回退最后一问并清空该问答案（选错可返回重选；跳过题同样可回退）
+function progPrev() {
+  const last = progState.asked.pop();
+  if (last) delete progState.answers[last];
   renderProgressive();
 }
 
@@ -1387,31 +1434,3 @@ function renderManual() {
   box.scrollIntoView({ behavior: 'smooth' });
 }
 
-// ===== 风格切换（5 套设计：a 政务金蓝 / b 深空科技 / c 水墨 / d 杂志 / e 玻璃） =====
-(function () {
-  var LS_STYLE = 'zct_v1_style';
-  var STYLES = ['a', 'b', 'c', 'd', 'e'];
-  function applyStyle(s, save) {
-    if (STYLES.indexOf(s) === -1) s = 'a';
-    document.body.dataset.style = s;
-    var btns = document.querySelectorAll('.sw-btn');
-    for (var i = 0; i < btns.length; i++) {
-      btns[i].classList.toggle('active', btns[i].dataset.style === s);
-    }
-    if (save) { try { localStorage.setItem(LS_STYLE, s); } catch (e) {} }
-  }
-  function initStyle() {
-    var saved = null;
-    try { saved = localStorage.getItem(LS_STYLE); } catch (e) {}
-    var btns = document.querySelectorAll('.sw-btn');
-    for (var i = 0; i < btns.length; i++) {
-      btns[i].addEventListener('click', function () { applyStyle(this.dataset.style, true); });
-    }
-    applyStyle((saved && STYLES.indexOf(saved) !== -1) ? saved : 'a', false);
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initStyle);
-  } else {
-    initStyle();
-  }
-})();

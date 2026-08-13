@@ -32,7 +32,7 @@ window.ZCT_DATA.national.ndrc.push(
       {
         category: "项目条件（1228 号文第六条 · 第十一条）",
         items: [
-          { name: "项目为计划新开工或在建项目，未完工（含试运行）", required: true, weight: 3, veto: true, description: "1228 号文第六条：应当用于前期手续齐全、具备开工条件的计划新开工或在建项目，不得用于已完工（含试运行）项目；38 号令第八条同口径（除对未足额安排项目安排剩余资金、用于应急除险项目等特殊情况外）", basis: { name: "1228 号文第六条 · 38 号令第八条", url: "https://zfxxgk.ndrc.gov.cn/web/iteminfo.jsp?id=20552" } },
+          { name: "项目为计划新开工或在建项目，未完工（含试运行）", required: true, weight: 3, veto: true, autoMatch: "projectStatus", rule: v => v === "在建" || v === "拟实施（未开工）" ? true : v === "已完工" ? false : undefined, description: "1228 号文第六条：应当用于前期手续齐全、具备开工条件的计划新开工或在建项目，不得用于已完工（含试运行）项目；38 号令第八条同口径（除对未足额安排项目安排剩余资金、用于应急除险项目等特殊情况外）；表单拟申报项目实施状态选「在建」「拟实施（未开工）」即满足，选「已完工」触发一票否决（与本专项事后奖补类政策口径相反）", basis: { name: "1228 号文第六条 · 38 号令第八条", url: "https://zfxxgk.ndrc.gov.cn/web/iteminfo.jsp?id=20552" } },
           { name: "前期手续齐全、具备开工条件（审批/核准/备案 + 规划、用地、环评、节能审查等）", required: true, weight: 3, description: "1228 号文第六条「前期手续齐全、具备开工条件」；第十一条（四）：项目已通过全国投资项目在线审批监管平台（国家重大建设项目库）完成审批（核准、备案），规划、用地、环评、用能、安全（含安全生产）、施工等条件保障和落实情况", basis: { name: "1228 号文第六条 · 第十一条（四）", url: "https://zfxxgk.ndrc.gov.cn/web/iteminfo.jsp?id=20552" } },
           { name: "已纳入国家重大建设项目库「重大项目储备库」模块", required: true, weight: 2, description: "1228 号文第九条：依托国家重大建设项目库做好项目谋划储备；第十二条省级审核重点含是否纳入国家重大建设项目库「重大项目储备库」模块", basis: { name: "1228 号文第九条 · 第十二条", url: "https://zfxxgk.ndrc.gov.cn/web/iteminfo.jsp?id=20552" } },
           { name: "总投资及资金来源全部落实（资金筹措方案闭合）", required: true, weight: 2, description: "1228 号文第十一条（五）：项目投资估算和资金筹措方案，说明申请中央预算内投资的规模、其他资金来源；评估重点含配套资金和建设条件落实情况（第十五条）", basis: { name: "1228 号文第十一条（五）· 第十五条", url: "https://zfxxgk.ndrc.gov.cn/web/iteminfo.jsp?id=20552" } },
@@ -99,7 +99,7 @@ window.ZCT_DATA.national.ndrc.push(
         items: [
           { name: "淘汰设备已达最低使用年限/折旧年限（硬性条件）", required: true, weight: 2, description: "1745 号文（一）：「综合不同行业设备平均折旧年限、技术更新周期等因素，分领域细化完善淘汰设备的最低使用年限、技术指标等定量要求，将设备折旧和最低使用年限作为申报项目的硬性条件」。各行业具体年限数值以分领域实施细则为准，需人工核实本企业设备是否达标", basis: { name: "1745 号文（一）", url: "https://www.ndrc.gov.cn/xwdt/tzgg/202512/t20251230_1402852.html" } },
           { name: "项目投资额达到申报门槛（2026 年门槛已降低）", required: true, weight: 2, description: "1745 号文（一）：「优化申报条件和审核流程，进一步降低申报设备更新项目的投资额门槛」。具体投资额门槛数字由分领域实施细则明确，需按属地发改部门申报部署人工核实", basis: { name: "1745 号文（一）", url: "https://www.ndrc.gov.cn/xwdt/tzgg/202512/t20251230_1402852.html" } },
-          { name: "更新内容为淘汰落后设备、购置先进高效设备", required: true, weight: 1, description: "1745 号文（一）：「严格设备淘汰和报废处置，规范资产管理，避免资源浪费」——设备更新项目须以淘汰老旧设备、实施更新改造为内容，不属设备更新性质的支出不可申报", basis: { name: "1745 号文（一）", url: "https://www.ndrc.gov.cn/xwdt/tzgg/202512/t20251230_1402852.html" } },
+          { name: "更新内容为淘汰落后设备、购置先进高效设备", required: true, weight: 1, autoMatch: "projectType", rule: v => v === "技改或设备更新" ? true : v === "不清楚" ? undefined : false, description: "1745 号文（一）：「严格设备淘汰和报废处置，规范资产管理，避免资源浪费」——设备更新项目须以淘汰老旧设备、实施更新改造为内容，不属设备更新性质的支出不可申报；表单拟申报项目类型选「技改或设备更新」即满足，其余类型项目不属于设备更新支持内容", basis: { name: "1745 号文（一）", url: "https://www.ndrc.gov.cn/xwdt/tzgg/202512/t20251230_1402852.html" } },
           { name: "项目具备实施条件（前期手续与资金落实）", required: true, weight: 1, description: "1745 号文（一）：「加强项目储备、申报、审核、下达、实施和资金支付使用等全链条管理」——项目须先储备、实施条件具备方可申报，具体材料要求以属地发改部门申报部署为准", basis: { name: "1745 号文（一）", url: "https://www.ndrc.gov.cn/xwdt/tzgg/202512/t20251230_1402852.html" } }
         ]
       },

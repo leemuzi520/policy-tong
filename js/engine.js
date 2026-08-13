@@ -5,7 +5,7 @@
 
 // 数据版本：任何政策数据变更后更新此值（同步更新自诊断报告页脚日期戳）
 // ============================================================
-const DATA_VERSION = '2026-08-05'; // 环境时钟口径：同日第二次数据变更（2b.3 deadlineDate 4 条），沿用同日戳
+const DATA_VERSION = '2026-08-13'; // 环境时钟口径：同日移除 3 条推算 deadlineDate（P1-2），数据变更日
 
 // 政策库：由 data/ 目录按部门汇总（2a.1 数据分离，2026-08-02）
 // 汇总后按 order 字段恢复原数组顺序；新增政策按部门写入 data/ 对应文件，order 取当前最大值+1
@@ -63,10 +63,29 @@ const PLAN_LAYERS = [
   { id: 5, label: '制造业单项冠军', next: null, top: '你已到梯度链条顶层：单项冠军证书有效期 3 年，有效期内每年 5 月 31 日前在培育平台更新企业信息，关注复核评价安排。另一并列方向：重点「小巨人」专项（中央奖补 600 万/家·三年），如未申报可关注批次预申报。' }
 ];
 
+// 政策可自动判断权重（有 autoMatch 的条件权重和）：核验进度分母
+// 与 evaluatePolicyConditions 的 verifiedWeight 同口径；scoreBased 路径恒未核验（权重 0 不进）
+function autoCheckableWeight(policy) {
+  let w = 0;
+  policy.conditions.forEach(cat => {
+    if (cat.paths) {
+      cat.paths.forEach(pt => {
+        if (pt.scoreBased) return;
+        if (pt.autoMatch) w += pt.items.reduce((s, i) => s + i.weight, 0);
+      });
+    } else {
+      cat.items.forEach(it => { if (it.autoMatch) w += it.weight; });
+    }
+  });
+  return w;
+}
+
 function evaluatePolicyConditions(policy, profile) {
   let totalWeight = 0;
   let verifiedWeight = 0; // 已核验条件权重（可自动判断且表单已填）
   let matchedWeight = 0;
+  let requiredTotal = 0; // 必选条件总数（含二选一路径），供展示「已核验 X/Y 项必选」
+  let verifiedRequired = 0; // 已核验且三态已定的必选数
   const failedRequired = [];
   const failedVeto = [];
   const unverifiedRequired = [];
@@ -81,20 +100,26 @@ function evaluatePolicyConditions(policy, profile) {
     if (cat.paths) {
       cat.paths.forEach(path => {
         const label = path.name;
-        const pathWeight = path.items.reduce((s, i) => s + i.weight, 0);
-        totalWeight += pathWeight;
         if (path.scoreBased) {
           // 评分路径需逐档自评（自诊断标签），表单无法自动算分 → 恒未核验，引导去自诊断核实
+          // 子项为评分档位（scoreOptions）无权重：不进总权重分母，否则求和得 NaN（2026-08-13 修复）
+          requiredTotal += 1;
           unverifiedRequired.push(label);
-          items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: false, unverified: true, weight: pathWeight });
+          items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: false, unverified: true, weight: 0 });
           return;
         }
-        const canAutoCheck = !!path.autoMatch && profile[path.autoMatch] !== undefined && profile[path.autoMatch] !== '';
+        const pathWeight = path.items.reduce((s, i) => s + i.weight, 0);
+        totalWeight += pathWeight;
+        requiredTotal += 1;
+        // 2026-08-13 P1：「不清楚」统一三态拦截——任何 rule 都不对「不清楚」判定，归未核验而非未通过/通过。
+        // 一处拦截覆盖所有字段（含白名单型 rule 如 segYears/rd，原会误判未通过；ipr v!=="0" 型原会误判满足）
+        const canAutoCheck = !!path.autoMatch && profile[path.autoMatch] !== undefined && profile[path.autoMatch] !== '' && profile[path.autoMatch] !== '不清楚';
         if (canAutoCheck) {
           verifiedWeight += pathWeight;
           // 2026-08-02 拆细：paths 类支持 path.rule（档位/组合判定，如知产数量档、层级前提 level），无 rule 时保持「是/否」三态语义
           const verdict = path.rule ? path.rule(profile[path.autoMatch], profile) :
             (profile[path.autoMatch] === "是" ? true : profile[path.autoMatch] === "否" ? false : undefined);
+          if (verdict !== undefined) verifiedRequired += 1;
           if (verdict === true) {
             matchedWeight += pathWeight;
             matchedItems.push(label);
@@ -116,6 +141,7 @@ function evaluatePolicyConditions(policy, profile) {
     }
     cat.items.forEach(item => {
       totalWeight += item.weight;
+      if (item.required) requiredTotal += 1;
       let matched = false;
       let verdict; // 判定结果：true/false，或 undefined（3 态字段选「不清楚」= 无法判断）
 
@@ -123,7 +149,7 @@ function evaluatePolicyConditions(policy, profile) {
       const autoVal = item.autoMatch === 'cert'
         ? (Array.isArray(profile.certs) && profile.certs.length > 0 ? '1' : '')
         : profile[item.autoMatch];
-      const canAutoCheck = !!item.autoMatch && autoVal !== undefined && autoVal !== '';
+      const canAutoCheck = !!item.autoMatch && autoVal !== undefined && autoVal !== '' && autoVal !== '不清楚'; // 2026-08-13 P1：同上，items 分支统一拦截
       if (canAutoCheck) {
         verifiedWeight += item.weight;
         if (item.autoMatch === 'cert') {
@@ -134,6 +160,7 @@ function evaluatePolicyConditions(policy, profile) {
           verdict = item.rule(profile[item.autoMatch], profile);
         }
         matched = verdict === true;
+        if (verdict !== undefined) verifiedRequired += 1;
       }
       // 无法自动判断的条件（无 autoMatch / 表单字段未填 / 3 态字段选「不清楚」）：视为「未核验」而非「未通过」，
       // 渲染时单独黄色提示，驱动用户去自诊断标签逐条核实
@@ -163,7 +190,7 @@ function evaluatePolicyConditions(policy, profile) {
   // 已核验覆盖 < 15%（或一个条件都没核验到）→ 信息不足，不做推荐判断
   const insufficient = verifiedWeight === 0 || coverage < 0.15;
 
-  return { totalWeight, verifiedWeight, matchedWeight, score, coverage, insufficient, failedRequired, failedVeto, unverifiedRequired, unverifiedVeto, matchedItems, unmatchedOptional, items };
+  return { totalWeight, verifiedWeight, matchedWeight, score, coverage, insufficient, requiredTotal, verifiedRequired, failedRequired, failedVeto, unverifiedRequired, unverifiedVeto, matchedItems, unmatchedOptional, items };
 }
 
 // ============================================================
@@ -335,6 +362,9 @@ function progressiveStep(profile, askedKeys) {
   const remaining = POLICIES.filter(p => {
     // 硬淘汰 1：适用行业不匹配（applicableIndustries 非空的政策才生效）
     if (profile.industry && p.applicableIndustries.length && !p.applicableIndustries.includes(profile.industry)) return false;
+    // 2b.4 硬淘汰 3：地区不匹配（2026-08-13）——市级政策限定适用市，企业所在地已填且不符 → 淘汰；
+    // 未填所在地或政策无 regions（省级/国家级）不淘汰
+    if (profile.region && p.regions && p.regions.length && !p.regions.includes(profile.region)) return false;
     // 硬淘汰 2：必选/一票否决条件已确认不满足（未核验不淘汰，引导补数据而非误杀）
     const r = evaluatePolicyConditions(p, profile);
     return r.failedRequired.length === 0 && r.failedVeto.length === 0;
@@ -350,6 +380,36 @@ function progressiveStep(profile, askedKeys) {
   if (remaining.length <= 5 || askable.length === 0) {
     return { done: true, remaining, eliminated, nextKey: null, nextCount: 0 };
   }
+  // 锚点优先（2026-08-13 方案 A）：拟申报项目类型是资金/资质分流的锚点。
+  // 纯引用计数下 projectType 引用数（3）远低于 accident/rd/ipr 等通用字段，资金字段会被排到第 8-10 问；
+  // 剩余政策中仍有项目制政策（引用 projectType）时先问它，答后硬淘汰 2 自动淘汰类型不符的政策，
+  // 后续引用计数自然在兼容子集内分流——资金类追问项目字段（projectStatus/investAmount）、资质类追问资质字段
+  const hasProjectPolicies = remaining.some(p => p.conditions.some(cat => {
+    const items = cat.paths ? cat.paths.flatMap(pt => pt.items || []) : (cat.items || []);
+    return items.some(it => it.autoMatch === 'projectType');
+  }));
+  if (hasProjectPolicies && !asked.has('projectType') && !profile.projectType) {
+    return { done: false, remaining, eliminated, nextKey: 'projectType', nextCount: null };
+  }
+  // P2（2026-08-13）：记忆字段优先追问——用户零成本直觉可答的字段（industry/revenue/years 已由 coreNext 覆盖）
+  // 排在查询字段（需查报表/数证书/专业概念）之前。理由：引用计数只优化收敛步数，「答不出的问题」
+  // 让用户中途放弃的代价远大于多问一个能答的问题。连续跳过已由 progSkip 处理，无需在此处理。
+  // region 无 autoMatch 引用（筛选/硬淘汰专用），但答后立即硬淘汰市级政策（收敛效率最高）→ 无条件优先
+  if (!asked.has('region') && !profile.region) {
+    return { done: false, remaining, eliminated, nextKey: 'region', nextCount: null };
+  }
+  const MEMORY_KEYS = ['type'];
+  const memDemand = {};
+  remaining.forEach(p => p.conditions.forEach(cat => {
+    const mItems = cat.paths ? cat.paths.flatMap(pt => pt.items || []) : (cat.items || []);
+    mItems.forEach(it => {
+      if (it.autoMatch && MEMORY_KEYS.includes(it.autoMatch) && askable.some(f => f.key === it.autoMatch)) {
+        memDemand[it.autoMatch] = (memDemand[it.autoMatch] || 0) + 1;
+      }
+    });
+  }));
+  const memBest = Object.entries(memDemand).sort((a, b) => b[1] - a[1])[0];
+  if (memBest) return { done: false, remaining, eliminated, nextKey: memBest[0], nextCount: memBest[1] };
   // 追问：被最多剩余政策依赖的未问字段（autoMatch 引用计数，含 paths 子项）
   const demand = {};
   remaining.forEach(p => p.conditions.forEach(cat => {

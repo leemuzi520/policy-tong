@@ -5,6 +5,7 @@ window.ZCT_DATA.city = window.ZCT_DATA.city || [];
 window.ZCT_DATA.city.push(
   {
     id: "sztech",
+    regions: ["深圳"],
     order: 26,
     column: "city",
     name: "深圳市企业技术改造扶持计划",
@@ -23,7 +24,7 @@ window.ZCT_DATA.city.push(
         category: "基础合规（12 号规程通用要求）",
         items: [
           { name: "深圳市注册、独立法人、成立 ≥3 年", required: true, weight: 3, autoMatch: "years", rule: v => v === ">5年" || v === "3-5年" ? true : false, description: "12 号规程申报条件：深圳市内注册、独立法人，申报单位成立时间不低于 3 年；表单成立年限选「3-5 年」「>5 年」满足", basis: { name: "深工信规〔2024〕12 号申报条件", url: "http://www.sz.gov.cn/zfgb/2024/1346/content/post_11636176.html" } },
-          { name: "项目在深圳市内实施且已实施完毕，已备案并纳入技改投资统计", required: true, weight: 3, description: "12 号规程申报条件：项目须在深圳市技改项目备案系统备案，已按规定纳入技术改造投资统计（项目类别为工业企业技术改造项目），需人工核验", basis: { name: "深工信规〔2024〕12 号申报条件", url: "http://www.sz.gov.cn/zfgb/2024/1346/content/post_11636176.html" } },
+          { name: "项目在深圳市内实施且已实施完毕，已备案并纳入技改投资统计", required: true, weight: 3, autoMatch: "projectStatus", rule: v => v === "已完工" ? true : v === "不清楚" ? undefined : false, description: "12 号规程申报条件：项目须在深圳市技改项目备案系统备案，已按规定纳入技术改造投资统计（项目类别为工业企业技术改造项目）；表单拟申报项目实施状态选「已完工」即满足完工口径，备案与投资统计入库仍需人工核验", basis: { name: "深工信规〔2024〕12 号申报条件", url: "http://www.sz.gov.cn/zfgb/2024/1346/content/post_11636176.html" } },
           { name: "未列入严重失信主体名单、无重大违法违规", required: true, weight: 2, autoMatch: "accident", rule: v => v === "无", description: "12 号规程申报条件：申报单位未被列入严重失信主体名单；近三年无重大违法违规行为", basis: { name: "深工信规〔2024〕12 号申报条件", url: "http://www.sz.gov.cn/zfgb/2024/1346/content/post_11636176.html" } }
         ]
       },
@@ -42,13 +43,14 @@ window.ZCT_DATA.city.push(
   },
   {
     id: "dgtech",
+    regions: ["东莞"],
     order: 27,
     column: "city",
     name: "东莞市企业技术改造资金",
     issuingBody: "东莞市工业和信息化局",
     level: "市级",
     deadline: "项目库入库制、每年 1 批：2026 年度入库 2025-09-01~9-22 已截止（资助计划 2026-04 已公示）；2027 年度入库预计 2026 年 9 月启动（收 2025 年度完工投入项目）",
-    deadlineDate: "2026-09-30", // 2b.3 推算：deadline 文本「2027 年度入库预计 2026 年 9 月启动」，月粒度取当月最后一天；通知发布后按实际截止更新
+    // 无 deadlineDate（2026-08-13 移除推算值）：2027 年度入库通知未发布，推算值会在时间轴渲染误导性紧迫提示；往年节奏（约 9 月启动入库）见 deadline 文本，通知发布后按实际截止补录
     effort: "Medium",
     updated: "2026-08-05",
     source: { name: "《东莞市工业和信息化产业发展专项资金企业技术改造和创新项目管理实施细则》（东工信〔2023〕24 号）", url: "https://www.dg.gov.cn/dgzsj/gkmlpt/content/4/4428/post_4428764.html" },
@@ -61,7 +63,7 @@ window.ZCT_DATA.city.push(
         category: "申报资格（2026 年度入库通知）",
         items: [
           { name: "东莞市办理工商登记、独立法人的制造业企业", required: true, weight: 3, autoMatch: "type", rule: v => v !== "科技型中小企业" && v !== "中小微企业" ? true : undefined, description: "2026 年入库通知申报条件 1：在东莞市办理工商登记、具有独立法人资格的制造业企业；表单企业类型选「规模以上工业企业」或「大型企业」即满足，选科技型/中小微无法确认是否制造业，需人工核实", basis: { name: "2026 年东莞市企业技术改造资金项目入库通知", url: "https://www.dg.gov.cn/dgzsj/gkmlpt/content/4/4428/post_4428764.html" } },
-          { name: "项目年度不含税投入 ≥500 万元", required: true, weight: 3, description: "2026 年入库通知申报条件 2：项目在 2024-01-01 至 2024-12-31 期间不含税投入不低于 500 万元（2027 年度预计收 2025 年度投入）；投入须为引进购置先进生产设备（含配套软件）实施设备更新、高端化智能化数字化改造，需人工核验", basis: { name: "2026 年东莞市企业技术改造资金项目入库通知", url: "https://www.dg.gov.cn/dgzsj/gkmlpt/content/4/4428/post_4428764.html" } },
+          { name: "项目年度不含税投入 ≥500 万元", required: true, weight: 3, autoMatch: "investAmount", rule: v => v === "<500万" ? false : true, description: "2026 年入库通知申报条件 2：项目在 2024-01-01 至 2024-12-31 期间不含税投入不低于 500 万元（2027 年度预计收 2025 年度投入）；投入须为引进购置先进生产设备（含配套软件）实施设备更新、高端化智能化数字化改造；表单投资额选「500万-1000万」及以上即满足（档位下界 500 万与门槛对齐），实际投入以发票与审计核定为准", basis: { name: "2026 年东莞市企业技术改造资金项目入库通知", url: "https://www.dg.gov.cn/dgzsj/gkmlpt/content/4/4428/post_4428764.html" } },
           { name: "未获得过省技改资金或市工信领域财政资金支持（同项目同设备）", required: true, weight: 2, description: "2026 年入库通知申报条件 4：申报项目及设备投资未获得过 2026 年广东省制造业当家重点任务保障专项企业技术改造资金或市工业和信息化领域财政资金支持，需人工核验", basis: { name: "2026 年东莞市企业技术改造资金项目入库通知", url: "https://www.dg.gov.cn/dgzsj/gkmlpt/content/4/4428/post_4428764.html" } },
           { name: "项目投资按规定纳入技术改造投资统计", required: true, weight: 2, description: "2026 年入库通知申报条件 5：项目投资按规定纳入技术改造投资统计，需人工核验", basis: { name: "2026 年东莞市企业技术改造资金项目入库通知", url: "https://www.dg.gov.cn/dgzsj/gkmlpt/content/4/4428/post_4428764.html" } },
           { name: "不存在不予资助情形（东财规〔2023〕2 号）", required: true, weight: 2, autoMatch: "accident", rule: v => v === "无", description: "2026 年入库通知申报条件 3：企业不存在《关于东莞市促进经济发展类专项资金不予资助范围的若干规定》（东财规〔2023〕2 号）所列不予资助情形（严重失信、重大违法违规等）", basis: { name: "2026 年东莞市企业技术改造资金项目入库通知", url: "https://www.dg.gov.cn/dgzsj/gkmlpt/content/4/4428/post_4428764.html" } }
@@ -79,6 +81,7 @@ window.ZCT_DATA.city.push(
   },
   {
     id: "fsdigital",
+    regions: ["佛山"],
     order: 28,
     column: "city",
     name: "佛山市中小企业数字化转型城市试点专项资金",
@@ -97,8 +100,8 @@ window.ZCT_DATA.city.push(
       {
         category: "申报资格（佛工信〔2026〕1 号实施细则）",
         items: [
-          { name: "佛山市智能家居、高端装备细分行业的制造业中小企业", required: true, weight: 3, description: "细则申报对象：佛山市智能家居、高端装备细分行业（含关联配套产业）的制造业中小企业；表单无中小企业划型与细分行业字段，需人工核验（参照《中小企业划型标准规定》）", basis: { name: "佛工信〔2026〕1 号实施细则", url: "https://www.foshan.gov.cn/gfxwj/sbmgfxwj/fssgyhxxhj/content/post_6943866.html" } },
-          { name: "实施数字化转型改造项目", required: true, weight: 3, description: "细则申报条件：企业实施数字化改造（上云用数赋智、数字化车间等），项目投入为数字化改造相关费用，需人工核验", basis: { name: "佛工信〔2026〕1 号实施细则", url: "https://www.foshan.gov.cn/gfxwj/sbmgfxwj/fssgyhxxhj/content/post_6943866.html" } },
+          { name: "佛山市智能家居、高端装备细分行业的制造业中小企业", required: true, weight: 3, autoMatch: "type", rule: v => v === "科技型中小企业" || v === "中小微企业" ? true : v === "大型企业（营收>4亿）" ? false : undefined, description: "细则申报对象：佛山市智能家居、高端装备细分行业（含关联配套产业）的制造业中小企业；表单企业类型选「科技型中小企业」「中小微企业」即满足中小口径，「规模以上工业企业」划型未确认需人工核验（参照《中小企业划型标准规定》），大型企业不满足", basis: { name: "佛工信〔2026〕1 号实施细则", url: "https://www.foshan.gov.cn/gfxwj/sbmgfxwj/fssgyhxxhj/content/post_6943866.html" } },
+          { name: "实施数字化转型改造项目", required: true, weight: 3, autoMatch: "projectType", rule: v => v === "数字化转型" ? true : v === "不清楚" ? undefined : false, description: "细则申报条件：企业实施数字化改造（上云用数赋智、数字化车间等），项目投入为数字化改造相关费用；表单拟申报项目类型选「数字化转型」即满足，其余类型项目不属于本专项支持范围", basis: { name: "佛工信〔2026〕1 号实施细则", url: "https://www.foshan.gov.cn/gfxwj/sbmgfxwj/fssgyhxxhj/content/post_6943866.html" } },
           { name: "数字化水平等级达到二级及以上", required: true, weight: 3, description: "细则奖励标准：按数字化水平等级（评估认定）分档——二级/三级累计最高 50 万、四级最高 70 万；等级不足二级的无法获得奖励，需人工核验", basis: { name: "佛工信〔2026〕1 号实施细则", url: "https://www.foshan.gov.cn/gfxwj/sbmgfxwj/fssgyhxxhj/content/post_6943866.html" } },
           { name: "合同/发票/支付凭证/验收报告时间在 2025-09-07 至 2027-09-06 期间", required: true, weight: 2, description: "细则申报要求：项目相关合同、发票、支付凭证、验收报告时间须在 2025-09-07 至 2027-09-06 之间，需人工核验", basis: { name: "佛工信〔2026〕1 号实施细则", url: "https://www.foshan.gov.cn/gfxwj/sbmgfxwj/fssgyhxxhj/content/post_6943866.html" } },
           { name: "已办理入库备案（改造前备案、先到先得）", required: true, weight: 2, description: "333 号通知：入库备案（改造前）2026-07-01 至 12-31 分批受理，「试点一个、改造一个、支持一个」动态入库、「总额控制、分批受理、先到先得」用完即止；须与数字化服务商资源池内服务商签约，需人工核验", basis: { name: "佛工信函〔2026〕333 号入库备案通知", url: "http://fsiit.foshan.gov.cn/fssgyhxxhj/zwgk/xmsb/content/post_7189742.html" } }
@@ -115,6 +118,7 @@ window.ZCT_DATA.city.push(
   },
   {
     id: "dgloan",
+    regions: ["东莞"],
     order: 29,
     column: "city",
     name: "东莞市工业设备更新银行贷款贴息",

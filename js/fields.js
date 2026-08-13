@@ -15,16 +15,20 @@
 //   dynamic    选项由 JS 动态生成（industry：与筛选栏同源，避免两处维护分叉）
 //   type       'checkbox' 多选（certs 特例），缺省 'select'
 //
-// tier 划分（用户确认基础 7 项建议 → 映射现有字段 5 项）：
-//   行业/规模/年限/营收/研发占比/知识产权 → industry/revenue/years/rd/ipr
-//   「注册地」现有表单与政策条件均无此维度，不新增字段；「规模」与「营收」同字段（revenue）。
+// tier 划分（用户确认基础 7 项建议 → 映射现有字段 6 项）：
+//   行业/规模/年限/营收/研发占比/知识产权/所在地 → industry/revenue/years/rd/ipr/region
+//   「规模」与「营收」同字段（revenue）。region 为 2026-08-13 新增：市级政策按企业所在地匹配/筛选
+//   （city.js 政策挂 regions 元数据；省级/国家级政策无 regions = 不限制）。
 const FIELDS = [
   // ===== 基础区（basic，默认展开）=====
   { key: 'industry', id: 'mIndustry', label: '所属行业', tier: 'basic', match: true, plan: false, dynamic: true },
   { key: 'revenue', id: 'mRevenue', label: '上年度营业收入', tier: 'basic', match: true, plan: true, options: [['<500万', '< 500 万'], ['500万-2000万', '500 万 - 2000 万'], ['2000万-5000万', '2000 万 - 5000 万'], ['5000万-1亿', '5000 万 - 1 亿'], ['1亿-4亿', '1 亿 - 4 亿'], ['>4亿', '> 4 亿']] },
   { key: 'years', id: 'mYears', label: '成立年限', tier: 'basic', match: true, plan: true, options: [['<1年', '< 1 年'], ['1-3年', '1 - 3 年'], ['3-5年', '3 - 5 年'], ['>5年', '> 5 年']] },
-  { key: 'rd', id: 'mRD', label: '研发费用占营收比例', tier: 'basic', match: true, plan: true, options: [['<3%', '< 3%'], ['3%-5%', '3% - 5%'], ['5%-8%', '5% - 8%'], ['>8%', '> 8%']] },
-  { key: 'ipr', id: 'mIPR', label: '有效知识产权数量', planLabel: '有效知识产权数量（专利总数，≥6 件从严覆盖 4 项Ⅰ类）', tier: 'basic', match: true, plan: true, options: [['0', '无'], ['1-5', '1 - 5 件'], ['6-15', '6 - 15 件'], ['>15', '> 15 件']] },
+  // P1（2026-08-13）：基础区专业指标加「不清楚」出口 + 数据来源提示——匹配表单只收集用户 10 秒能答的字段，
+  // 答不出的（需查审计报告/数证书）允许选「不清楚」，引擎按未核验处理（三态），不逼用户猜值
+  { key: 'rd', id: 'mRD', label: '研发费用占营收比例（上年度审计报告：研发费用 ÷ 营业收入）', tier: 'basic', match: true, plan: true, options: [['<3%', '< 3%'], ['3%-5%', '3% - 5%'], ['5%-8%', '5% - 8%'], ['>8%', '> 8%'], ['不清楚', '不清楚（要查审计报告才能答，选此项按未核实处理）']] },
+  { key: 'ipr', id: 'mIPR', label: '有效知识产权数量（发明/实用新型/软著等，按证书数点一下）', planLabel: '有效知识产权数量（专利总数，≥6 件从严覆盖 4 项Ⅰ类；不确定选「不清楚」）', tier: 'basic', match: true, plan: true, options: [['0', '无'], ['1-5', '1 - 5 件'], ['6-15', '6 - 15 件'], ['>15', '> 15 件'], ['不清楚', '不清楚（要数证书才能答，选此项按未核实处理）']] },
+  { key: 'region', id: 'mRegion', label: '企业（或项目）所在地', tier: 'basic', match: true, plan: false, options: ['广州', '深圳', '东莞', '佛山', '珠海', '中山', '惠州', '江门', '肇庆', '省内其他市', '省外'] },
 
   // ===== 进阶区（advanced，默认折叠）=====
   { key: 'type', id: 'mType', label: '企业类型', tier: 'advanced', match: true, plan: false, options: ['规模以上工业企业', '科技型中小企业', '大型企业（营收>4亿）', '中小微企业'] },
@@ -43,7 +47,18 @@ const FIELDS = [
   { key: 'listed', id: 'mListed', label: '是否在境内外公开发行股票（重点小巨人资格：须未上市）', tier: 'advanced', match: true, plan: true, options: ['未上市', '已上市', '不清楚'] },
   { key: 'invest', id: 'mInvest', label: '是否已编制「三新一强」推进计划且投资总额 >2000 万（重点小巨人核心要件）', tier: 'advanced', match: true, plan: true, options: [['已编制且>2000万', '已编制且投资 >2000 万'], ['未编制或不足', '未编制或投资不足'], ['不清楚', '不清楚']] },
   { key: 'direct', id: 'mDirect', label: '是否满足创新型直通条件（高企有效期内/省级以上科技奖励/省部级研发机构/股权融资 ≥500 万，满足任一即可）', tier: 'advanced', match: true, plan: true, options: [['是', '是，满足至少一项'], ['否', '否'], ['不清楚', '不清楚']] },
-  { key: 'certs', id: 'mCert', label: '现有认证（多选）', tier: 'advanced', match: true, plan: false, type: 'checkbox', options: [['ISO9001', 'ISO9001'], ['ISO14001', 'ISO14001'], ['ISO50001', 'ISO50001'], ['ISO45001', 'ISO45001（含旧证 OHSAS18001）']] }
+  { key: 'certs', id: 'mCert', label: '现有认证（多选）', tier: 'advanced', match: true, plan: false, type: 'checkbox', options: [['ISO9001', 'ISO9001'], ['ISO14001', 'ISO14001'], ['ISO50001', 'ISO50001'], ['ISO45001', 'ISO45001（含旧证 OHSAS18001）']] },
+
+  // ===== 资金类项目字段（2026-08-13 方案 A：问卷表单按政策类型分流）=====
+  // 专项资金类政策（技改/贴息/国债/投资奖励）的核心条件此前无表单字段可自动判断——
+  // 「项目投资额门槛」「项目实施状态（完工/在建）」「项目类型/投向」是资金类政策的命门，
+  // 而 19 个旧字段几乎全是资质体系专用（专精特新/平台类），导致资金类政策大面积落「信息不足」。
+  // 口径：三项均指企业当前关注/拟申报的「项目」而非企业自身属性（与自诊断「项目条件」一致）；
+  // 投资额按不含税投入、发票与付款金额从小认定（省技改/固废专项均为该口径）。
+  // 渐进式问卷（engine.progressiveStep）按剩余政策 autoMatch 引用计数自动追问这三项，无需改 engine。
+  { key: 'projectStatus', id: 'mProjectStatus', label: '拟申报项目实施状态', tier: 'advanced', match: true, plan: false, options: ['已完工', '在建', '拟实施（未开工）', '不清楚'] },
+  { key: 'investAmount', id: 'mInvestAmount', label: '拟申报项目投资额（不含税投入，发票与付款从小认定）', tier: 'advanced', match: true, plan: false, options: [['<500万', '< 500 万'], ['500万-1000万', '500 万 - 1000 万'], ['1000万-2000万', '1000 万 - 2000 万'], ['2000万-1亿', '2000 万 - 1 亿'], ['>1亿', '> 1 亿']] },
+  { key: 'projectType', id: 'mProjectType', label: '拟申报项目类型', tier: 'advanced', match: true, plan: false, options: [['技改或设备更新', '技改或设备更新（如购买新设备、产线升级改造）'], ['节能降碳改造', '节能降碳改造（如节能降耗、余热利用、光伏建设）'], ['固废资源化利用', '固废资源化利用（如废料回收再生、循环利用项目）'], ['数字化转型', '数字化转型（如数字化车间、上云上平台、智能产线）'], ['不清楚', '不清楚（不确定时先选此项，仅用于排除明显不符的政策）']] }
 ];
 
 // ===== 政策侧字段注册（2b.2 三维评分，2026-08-05）=====

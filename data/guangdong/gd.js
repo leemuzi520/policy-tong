@@ -261,16 +261,16 @@ window.ZCT_DATA.guangdong.push(
       {
         category: "项目条件（细则第九条（一）2-6 · 2027 年度入库要求）",
         items: [
-          { name: "项目在广东省内实施、取得工信部门技改备案/核准/审批文件", required: true, weight: 3, description: "第九条（一）2：符合国家和省产业政策，具备在工业和信息化主管部门备案、核准或审批等文件；2027 通知同口径", basis: { name: "细则第九条（一）2", url: "http://www.gd.gov.cn/zwgk/gongbao/2025/1/content/post_4652307.html" } },
+          { name: "项目在广东省内实施、取得工信部门技改备案/核准/审批文件", required: true, weight: 3, autoMatch: "projectType", rule: v => v === "技改或设备更新" ? true : v === "不清楚" ? undefined : false, description: "第九条（一）2：符合国家和省产业政策，具备在工业和信息化主管部门备案、核准或审批等文件；2027 通知同口径；表单拟申报项目类型选「技改或设备更新」即满足，其余类型项目不属于四新技改支持范围", basis: { name: "细则第九条（一）2", url: "http://www.gd.gov.cn/zwgk/gongbao/2025/1/content/post_4652307.html" } },
           { name: "项目按规定纳入技术改造投资统计", required: true, weight: 2, description: "第九条（一）3：企业技术改造项目按规定纳入技术改造投资统计", basis: { name: "细则第九条（一）3", url: "http://www.gd.gov.cn/zwgk/gongbao/2025/1/content/post_4652307.html" } },
           { name: "项目及申报奖励的设备投资未获得过省工信领域其他财政资金支持", required: true, weight: 3, description: "第九条（一）4：不得多头申报；已获省级技改资金支持但未按规定完工验收的企业不得申报（2027 通知）", basis: { name: "细则第九条（一）4 · 2027 通知入库要求", url: "http://www.gd.gov.cn/zwgk/gongbao/2025/1/content/post_4652307.html" } },
-          { name: "2025-01-01 至 2025-12-31 期间完工且完工日期在备案建设期内（2027 年度）", required: true, weight: 3, description: "第九条（一）5：在规定时间内完工，且完工日期在项目备案证建设期内；2027 年度项目库要求 2025-01-01（含）至 2025-12-31（含）期间完工（粤工信技改函〔2026〕40 号）", basis: { name: "细则第九条（一）5 · 粤工信技改函〔2026〕40 号入库要求", url: "https://www.jieyang.gov.cn/jyjxj/tzgg/qttz/content/post_1036551.html" } }
+          { name: "2025-01-01 至 2025-12-31 期间完工且完工日期在备案建设期内（2027 年度）", required: true, weight: 3, autoMatch: "projectStatus", rule: v => v === "已完工" ? true : v === "不清楚" ? undefined : false, description: "第九条（一）5：在规定时间内完工，且完工日期在项目备案证建设期内；2027 年度项目库要求 2025-01-01（含）至 2025-12-31（含）期间完工（粤工信技改函〔2026〕40 号）；表单拟申报项目实施状态选「已完工」即满足，完工年度是否在窗口内需人工核验", basis: { name: "细则第九条（一）5 · 粤工信技改函〔2026〕40 号入库要求", url: "https://www.jieyang.gov.cn/jyjxj/tzgg/qttz/content/post_1036551.html" } }
         ]
       },
       {
         category: "支持方式（细则第十一/十三/十六/十八条，满足越多可获支持越多）",
         items: [
-          { name: "设备奖励：新设备购置额（不含税）珠三角 ≥700 万、粤东西北 ≥400 万", required: false, weight: 3, description: "第九条（一）6 + 第十一条：符合条件的新设备购置总额（不含税）珠三角 ≥700 万、粤东粤西粤北 ≥400 万；按 ≤20%（珠三角）/≤30%（粤东西北）奖励，单项目上限 1500 万；奖励比例由地市自主确定", basis: { name: "细则第九条（一）6、第十一条", url: "http://www.gd.gov.cn/zwgk/gongbao/2025/1/content/post_4652307.html" } },
+          { name: "设备奖励：新设备购置额（不含税）珠三角 ≥700 万、粤东西北 ≥400 万", required: false, weight: 3, autoMatch: "investAmount", rule: v => v === "1000万-2000万" || v === "2000万-1亿" || v === ">1亿" ? true : v === "<500万" ? false : undefined, description: "第九条（一）6 + 第十一条：符合条件的新设备购置总额（不含税）珠三角 ≥700 万、粤东粤西粤北 ≥400 万；按 ≤20%（珠三角）/≤30%（粤东西北）奖励，单项目上限 1500 万；奖励比例由地市自主确定；表单投资额选「1000万-2000万」及以上即满足，500万-1000万 档珠三角是否达 700 万线需人工核验", basis: { name: "细则第九条（一）6、第十一条", url: "http://www.gd.gov.cn/zwgk/gongbao/2025/1/content/post_4652307.html" } },
           { name: "银行贷款贴息：固定资产贷款 ≥100 万", required: false, weight: 2, description: "第十二条、第十三条：从银行获得固定资产贷款且额度 ≥100 万（含），贴息期内无不良信贷记录；事后补贴按已支付利息额 ≤30%，贴息期 ≤3 年，单企业单自然年最高 200 万；同一笔贷款只能享受一次省财政贴息；逾期利息、加息罚息、流动资金借款不予贴息", basis: { name: "细则第十二条、第十三条", url: "http://www.gd.gov.cn/zwgk/gongbao/2025/1/content/post_4652307.html" } },
           { name: "保险增信补贴：通过保险增信获得固定资产贷款", required: false, weight: 2, description: "第十五条、第十六条：通过保险增信方式从银行获得固定资产贷款，补贴期内无不良信贷记录；事后补贴按已支付保险费用 ≤50%，单企业每年最高 40 万；同一笔保险增信贷款只能享受一次补贴", basis: { name: "细则第十五条、第十六条", url: "http://www.gd.gov.cn/zwgk/gongbao/2025/1/content/post_4652307.html" } },
           { name: "融资租赁补贴：设备融资租赁合同额 ≥500 万", required: false, weight: 2, description: "第十七条、第十八条：通过直接融资租赁购入生产及生产配套设备（不含办公设备），单项目合同额 ≥500 万；按合同额×签约时 LPR 的 15% 一次性补贴，单项目补贴期 ≤3 年，单企业单自然年最高 200 万", basis: { name: "细则第十七条、第十八条", url: "http://www.gd.gov.cn/zwgk/gongbao/2025/1/content/post_4652307.html" } }
@@ -318,7 +318,7 @@ window.ZCT_DATA.guangdong.push(
       {
         category: "基础合规（粤工信节能函〔2025〕34 号 · 不予支持情形）",
         items: [
-          { name: "广东省内登记注册并实际生产经营的工业企业", required: true, weight: 2, description: "申报主体为在省内登记注册并生产经营、具有独立民事责任能力、诚信纳税的工业企业；粤港清洁生产伙伴方向为获 2024 年度「粤港清洁生产伙伴（制造业）」标志的在粤港资企业", basis: { name: "2026 年度入库申报指南（附件）", url: "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2752835.html" } },
+          { name: "广东省内登记注册并实际生产经营的工业企业", required: true, weight: 2, autoMatch: "type", rule: () => true, description: "申报主体为在省内登记注册并生产经营、具有独立民事责任能力、诚信纳税的工业企业；粤港清洁生产伙伴方向为获 2024 年度「粤港清洁生产伙伴（制造业）」标志的在粤港资企业；表单四种企业类型均为依法设立的企业，此条件自动通过，未选类型时归为未核验", basis: { name: "2026 年度入库申报指南（附件）", url: "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2752835.html" } },
           { name: "项目不属于淘汰类和落后产能项目", required: true, weight: 2, veto: true, description: "不予支持情形：淘汰类和落后产能项目不得申报", basis: { name: "粤工信节能函〔2025〕34 号 · 不予支持情形", url: "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2752835.html" } },
           { name: "非环保信用「环保不良企业」及「信用中国（广东）」受惩戒黑名单企业", required: true, weight: 2, veto: true, description: "不予支持情形：环保信用评价为「环保不良企业」及「信用中国（广东）」受惩戒黑名单企业不得申报", basis: { name: "粤工信节能函〔2025〕34 号 · 不予支持情形", url: "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2752835.html" } },
           { name: "项目未通过其他渠道获得省级财政资金支持，且无省工信厅经管专项资金逾期未验收项目", required: true, weight: 2, veto: true, description: "不予支持情形：已通过其他渠道获得省级财政资金支持的项目不得申报；存在省工信厅经管专项资金项目逾期未验收情况的单位不得申报", basis: { name: "粤工信节能函〔2025〕34 号 · 不予支持情形", url: "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2752835.html" } }
@@ -327,9 +327,9 @@ window.ZCT_DATA.guangdong.push(
       {
         category: "项目条件（2026 年度入库申报指南）",
         items: [
-          { name: "项目已完工，完工时间 2024-07-01（含）至 2025-06-30（含）", required: true, weight: 3, description: "事后奖励制：项目须已完工，完工时间在 2024 年 7 月 1 日（含）至 2025 年 6 月 30 日（含）之间（2026 年度口径）", basis: { name: "2026 年度入库申报指南 · 申报条件", url: "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2752835.html" } },
-          { name: "项目属于支持范围四类之一（一般工业固废 / 动力电池再生利用 / 协同处置 / 绿色园区·绿色工厂固废减量化）", required: true, weight: 3, description: "支持范围：一般工业固体废物资源化利用项目；新能源汽车废旧动力电池综合利用（再生利用）项目；工业窑炉、水泥窑等设施协同处置固体废物（含一般工业固体废物、生活垃圾、垃圾焚烧飞灰）项目；绿色园区、绿色工厂过程中实施的固体废弃物减量化项目", basis: { name: "2026 年度入库申报指南 · 支持范围", url: "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2752835.html" } },
-          { name: "设备投资额达门槛：珠三角 ≥600 万、粤东粤西粤北 ≥300 万", required: true, weight: 3, description: "项目设备投资额珠三角不低于 600 万（东莞指南口径）、粤东粤西粤北不低于 300 万（韶关口径），不含非生产性交通运输车辆购置，遵循发票金额与付款金额从小原则；新能源汽车废旧动力电池回收网点建设项目按固定资产投资额不低于 300 万，同一主体多个网点可合并计算", basis: { name: "2026 年度入库申报指南 · 申报条件", url: "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2752835.html" } },
+          { name: "项目已完工，完工时间 2024-07-01（含）至 2025-06-30（含）", required: true, weight: 3, autoMatch: "projectStatus", rule: v => v === "已完工" ? true : v === "不清楚" ? undefined : false, description: "事后奖励制：项目须已完工，完工时间在 2024 年 7 月 1 日（含）至 2025 年 6 月 30 日（含）之间（2026 年度口径）；表单拟申报项目实施状态选「已完工」即满足，完工时间是否在窗口内需人工核验", basis: { name: "2026 年度入库申报指南 · 申报条件", url: "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2752835.html" } },
+          { name: "项目属于支持范围四类之一（一般工业固废 / 动力电池再生利用 / 协同处置 / 绿色园区·绿色工厂固废减量化）", required: true, weight: 3, autoMatch: "projectType", rule: v => v === "固废资源化利用" ? true : v === "不清楚" ? undefined : false, description: "支持范围：一般工业固体废物资源化利用项目；新能源汽车废旧动力电池综合利用（再生利用）项目；工业窑炉、水泥窑等设施协同处置固体废物（含一般工业固体废物、生活垃圾、垃圾焚烧飞灰）项目；绿色园区、绿色工厂过程中实施的固体废弃物减量化项目；表单拟申报项目类型选「固废资源化利用」即满足，其余类型项目不属于本专项支持范围", basis: { name: "2026 年度入库申报指南 · 支持范围", url: "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2752835.html" } },
+          { name: "设备投资额达门槛：珠三角 ≥600 万、粤东粤西粤北 ≥300 万", required: true, weight: 3, autoMatch: "investAmount", rule: v => v === "<500万" ? undefined : true, description: "项目设备投资额珠三角不低于 600 万（东莞指南口径）、粤东粤西粤北不低于 300 万（韶关口径），不含非生产性交通运输车辆购置，遵循发票金额与付款金额从小原则；新能源汽车废旧动力电池回收网点建设项目按固定资产投资额不低于 300 万，同一主体多个网点可合并计算；表单投资额选「500万-1000万」及以上即满足粤东西北门槛，珠三角 600 万线需人工核验（发票与付款从小认定）", basis: { name: "2026 年度入库申报指南 · 申报条件", url: "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2752835.html" } },
           { name: "综合利用能力达硬门槛（固废 ≥10 万吨/年等）", required: true, weight: 3, description: "单个项目固体废物综合利用能力不低于：一般工业固体废物 10 万吨/年；新能源汽车废旧动力电池再生利用 1 万吨/年；生活垃圾 5 万吨/年或垃圾焚烧飞灰 3 万吨/年；绿色园区、绿色工厂的工业固体废物综合利用率达到工信部公布的绿色园区、绿色工厂相关标准要求", basis: { name: "2026 年度入库申报指南 · 申报条件", url: "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2752835.html" } },
           { name: "涉及新建、改建、扩建投资项目的符合节能审查要求", required: true, weight: 2, description: "涉及新建、改建、扩建投资项目的，应符合固定资产投资项目节能审查相关要求", basis: { name: "2026 年度入库申报指南 · 申报条件", url: "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2752835.html" } }
         ]
@@ -501,7 +501,7 @@ window.ZCT_DATA.guangdong.push(
     issuingBody: "广东省科学技术厅",
     level: "省级",
     deadline: "每年 1 批（12 号文：按省科技厅年度申报指南组织申报）。2025 年度申报已结束（2025-08-06 发布通知、2025-09-05 17:00 截止，认定结果 2026-01-27 公布 478 家）；2026 年度申报通知截至 2026-08-03 尚未发布（2025 年度按 8 月初发文、9 月初截止的节奏，预计 2026 年 8-9 月启动），以省科技厅（gdstc.gd.gov.cn）官网通知为准",
-    deadlineDate: "2026-09-30", // 2b.3 推算：deadline 文本「预计 2026 年 8-9 月启动」（2025 年度 9-05 截止），月粒度取当月最后一天；申报通知发布后按实际截止更新
+    // 无 deadlineDate（2026-08-13 移除推算值）：2026 年度通知未发布，推算值会在时间轴渲染误导性紧迫提示；往年节奏（约 8-9 月启动）见 deadline 文本，通知发布后按实际截止补录
     effort: "Medium",
     updated: "2026-08-03",
     // 无 batches：2025 年度申报已截止、2026 年度通知未发布，无未截止批次 → 不渲染紧迫度（防过期误导）；通知发布后更新
@@ -618,7 +618,7 @@ window.ZCT_DATA.guangdong.push(
     issuingBody: "广东省工业和信息化厅",
     level: "省级",
     deadline: "项目库入库制、每年 1 批：2026 年度入库（粤工信融资函〔2025〕26 号，利息发生期 2024-05-01~2025-04-30）已于 2025-08-30 截止、贴息资金 2026 年度下达；2027 年度入库通知预计 2026 年 8 月前后发布（利息发生期约 2025-05-01~2026-04-30），建议提前备齐贷款合同与利息单",
-    deadlineDate: "2026-08-31", // 2b.3 推算：deadline 文本「2027 年度入库通知预计 2026 年 8 月前后发布」（2026 年度 8-30 截止），月粒度取当月最后一天；通知发布后按实际截止更新
+    // 无 deadlineDate（2026-08-13 移除推算值）：2027 年度入库通知未发布，推算值会在时间轴渲染误导性紧迫提示；往年节奏（约 7-8 月发通知、8 月中下旬截止）见 deadline 文本，通知发布后按实际截止补录
     effort: "Medium",
     updated: "2026-08-05",
     source: { name: "《广东省工业和信息化厅关于做好 2026 年专精特新中小企业贷款贴息项目入库工作的通知》（粤工信融资函〔2025〕26 号）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" },
