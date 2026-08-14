@@ -135,9 +135,7 @@ function policyCardHtml(p) {
                 `).join('')}
           </div>
         `).join('')}
-        <div class="policy-tips">
-          <strong>实操提醒（来自 49 家企业申报经验）</strong>：${p.tips}
-        </div>
+        ${p.tips ? `<div class="policy-tips"><strong>实操提醒（来自 49 家企业申报经验）</strong>：${p.tips}</div>` : ''}
         <div class="policy-source">
           <span class="src-tag">政策原文</span>
           <div class="src-docs">
@@ -355,25 +353,18 @@ function getMatchProfile() {
 // 逐条件评估公共函数（智能匹配 runMatch 与培育规划 runPlan 共用，规则单源，避免两处判定分叉）
 // 返回：score（已核验内达成率）/ coverage（已核验覆盖）/ insufficient + 聚合数组 + items（逐条明细，供培育规划差距清单）
 
-// 申报窗口紧迫度（2026-08-02 P1-1）：数据驱动，无 batches 字段的政策不渲染
-// 取最近一个未截止批次：≤7 天红色、≤30 天橙色、更远绿色；批次全截止则不显示（避免过期误导）
+// 申报窗口紧迫度（2026-08-02 P1-1 → 2026-08-14 口径统一）：数据源与引擎 getTimingInfo 单源
+// （batches 最近未截止批次 → deadlineDate → is_rolling）；无窗口数据不渲染；滚动申报由政策卡片标签承担
+// 修复前仅认 batches：deadlineDate 政策（fsdigital/gdnewmat）Timing 有分但匹配结果无紧迫提示——双口径
 function windowUrgencyHTML(policy) {
-  if (!policy.batches || !policy.batches.length) return '';
-  const now = new Date();
-  const upcoming = policy.batches
-    .map(b => {
-      const [y, m, d] = b.date.split('-').map(Number);
-      return { b, t: new Date(y, m - 1, d, 23, 59, 59).getTime() - now.getTime() };
-    })
-    .filter(x => x.t > 0)
-    .sort((a, b) => a.t - b.t);
-  if (!upcoming.length) return '';
-  const { b, t } = upcoming[0];
-  const days = Math.ceil(t / 86400000);
+  const t = getTimingInfo(policy);
+  if (!t.has || t.rolling) return '';
+  const days = t.days;
   const color = days <= 7 ? 'var(--danger)' : days <= 30 ? 'var(--warning)' : 'var(--success)';
   const bg = days <= 7 ? 'var(--bg-danger)' : days <= 30 ? 'var(--bg-warning)' : 'var(--bg-success)';
   const tip = days <= 7 ? `仅剩 ${days} 天` : `剩 ${days} 天`;
-  return `<div style="color:${color};font-weight:600;margin-bottom:6px;padding:8px 12px;background:${bg};border-radius:4px;">⏰ 申报窗口：${b.label}（${b.date}）材料截止，${tip}</div>`;
+  const who = t.batchLabel ? `${t.batchLabel}（${t.date}）` : t.date;
+  return `<div style="color:${color};font-weight:600;margin-bottom:6px;padding:8px 12px;background:${bg};border-radius:4px;">⏰ 申报窗口：${who} 材料截止，${tip}</div>`;
 }
 
 // 2b.4 档位词（2026-08-13 方案 B）：tier → 主判定文案（展示层单源，卡片主视觉与匹配页头部共用）
@@ -1260,7 +1251,8 @@ function progFillForm() {
 
 // ============================================================
 // Phase 3.2 申报路线图 UI（2026-08-05）：三层递进（企蒜蒜分层 + 三维评分）
-// 画像 = 匹配表单 ∪ 路线图表单（mergeProfiles：任一处填了都能用，匹配表单优先）
+// 画像 = 匹配表单 ∪ 路线图表单（mergeProfiles：任一处填了都能用；路线图表单优先——后填生效=用户最新意图）
+// 2026-08-14 修复：注释方向修正（原写「匹配表单优先」，与实现相反；实现路线图优先符合「同键联动」设计）
 // ============================================================
 function getRoadmapProfile() {
   const p = {};
@@ -1274,7 +1266,7 @@ function getRoadmapProfile() {
   return p;
 }
 
-// b 的非空值覆盖 a（画像并集，避免空串覆盖已填值）
+// b 的非空值覆盖 a（画像并集，避免空串覆盖已填值；调用方传 (匹配, 路线图) → 路线图优先）
 function mergeProfiles(a, b) {
   const out = Object.assign({}, a);
   Object.keys(b).forEach(k => {

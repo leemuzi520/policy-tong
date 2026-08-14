@@ -73,7 +73,7 @@ window.ZCT_DATA.national.miit.push(
       {
         category: "加分项（非认定硬条件）",
         items: [
-          { name: "取得质量管理体系认证", required: false, weight: 1, description: "如 ISO9001 或同等级别质量管理体系认证；2 号文七项指标不含此项，但复核企业按 63 号文标准仍会考查（精细化指标）", autoMatch: "cert", rule: v => v.includes("ISO9001") },
+          { name: "取得质量管理体系认证", required: false, weight: 1, description: "如 ISO9001 或同等级别质量管理体系认证；2 号文七项指标不含此项，但复核企业按 63 号文标准仍会考查（精细化指标）", autoMatch: "certs", rule: v => v.includes("ISO9001") },
           { name: "拥有自主品牌", required: false, weight: 2, description: "拥有注册商标或品牌；63 号文复核标准特色化指标要求，2 号文新申请非硬性" },
           { name: "产品通过国际/国内权威认证", required: false, weight: 1, description: "如 CE、UL、CCC 等产品认证；63 号文复核标准精细化指标（管理体系认证或发达国家和地区产品认证）" },
           { name: "自建或联合建立研发机构", required: false, weight: 2, description: "如技术中心、实验室、博士后工作站等；63 号文复核标准创新能力一般性条件，2 号文新申请非硬性" },
@@ -131,10 +131,10 @@ window.ZCT_DATA.national.miit.push(
       {
         category: "管理体系",
         items: [
-          { name: "已建立质量管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持质量管理体系（GB/T 19001/ISO9001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "cert", rule: v => v.includes("ISO9001") },
-          { name: "已建立环境管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持环境管理体系（GB/T 24001/ISO14001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "cert", rule: v => v.includes("ISO14001") },
-          { name: "已建立能源管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持能源管理体系（GB/T 23331/ISO50001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "cert", rule: v => v.includes("ISO50001") },
-          { name: "已建立职业健康安全管理体系", required: true, weight: 1, description: "GB/T 36132 第 6 章：建立并保持职业健康安全管理体系（ISO45001，OHSAS18001 已于 2021 年停发，有效期内的旧证仍认可）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "cert", rule: v => v.includes("ISO45001") || v.includes("OHSAS18001") }
+          { name: "已建立质量管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持质量管理体系（GB/T 19001/ISO9001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO9001") },
+          { name: "已建立环境管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持环境管理体系（GB/T 24001/ISO14001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO14001") },
+          { name: "已建立能源管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持能源管理体系（GB/T 23331/ISO50001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO50001") },
+          { name: "已建立职业健康安全管理体系", required: true, weight: 1, description: "GB/T 36132 第 6 章：建立并保持职业健康安全管理体系（ISO45001，OHSAS18001 已于 2021 年停发，有效期内的旧证仍认可）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO45001") || v.includes("OHSAS18001") }
         ]
       },
       {
@@ -330,7 +330,10 @@ window.ZCT_DATA.national.miit.push(
     level: "国家级",
     deadline: "2026 年度：全国系统开放 2026-06-01 至 08-31；广东分 3 批（6-8 月每月一批，批次截止=当月最后一日），8 月 31 日全面停止填报",
     effort: "Easy",
+    // 2026 年度广东 3 批完整序列（2026-08-14 补全第 1/2 批；引擎只取未来批次，历史批次供数据对照与巡检）
     batches: [
+      { label: "2026 年度·广东第 1 批", date: "2026-06-30" },
+      { label: "2026 年度·广东第 2 批", date: "2026-07-31" },
       { label: "2026 年度·广东第 3 批（最后一批）", date: "2026-08-31" }
     ],
     updated: "2026-08-03",
@@ -449,7 +452,7 @@ window.ZCT_DATA.national.miit.push(
           { name: "建有健全研发机构或与大学/科研机构长期稳定合作", required: true, weight: 2, description: "第七条（二）；需提供研发机构设立文件或产学研合作协议", basis: { name: "540 号文第七条（二）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
           { name: "在行业发展中具有较强带动性，形成有知名度的自主品牌", required: true, weight: 2, description: "第七条（三）；需提供品牌知名度佐证（商标注册、行业排名等）", basis: { name: "540 号文第七条（三）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
           { name: "近 3 年连续盈利、财务状况良好", required: true, weight: 2, description: "第七条（四）；以近三年审计报告核实", basis: { name: "540 号文第七条（四）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
-          { name: "建有较完善的知识产权管理体系和质量保证体系", required: true, weight: 2, autoMatch: "cert", rule: v => v.includes("ISO9001"), description: "第七条（四）：ISO9001 认证可佐证质量保证体系部分，知识产权管理体系需人工核实（如贯标/知识产权管理体系认证）", basis: { name: "540 号文第七条（四）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
+          { name: "建有较完善的知识产权管理体系和质量保证体系", required: true, weight: 2, autoMatch: "certs", rule: v => v.includes("ISO9001"), description: "第七条（四）：ISO9001 认证可佐证质量保证体系部分，知识产权管理体系需人工核实（如贯标/知识产权管理体系认证）", basis: { name: "540 号文第七条（四）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
           { name: "积极实施技术改造，具有重大科技成果转化能力，节能减排降耗有较强示范作用", required: true, weight: 2, description: "第七条（五）；需提供技改项目、成果转化与节能降耗佐证", basis: { name: "540 号文第七条（五）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
           { name: "把技术创新和自主品牌创新作为经营发展战略的重要内容", required: true, weight: 1, description: "第七条（六）；需提供企业发展战略与创新规划文件", basis: { name: "540 号文第七条（六）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } }
         ]

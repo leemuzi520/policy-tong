@@ -5,7 +5,7 @@
 
 // 数据版本：任何政策数据变更后更新此值（同步更新自诊断报告页脚日期戳）
 // ============================================================
-const DATA_VERSION = '2026-08-13'; // 环境时钟口径：同日移除 3 条推算 deadlineDate（P1-2），数据变更日
+const DATA_VERSION = '2026-08-14'; // 环境时钟口径：P1 修复日（断言补 city / region 封顶 / cert 键统一 / 紧迫提示单源 / kjxqy 批次补全）
 
 // 政策库：由 data/ 目录按部门汇总（2a.1 数据分离，2026-08-02）
 // 汇总后按 order 字段恢复原数组顺序；新增政策按部门写入 data/ 对应文件，order 取当前最大值+1
@@ -18,7 +18,8 @@ const POLICIES = [
 ].sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
 
 // 启动断言：数据挂载完整性（缺失即报错，避免静默空库）
-if (!(window.ZCT_DATA?.national?.most?.length > 0 && window.ZCT_DATA?.national?.miit?.length > 0 && window.ZCT_DATA?.national?.ndrc?.length > 0 && window.ZCT_DATA?.guangdong?.length > 0)) {
+// 2026-08-14 修复：补 city 文件检查（2b.1 新增 city.js 后断言未同步，city 缺失时静默空转）
+if (!(window.ZCT_DATA?.national?.most?.length > 0 && window.ZCT_DATA?.national?.miit?.length > 0 && window.ZCT_DATA?.national?.ndrc?.length > 0 && window.ZCT_DATA?.guangdong?.length > 0 && window.ZCT_DATA?.city?.length > 0)) {
   console.error('[政策通] 数据文件未完整加载，POLICIES 可能为空。请检查 data/ 目录文件。');
 }
 const COLUMNS = [
@@ -145,16 +146,13 @@ function evaluatePolicyConditions(policy, profile) {
       let matched = false;
       let verdict; // 判定结果：true/false，或 undefined（3 态字段选「不清楚」= 无法判断）
 
-      // cert 类条件（autoMatch:'cert'）取值在 profile.certs 数组而非 profile['cert']：数组非空才算可自动判断，空数组等价于未填 → 未核验
-      const autoVal = item.autoMatch === 'cert'
-        ? (Array.isArray(profile.certs) && profile.certs.length > 0 ? '1' : '')
-        : profile[item.autoMatch];
-      const canAutoCheck = !!item.autoMatch && autoVal !== undefined && autoVal !== '' && autoVal !== '不清楚'; // 2026-08-13 P1：同上，items 分支统一拦截
+      // 三态取值：checkbox 多选（certs）空数组等价于未填 → 未核验；其余字段按值判
+      // 2026-08-14 修复：autoMatch 键统一为注册表键名（cert → certs），删除特判；数组空检查通用化（未来 checkbox 字段同样生效）
+      const autoVal = profile[item.autoMatch];
+      const canAutoCheck = !!item.autoMatch && autoVal !== undefined && autoVal !== '' && autoVal !== '不清楚' && !(Array.isArray(autoVal) && autoVal.length === 0); // 2026-08-13 P1：同上，items 分支统一拦截
       if (canAutoCheck) {
         verifiedWeight += item.weight;
-        if (item.autoMatch === 'cert') {
-          verdict = item.rule(profile.certs);
-        } else if (item.autoMatch === 'industry') {
+        if (item.autoMatch === 'industry') {
           verdict = item.rule(profile.industry, policy);
         } else {
           verdict = item.rule(profile[item.autoMatch], profile);
@@ -208,11 +206,12 @@ function getTimingInfo(policy, now = new Date()) {
     return new Date(y, m - 1, d, 23, 59, 59).getTime() - now.getTime();
   };
   let date = null;
+  let batchLabel = ''; // 最近未截止批次的 label（app.js windowUrgencyHTML 展示用，2026-08-14 口径统一）
   if (policy.batches && policy.batches.length) {
     const upcoming = policy.batches
       .filter(b => deadlineMs(b.date) > 0)
       .sort((a, b) => deadlineMs(a.date) - deadlineMs(b.date));
-    if (upcoming.length) date = upcoming[0].date;
+    if (upcoming.length) { date = upcoming[0].date; batchLabel = upcoming[0].label; }
   } else if (policy.deadlineDate && deadlineMs(policy.deadlineDate) > 0) {
     date = policy.deadlineDate;
   }
@@ -220,7 +219,7 @@ function getTimingInfo(policy, now = new Date()) {
     const days = Math.ceil(deadlineMs(date) / 86400000);
     const score = days < 14 ? 20 : days < 30 ? 50 : days < 90 ? 80 : days < 180 ? 95 : 100;
     const label = days < 14 ? '非常紧迫' : days < 30 ? '紧迫' : days < 90 ? '较从容' : '从容';
-    return { has: true, days, date, score, label };
+    return { has: true, days, date, score, label, batchLabel };
   }
   if (policy.is_rolling) return { has: true, rolling: true, score: 90, label: '滚动申报' };
   return { has: false, label: '窗口未定' };
@@ -323,15 +322,17 @@ function nearMissRecovery(results, profile) {
     for (let k = 1; k <= relaxable.length; k++) {
       addW += relaxable[k - 1].weight;
       const s = Math.round((r.matchedWeight + addW) / r.verifiedWeight * 100);
-      const tier = r.industryMatch
+      // 2026-08-14 修复：region 与 industry 同口径封顶（runMatch 对两者均 soft 降档 medium cap 69）——
+      // 此前只封 industry，地区不匹配的市级政策放松后可能虚高到推荐档
+      const tier = (r.industryMatch && r.regionMatch)
         ? (s >= 75 ? 'high' : s >= 50 ? 'medium' : 'low')
-        : (s >= 50 ? 'medium' : 'low'); // 行业不匹配封顶中档（与 runMatch 同款，得分本身无意义）
+        : (s >= 50 ? 'medium' : 'low'); // 行业/地区不匹配封顶中档（与 runMatch 同款，得分本身无意义）
       if (tier === 'high' || tier === 'medium') {
         cands.push({
           policy: r.policy,
           relaxCount: k,
           tier,
-          score: r.industryMatch ? s : Math.min(s, 69),
+          score: (r.industryMatch && r.regionMatch) ? s : Math.min(s, 69),
           gaps: relaxable.slice(0, k).map(it => ({ name: it.name, desc: it.description, want: labelOf(it.autoMatch) }))
         });
         break; // 该政策取最少放松数
