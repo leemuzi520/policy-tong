@@ -163,7 +163,9 @@ window.ZCT_DATA.national.miit.push(
           { name: "单位产品综合能耗达到基准值要求", required: true, weight: 3, description: "GB/T 36132-2025 绩效指标（能源低碳化）：实际数据与基准值/引领值对比评分；工业重点领域优先推荐能效达到标杆水平、其他行业优先推荐能源消耗限额标准先进值或 1 级水平（13 号文第十四条）；需提供能源审计报告或节能评估报告", basis: { name: "GB/T 36132-2025（能源低碳化指标）· 13 号文第十四条", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "能源审计报告或节能评估报告 + 近一年能耗统计台账（综合能耗与产品产量数据）" },
           { name: "单位产品取水量达到基准值要求", required: true, weight: 2, description: "GB/T 36132-2025 绩效指标（资源高效化）：以基准值/引领值评分；需提供水平衡测试报告", basis: { name: "GB/T 36132-2025（资源高效化指标）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "水平衡测试报告或近一年用水台账（取水量与产品产量数据）" },
           { name: "主要污染物排放达到基准值要求", required: true, weight: 3, description: "GB/T 36132-2025 绩效指标（生产洁净化）：单位产品主要污染物产生量，以基准值/引领值评分；需提供环评批复 + 验收文件 + 近两年监测报告", basis: { name: "GB/T 36132-2025（生产洁净化指标）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "环评批复及验收文件 + 近两年第三方监测报告（主要污染物产生量数据）" },
-          { name: "一般工业固废综合利用率达到行业先进水平", required: true, weight: 2, description: "GB/T 36132-2025 绩效指标（资源高效化）：工业固体废物综合利用率，综合绩效应达到行业先进水平；需提供固废台账和综合利用去向证明", basis: { name: "GB/T 36132-2025（资源高效化指标）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "一般工业固废台账 + 综合利用去向证明（处置合同、转移联单等）" }
+          { name: "一般工业固废综合利用率达到行业先进水平", required: true, weight: 2, description: "GB/T 36132-2025 绩效指标（资源高效化）：工业固体废物综合利用率，综合绩效应达到行业先进水平；需提供固废台账和综合利用去向证明", basis: { name: "GB/T 36132-2025（资源高效化指标）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "一般工业固废台账 + 综合利用去向证明（处置合同、转移联单等）" },
+          { name: "碳排放强度达到基准值要求", required: true, weight: 2, description: "390 号文附件 1 评价指标第 2 项（能源低碳化，逆向定量 8 分）：按单位产品二氧化碳排放量或单位产值二氧化碳排放量与本行业先进水平对标赋分（引领值=行业先进水平、基准值=行业平均水平）；需提供碳排放核算数据", basis: { name: "390 号文附件 1《绿色工厂评价要求（2025）》（厦门转发）", url: "https://gxj.xm.gov.cn/xwzx/tzgg/202510/t20251011_2959669.htm" }, evidence: "碳排放核算数据/碳排放盘查报告（单位产品或单位产值碳排放量）" },
+          { name: "土地产出率达到基准值要求", required: true, weight: 2, description: "390 号文附件 1 评价指标第 14 项（用地集约化 8%，8 分）：按单位用地面积产能或单位用地面积产值与本行业或地方先进水平对标赋分（引领值=行业先进水平、基准值=行业平均水平）；用地集约化为 2026 新五化指标体系新增一级指标", basis: { name: "390 号文附件 1《绿色工厂评价要求（2025）》（厦门转发）", url: "https://gxj.xm.gov.cn/xwzx/tzgg/202510/t20251011_2959669.htm" }, evidence: "用地面积与产能/产值数据（土地产出率计算说明）" }
         ]
       },
       {
@@ -171,7 +173,8 @@ window.ZCT_DATA.national.miit.push(
         items: [
           { name: "开展了绿色设计或生态设计", required: false, weight: 2, description: "GB/T 36132 产品要求：宜按 GB/T 24256 开展生态设计（官方为「宜」，属提高性要求）；有绿色设计产品或绿色设计示范企业资质为佳", basis: { name: "GB/T 36132-2025（产品绿色化要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "绿色设计产品目录/生态设计相关认证或设计文件" },
           { name: "建立了绿色供应链管理制度", required: false, weight: 1, description: "GB/T 36132 采购要求：绿色采购与供应商管理；对供应商有绿色准入要求", basis: { name: "GB/T 36132-2025（采购与供应链要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "绿色采购管理制度、供应商绿色准入要求文件" },
-          { name: "使用清洁能源或可再生能源", required: false, weight: 2, description: "GB/T 36132 基础设施与能源投入要求：可再生能源利用，如分布式光伏、绿电购买合同等", basis: { name: "GB/T 36132-2025（能源低碳化要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "分布式光伏并网协议/绿电交易合同/可再生能源证书等" }
+          { name: "使用清洁能源或可再生能源", required: false, weight: 2, description: "390 号文附件 1 评价指标第 3 项（能源低碳化，正向定量）：可再生能源利用率与本行业先进水平对标；GB/T 36132 基础设施与能源投入要求：可再生能源利用，如分布式光伏、绿电购买合同等", basis: { name: "390 号文附件 1（能源低碳化）· GB/T 36132-2025（能源低碳化要求）", url: "https://gxj.xm.gov.cn/xwzx/tzgg/202510/t20251011_2959669.htm" }, evidence: "分布式光伏并网协议/绿电交易合同/可再生能源证书等" },
+          { name: "开展主要产品碳足迹量化", required: false, weight: 2, description: "390 号文附件 1 评价指标第 13 项（产品绿色化，8 分）：依据 GB/T 24067 等适用的标准或规范开展主要产品碳足迹量化并提供报告，产品类别依据 GB/T 4754 归类，根据已开展情况赋分", basis: { name: "390 号文附件 1《绿色工厂评价要求（2025）》（厦门转发）", url: "https://gxj.xm.gov.cn/xwzx/tzgg/202510/t20251011_2959669.htm" }, evidence: "主要产品碳足迹报告（按 GB/T 24067 量化）" }
         ]
       }
     ],
@@ -188,7 +191,10 @@ window.ZCT_DATA.national.miit.push(
       { name: "一般工业固废台账与综合利用去向证明", required: true },
       { name: "「信用中国」报告 + 国家企业信用信息公示系统查询结果（负面清单核查）", required: true, basis: { name: "13 号文第十五条（负面清单）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_aab179dea60b4b77a05070e796c4c994.html" } },
       { name: "分布式光伏/绿电购买合同等可再生能源佐证", required: false, note: "申报前已建设或购买绿电的提供，属评分加分" },
-      { name: "绿色设计/生态设计、绿色供应链管理佐证", required: false, note: "属提高性要求，有则提供" }
+      { name: "绿色设计/生态设计、绿色供应链管理佐证", required: false, note: "属提高性要求，有则提供" },
+      { name: "碳排放核算数据/碳排放盘查报告（单位产品或单位产值碳排放量）", required: false, note: "390 号文附件 1 第 2 项碳排放强度指标佐证" },
+      { name: "主要产品碳足迹报告（按 GB/T 24067 量化）", required: false, note: "390 号文附件 1 第 13 项产品碳足迹指标佐证" },
+      { name: "用地面积与产能/产值数据（土地产出率计算说明）", required: false, note: "390 号文附件 1 第 14 项用地集约化指标佐证" }
     ],
     // 2026-08-14 修复：申报要求从诊断条件拆出（流程信息仅作提示展示）
     diagNotes: [
@@ -199,7 +205,8 @@ window.ZCT_DATA.national.miit.push(
       "获评后动态管理：每年 4 月 15 日前通过管理平台填报动态管理表（13 号文第十六条），得分连续三年处于后 5% 的从名单移出（390 号文）"
     ],
     revisions: [
-      { at: "2026-08-14", note: "zct-diag 细化：负面清单六项拆为可三态判定的独立条件（原合并为一条），新增「已纳入省层面绿色工厂名单」梯度培育前置硬条件，全部条件补 evidence，新增 materials 官方材料清单与 diagNotes；申报方式更新——2025 年度起不再要求第三方评价报告", basis: "13 号文第十条、第十五条 · 工信厅节函〔2025〕390 号" }
+      { at: "2026-08-14", note: "zct-diag 细化：负面清单六项拆为可三态判定的独立条件（原合并为一条），新增「已纳入省层面绿色工厂名单」梯度培育前置硬条件，全部条件补 evidence，新增 materials 官方材料清单与 diagNotes；申报方式更新——2025 年度起不再要求第三方评价报告", basis: "13 号文第十条、第十五条 · 工信厅节函〔2025〕390 号" },
+      { at: "2026-08-14", note: "手机实测补充：对照 390 号文附件 1《绿色工厂评价要求（2025）》新增碳排放强度（第 2 项）、土地产出率（第 14 项，用地集约化）2 条绿色绩效必选条件与产品碳足迹（第 13 项，GB/T 24067）可选条件，materials 补碳排放核算/碳足迹报告/用地产出数据 3 项佐证清单；可再生能源利用条件补充附件 1 第 3 项口径", basis: "390 号文附件 1（厦门转发 PDF）" }
     ],
     changesTitle: "2026 新标准变化要点",
     changesNote: "自 2026 年度申报起按新版标准评价，逐条有官方依据",

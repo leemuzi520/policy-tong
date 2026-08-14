@@ -742,24 +742,22 @@ function renderPathCategory(cat, policy, nextInput, nextItem) {
     }
     // 多选一路径：n 项中任意 1 项「符合」即满足（hint 可自定义，如创新型「直通」、专精特新「豁免」）
     // 2026-08-14 修复：checkbox → 三态 radio（符合/不符合/不清楚）——未核验不再被误判为不满足；子项不再标「必选」，「满足其一」语义由路径级说明承担
+    // 2026-08-14 手机实测修复：三态按钮由大按钮改紧凑胶囊单行（原 flex-wrap 在手机换行占 >60% 版面）
     const pathHint = path.hint || (path.items.length > 1 ? `满足以下 ${path.items.length} 项中任意 1 项即可` : '');
     return head +
       (pathHint ? `<div style="font-size:12px;color:var(--text-secondary);padding:0 14px 6px;">${pathHint}</div>` : '') +
       path.items.map(item => {
         const iIdx = nextItem();
+        const tri = (val, txt) => `<label style="display:inline-flex;align-items:center;gap:3px;font-size:12px;padding:2px 9px;background:var(--bg);border:1px solid var(--border);border-radius:11px;cursor:pointer;white-space:nowrap;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="${val}"> ${txt}</label>`;
         return `
           <div class="checklist-item">
             <div class="cond-label">
               ${item.name}
               <span class="cond-tag" style="background:var(--bg-warning);color:var(--warning);border:1px solid var(--warning);">满足其一</span>
-              <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
-              ${item.evidence ? `<div style="font-size:12px;color:var(--text-primary);margin-top:2px;">📎 佐证：${item.evidence}</div>` : ''}
-              ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">${item.basis.name}</a></div>` : ''}
-            </div>
-            <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
-              <label style="display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="yes"> 符合</label>
-              <label style="display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="no"> 不符合</label>
-              <label style="display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="unknown"> 不清楚</label>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;line-height:1.6;">${item.description}</div>
+              ${item.evidence ? `<div style="font-size:12px;color:var(--text-primary);margin-top:2px;line-height:1.6;">📎 佐证：${item.evidence}</div>` : ''}
+              ${item.basis ? `<div style="font-size:12px;margin-top:2px;line-height:1.6;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">${item.basis.name}</a></div>` : ''}
+              <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:nowrap;">${tri('yes','符合')}${tri('no','不符合')}${tri('unknown','不清楚')}</div>
             </div>
           </div>`;
       }).join('');
@@ -810,14 +808,14 @@ function loadDiagnosis() {
                 ${item.name}
                 ${item.veto ? '<span class="cond-tag" style="background:var(--bg-danger);color:var(--danger);border:1px solid var(--danger);">一票否决</span>' : ''}
                 <span class="cond-tag ${item.required ? 'required-tag' : 'optional-tag'}">${item.required ? '必选' : '可选'}</span>
-                <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
-                ${item.evidence ? `<div style="font-size:12px;color:var(--text-primary);margin-top:2px;">📎 佐证：${item.evidence}</div>` : ''}
-                ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">${item.basis.name}</a></div>` : ''}
-              </div>
-              <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
-                <label style="display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="yes"> 符合</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="no"> 不符合</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="unknown"> 不清楚</label>
+                <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;line-height:1.6;">${item.description}</div>
+                ${item.evidence ? `<div style="font-size:12px;color:var(--text-primary);margin-top:2px;line-height:1.6;">📎 佐证：${item.evidence}</div>` : ''}
+                ${item.basis ? `<div style="font-size:12px;margin-top:2px;line-height:1.6;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">${item.basis.name}</a></div>` : ''}
+                <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:nowrap;">
+                  <label style="display:inline-flex;align-items:center;gap:3px;font-size:12px;padding:2px 9px;background:var(--bg);border:1px solid var(--border);border-radius:11px;cursor:pointer;white-space:nowrap;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="yes"> 符合</label>
+                  <label style="display:inline-flex;align-items:center;gap:3px;font-size:12px;padding:2px 9px;background:var(--bg);border:1px solid var(--border);border-radius:11px;cursor:pointer;white-space:nowrap;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="no"> 不符合</label>
+                  <label style="display:inline-flex;align-items:center;gap:3px;font-size:12px;padding:2px 9px;background:var(--bg);border:1px solid var(--border);border-radius:11px;cursor:pointer;white-space:nowrap;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="unknown"> 不清楚</label>
+                </div>
               </div>
             </div>
           `;
