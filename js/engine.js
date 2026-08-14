@@ -473,13 +473,15 @@ const MANUAL_COMMON_MATERIALS = [
   '真实性承诺书（法定代表人签字 + 盖章）'
 ];
 
-// 专项佐证提示：条件描述中需要外部出具材料的条件（需用户逐条备齐对应佐证）
+// 专项佐证提示：优先取条件项的 evidence 字段（2026-08-14 zct-diag 细化后数据）；
+// 无 evidence 的政策回退关键词粗筛（description 含报告/证明/证书等外部材料字样的条件）——其他政策零影响
 function extractSupportDocs(policy) {
   const kw = /报告|证明|证书|审计|检测|评估|备案|登记|批复|认定书/;
   const hits = [];
   policy.conditions.forEach(cat => {
     const items = cat.paths ? cat.paths.flatMap(pt => pt.items || []) : (cat.items || []);
     items.forEach(it => {
+      if (it.evidence) { hits.push({ name: it.name, desc: it.evidence, basis: it.basis }); return; }
       if (it.description && kw.test(it.description)) hits.push({ name: it.name, desc: it.description, basis: it.basis });
     });
   });

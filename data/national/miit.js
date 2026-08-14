@@ -29,7 +29,7 @@ window.ZCT_DATA.national.miit.push(
           { name: "在境内注册、独立法人", required: true, weight: 3, description: "符合《中小企业划型标准规定》（工信部联企业〔2011〕300 号）" },
           { name: "已获专精特新中小企业称号（3 年有效期内）", required: true, weight: 3, autoMatch: "level", rule: v => v >= 2, description: "2 号文附件 2（一）：申报「小巨人」须先认定为省级专精特新中小企业，且在有效期内" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
           { name: "截至上年末从事特定细分市场 ≥3 年", required: true, weight: 3, tpl: "seg_years_min", params: { min: "3-5年" }, description: "2 号文附件 2（一）；原 63 号文「关键领域补短板/填空白企业可放宽至 2 年」条款已废止；以从事细分市场的实际年限计，非成立年限" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
-          { name: "近三年无重大安全/质量/环境事故", required: true, weight: 3, veto: true, description: "含较大生产安全事故、重大网络和数据安全事件、重大环境违法行为、严重质量问题、数据造假等（2 号文附件 3 说明）；数据造假将取消创新型/专精特新/小巨人称号且三年内不得再申报（117 号通知）", tpl: "no_accident" , basis: { name: "工信厅企业函〔2026〕117 号《关于开展 2026 年度专精特新「小巨人」企业认定和复核工作的通知》", url: "https://wap.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_83857a4773ac4583bd1540eeb78bcbcb.html" }},
+          { name: "近三年无重大安全/质量/环境事故", required: true, weight: 3, veto: true, description: "含较大生产安全事故、重大网络和数据安全事件、重大环境违法行为、严重质量问题、数据造假等（2 号文附件 3 说明）；数据造假将取消创新型/专精特新/小巨人称号且三年内不得再申报（117 号通知）", evidence: "信用中国（creditchina.gov.cn）报告 + 全国企业信用信息公示系统（gsxt.gov.cn）查询结果", tpl: "no_accident" , basis: { name: "工信厅企业函〔2026〕117 号《关于开展 2026 年度专精特新「小巨人」企业认定和复核工作的通知》", url: "https://wap.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_83857a4773ac4583bd1540eeb78bcbcb.html" }},
           { name: "非制造业单项冠军企业", required: true, weight: 3, description: "已获制造业单项冠军示范企业或单项冠军产品的企业，不再推荐新申请（117 号通知推荐要求（四））" , basis: { name: "工信厅企业函〔2026〕117 号《关于开展 2026 年度专精特新「小巨人」企业认定和复核工作的通知》", url: "https://wap.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_83857a4773ac4583bd1540eeb78bcbcb.html" }},
           { name: "无控股/同质关联冲突", required: true, weight: 3, description: "与已认定「小巨人」企业存在控股关系的企业、同一集团内生产相似主导产品的企业不予推荐（117 号通知推荐要求（四））" , basis: { name: "工信厅企业函〔2026〕117 号《关于开展 2026 年度专精特新「小巨人」企业认定和复核工作的通知》", url: "https://wap.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_83857a4773ac4583bd1540eeb78bcbcb.html" }}
         ]
@@ -37,12 +37,12 @@ window.ZCT_DATA.national.miit.push(
       {
         category: "认定条件（须同时满足，2 号文附件 2 七项指标）",
         items: [
-          { name: "上年度营业收入 ≥ 5000 万元", required: true, weight: 2, description: "2 号文附件 2（二）经营规模门槛；以审计报告为准", tpl: "revenue_min", params: { min: "5000万-1亿" } , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
-          { name: "主营业务收入占营收 ≥ 90%", required: true, weight: 2, description: "2 号文附件 2（二），由原 70% 提高；主营业务收入、主营业务成本须纳入审计报告（117 号通知）", tpl: "main_ratio_min", params: { min: "≥90%" } , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
-          { name: "近两年营业收入复合增长率 ≥ 5%", required: true, weight: 2, tpl: "growth_min", params: { min: "≥5%" }, description: "2 号文附件 2（二）；复核企业不考查该项指标" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
-          { name: "上年末资产负债率 ≤ 75%", required: true, weight: 1, tpl: "debt_max", params: { max: "55%-75%" }, description: "2 号文附件 2（二）财务健康指标" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
-          { name: "近两年研发费用合计 ≥1200 万元且每年占营收比重 ≥3%", required: true, weight: 3, autoMatch: "rd", rule: (v, profile) => v === "<3%" ? false : profile.rdTotal === "≥1200万" ? true : profile.rdTotal === "100万-1200万" || profile.rdTotal === "<100万" ? false : undefined, description: "2 号文附件 2（三）；两年合计金额与每年占比均须达标，以审计报告为准" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
-          { name: "主导产品市占率 ≥10% 或国内前三", required: true, weight: 3, autoMatch: "marketShare", rule: v => v === "全球前3" || v === "国内前三或≥10%", description: "2 号文附件 2（五）：在国内或国际细分市场占有率达到 10% 以上或国内前三名，且享有较高知名度、影响力；企业如实说明即可，无需第三方证明（附件 3 说明 + 117 号通知）" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
+          { name: "上年度营业收入 ≥ 5000 万元", required: true, weight: 2, description: "2 号文附件 2（二）经营规模门槛；以审计报告为准", evidence: "近三年（2023-2025）审计报告（财政部注册会计师行业统一监管平台 acc.mof.gov.cn 报备赋码）", tpl: "revenue_min", params: { min: "5000万-1亿" } , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
+          { name: "主营业务收入占营收 ≥ 90%", required: true, weight: 2, description: "2 号文附件 2（二），由原 70% 提高；主营业务收入、主营业务成本须纳入审计报告（117 号通知）", evidence: "审计报告须单独体现主营业务收入、主营业务成本两项指标", tpl: "main_ratio_min", params: { min: "≥90%" } , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
+          { name: "近两年营业收入复合增长率 ≥ 5%", required: true, weight: 2, tpl: "growth_min", params: { min: "≥5%" }, description: "2 号文附件 2（二）；复核企业不考查该项指标", evidence: "近两年审计报告（营业收入口径与填报数据一致）" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
+          { name: "上年末资产负债率 ≤ 75%", required: true, weight: 1, tpl: "debt_max", params: { max: "55%-75%" }, description: "2 号文附件 2（二）财务健康指标", evidence: "上年末审计报告" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
+          { name: "近两年研发费用合计 ≥1200 万元且每年占营收比重 ≥3%", required: true, weight: 3, autoMatch: "rd", rule: (v, profile) => v === "<3%" ? false : profile.rdTotal === "≥1200万" ? true : profile.rdTotal === "100万-1200万" || profile.rdTotal === "<100万" ? false : undefined, description: "2 号文附件 2（三）；两年合计金额与每年占比均须达标，以审计报告为准", evidence: "近两年审计报告（研发费用合计与占比口径）" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
+          { name: "主导产品市占率 ≥10% 或国内前三", required: true, weight: 3, autoMatch: "marketShare", rule: v => v === "全球前3" || v === "国内前三或≥10%", description: "2 号文附件 2（五）：在国内或国际细分市场占有率达到 10% 以上或国内前三名，且享有较高知名度、影响力；企业如实说明即可，无需第三方证明（附件 3 说明 + 117 号通知）", evidence: "细分市场占有率如实说明（界定细分市场范围、规模、本企业占有率，数据注明出处）" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
           { name: "主导产品属于六基/产业链关键环节", required: true, weight: 3, autoMatch: "sixBase", rule: v => v === "是" ? true : v === "否" ? false : undefined, description: "2 号文附件 2（六）：属于制造业核心基础零部件、核心基础元器件、关键软件、先进基础工艺、关键基础材料、产业技术基础，或属于改造提升传统产业、培育壮大新兴产业、布局建设未来产业，位于产业链关键环节，对提升产业链供应链韧性和安全水平发挥重要作用" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }},
           { name: "专精特新发展评价得分 ≥ 60 分", required: true, weight: 3, tpl: "eval_min", params: { min: "≥60分" }, description: "由培育平台按《中小企业专精特新发展评价指标体系》（工信厅企业〔2024〕75 号）自动计算，登录 zjtx.miit.gov.cn 查询本年度得分，无需自行测算；未查询前此项无法核验。复核企业近两年任意一年达 60 分以上即可（2 号文附件 2（七））" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" }}
         ]
@@ -57,7 +57,7 @@ window.ZCT_DATA.national.miit.push(
             autoMatch: "ipr",
             rule: v => v === "6-15" || v === ">15", // 专利总数 ≥6 件从严覆盖 4 项Ⅰ类（表单标签口径；具体Ⅰ类构成以自诊断逐项核实为准）
             items: [
-              { name: "拥有 ≥4 项与主导产品相关的Ⅰ类知识产权且实际应用产生经济效益", required: true, weight: 3, description: "Ⅰ类=发明专利（含国防专利）、植物新品种、国家级农作物品种、国家新药、国家一级中药保护品种、集成电路布图设计专有权；不含转入的Ⅰ类知产，企业应在权利人排名前三（附件 3 说明）；专利数据以国家知识产权局数据为准，涉及布图设计等其他Ⅰ类知产仍需提供证书（117 号通知）" , basis: { name: "工信厅企业函〔2026〕117 号《关于开展 2026 年度专精特新「小巨人」企业认定和复核工作的通知》", url: "https://wap.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_83857a4773ac4583bd1540eeb78bcbcb.html" }}
+              { name: "拥有 ≥4 项与主导产品相关的Ⅰ类知识产权且实际应用产生经济效益", required: true, weight: 3, description: "Ⅰ类=发明专利（含国防专利）、植物新品种、国家级农作物品种、国家新药、国家一级中药保护品种、集成电路布图设计专有权；不含转入的Ⅰ类知产，企业应在权利人排名前三（附件 3 说明）；专利数据以国家知识产权局数据为准，涉及布图设计等其他Ⅰ类知产仍需提供证书（117 号通知）", evidence: "Ⅰ类知识产权清单及实际应用效益说明（每项 500 字内）；布图设计等其他Ⅰ类知产提供证书；发明专利数据以国家知识产权局为准" , basis: { name: "工信厅企业函〔2026〕117 号《关于开展 2026 年度专精特新「小巨人」企业认定和复核工作的通知》", url: "https://wap.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_83857a4773ac4583bd1540eeb78bcbcb.html" }}
             ]
           },
           {
@@ -89,6 +89,19 @@ window.ZCT_DATA.national.miit.push(
           { name: "免费申报、谨防中介", required: true, weight: 1, description: "申请与复核均不收取任何费用；工信部未委托任何机构开展申报业务（117 号通知），谨防「内部渠道」「包过」收费" , basis: { name: "工信厅企业函〔2026〕117 号《关于开展 2026 年度专精特新「小巨人」企业认定和复核工作的通知》", url: "https://wap.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_83857a4773ac4583bd1540eeb78bcbcb.html" }}
         ]
       }
+    ],
+    // zct-diag 2026-08-14：申报材料清单（依据广州南沙 2026 年度通知附件 7 官方清单 + 117 号文；装订要求：A4 双面、加封面目录、胶装、公章/骑缝章齐备）
+    materials: [
+      { name: "《第八批专精特新「小巨人」企业申请书》（线上填报后下载打印，封面盖公章、法定代表人签字，线上线下数据一致）", required: true, note: "申请书单独装订一份", basis: { name: "广州南沙区 2026 年度小巨人认定通知附件 7", url: "http://www.gzns.gov.cn/zwgk/tzgg/content/post_10769343.html" } },
+      { name: "真实性声明和合规经营承诺", required: true },
+      { name: "营业执照副本扫描件", required: true },
+      { name: "上年度 12 月缴纳社保人数证明", required: true, note: "合并报表财务数据的需补子公司证明" },
+      { name: "近三年（2023-2025）审计报告", required: true, note: "须在财政部注册会计师行业统一监管平台（acc.mof.gov.cn）报备赋码，并体现主营业务收入、主营业务成本两项指标", basis: { name: "工信厅企业函〔2026〕117 号", url: "https://wap.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_83857a4773ac4583bd1540eeb78bcbcb.html" } },
+      { name: "信用中国报告 + 国家企业信用信息公示系统报告", required: true, note: "申报期间未被列入经营异常名录或严重失信主体名单", basis: { name: "广州南沙区 2026 年度小巨人认定通知附件 7", url: "http://www.gzns.gov.cn/zwgk/tzgg/content/post_10769343.html" } },
+      { name: "集成电路布图设计等其他Ⅰ类知识产权证书", required: false, note: "涉及则必需；国内发明专利由知识产权局数据核验，无需证书" },
+      { name: "近三年国家级科技奖励证明材料", required: false, note: "申请豁免知识产权条件时必需（获奖单位排名前三）" },
+      { name: "细分市场占有率说明（2024、2025 年度）", required: false, note: "评分佐证；界定细分市场范围、规模与本企业占有率，数据注明出处" },
+      { name: "质量管理体系认证、产品权威认证、制修订标准、研发机构等评分佐证", required: false, note: "自建研发机构需设立文件、研发人员及设备清单、研发场地照片" }
     ],
     changes: [
       "上年度营业收入 ≥5000 万元——2026 年新标准新增经营规模门槛",

@@ -34,15 +34,15 @@ window.ZCT_DATA.national.most.push(
         category: "基础合规（32 号文第十一条）",
         items: [
           { name: "注册成立一年以上", required: true, weight: 3, veto: true, description: "第十一条（一）：申请认定时注册成立 365 个日历天数以上（195 号指引三（一））；表单「1-3 年」档含未满 1 年企业，统一从严（宁可漏判不可误判），与小巨人成立年限规则口径一致", basis: { name: "32 号文第十一条（一）· 195 号指引三（一）", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" }, autoMatch: "years", rule: v => v === ">5年" || v === "3-5年" },
-          { name: "拥有核心自主知识产权所有权", required: true, weight: 3, description: "第十一条（二）：通过自主研发、受让、受赠、并购等方式取得，对其主要产品（服务）在技术上发挥核心支持作用；195 号指引三（二）：须在中国境内授权且在有效保护期内、权属人为申请企业；Ⅱ类知识产权（实用新型/外观设计/软著等）仅限使用一次，多权属人知识产权只能由一个权属人使用", basis: { name: "32 号文第十一条（二）· 195 号指引三（二）", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" }, autoMatch: "ipr", rule: v => v !== "0" },
+          { name: "拥有核心自主知识产权所有权", required: true, weight: 3, description: "第十一条（二）：通过自主研发、受让、受赠、并购等方式取得，对其主要产品（服务）在技术上发挥核心支持作用；195 号指引三（二）：须在中国境内授权且在有效保护期内、权属人为申请企业；Ⅱ类知识产权（实用新型/外观设计/软著等）仅限使用一次，多权属人知识产权只能由一个权属人使用", evidence: "知识产权证书；受让/受赠/并购的附转让协议、备案与缴费证明（Ⅱ类知产重复使用将导致评审不通过）", basis: { name: "32 号文第十一条（二）· 195 号指引三（二）", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" }, autoMatch: "ipr", rule: v => v !== "0" },
           { name: "属于国家重点支持的高新技术领域", required: true, weight: 3, description: "第十一条（三）：对企业主要产品（服务）发挥核心支持作用的技术属于《国家重点支持的高新技术领域》八大领域", basis: { name: "32 号文第十一条（三）", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" }, autoMatch: "industry", rule: (v, p) => p.applicableIndustries.includes(v) }
         ]
       },
       {
         category: "认定指标（须同时满足，32 号文第十一条）",
         items: [
-          { name: "科技人员占比 ≥ 10%", required: true, weight: 2, description: "第十一条（四）：从事研发和相关技术创新活动的科技人员占企业当年职工总数比例 ≥10%；195 号指引三（五）：科技人员指累计实际工作时间 183 天以上的人员（含在职、兼职、临时聘用），职工总数与科技人员数按全年月平均人数计算", basis: { name: "32 号文第十一条（四）· 195 号指引三（五）", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" } },
-          { name: "研发费用占比达标（按营收分档）", required: true, weight: 3, description: "第十一条（五）：近三个会计年度（实际经营期不满三年按实际经营时间计算）研发费用总额占同期销售收入总额——最近一年营收 <5000 万（含）≥5%、5000 万-2 亿（含）≥4%、>2 亿 ≥3%；费用归集范围 8 类见 195 号指引三（六），委托外部研发按实际发生额 80% 计入", basis: { name: "32 号文第十一条（五）· 195 号指引三（六）", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" }, autoMatch: "rd", rule: (v, profile) => {
+          { name: "科技人员占比 ≥ 10%", required: true, weight: 2, description: "第十一条（四）：从事研发和相关技术创新活动的科技人员占企业当年职工总数比例 ≥10%；195 号指引三（五）：科技人员指累计实际工作时间 183 天以上的人员（含在职、兼职、临时聘用），职工总数与科技人员数按全年月平均人数计算", evidence: "企业职工总数与科技人员名单及情况说明（按全年月平均人数统计，183 天口径）", basis: { name: "32 号文第十一条（四）· 195 号指引三（五）", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" } },
+          { name: "研发费用占比达标（按营收分档）", required: true, weight: 3, description: "第十一条（五）：近三个会计年度（实际经营期不满三年按实际经营时间计算）研发费用总额占同期销售收入总额——最近一年营收 <5000 万（含）≥5%、5000 万-2 亿（含）≥4%、>2 亿 ≥3%；费用归集范围 8 类见 195 号指引三（六），委托外部研发按实际发生额 80% 计入", evidence: "近三个会计年度研发费用专项审计/鉴证报告 + 企业研究开发费用辅助核算账目（明细表与凭证）", basis: { name: "32 号文第十一条（五）· 195 号指引三（六）", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" }, autoMatch: "rd", rule: (v, profile) => {
             if (!v) return undefined; // 未填研发费用 → 无法判断（未核验），不得误判为不符合
             const rev = profile.revenue;
             if (rev === ">4亿") return v !== "<3%"; // >2亿 → ≥3%
@@ -51,17 +51,17 @@ window.ZCT_DATA.national.most.push(
             // <5000万（含未选营收，按最严要求）→ ≥5%
             return v === "5%-8%" || v === ">8%";
           } },
-          { name: "境内研发费用占比 ≥ 60%", required: true, weight: 2, description: "第十一条（五）：企业在中国境内发生的研究开发费用总额占全部研究开发费用总额的比例不低于 60%；委托境外机构或个人（含港澳台）完成的研发活动费用不计入境内（195 号指引三（六）3）", basis: { name: "32 号文第十一条（五）· 195 号指引三（六）3", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" } },
-          { name: "高新技术产品/服务收入占比 ≥ 60%", required: true, weight: 2, description: "第十一条（六）：近一年高新技术产品（服务）收入占企业同期总收入比例 ≥60%；总收入＝收入总额减不征税收入，按《企业所得税法》及其实施条例计算；技术性收入含技术转让、技术服务、接受委托研究开发收入（195 号指引三（四））", basis: { name: "32 号文第十一条（六）· 195 号指引三（四）", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" } },
-          { name: "创新能力评价综合得分 ≥ 70 分（满分 100）", required: true, weight: 3, description: "第十一条（七）：企业创新能力评价应达到相应要求；195 号指引三（七）：按知识产权（≤30 分）、科技成果转化能力（≤30 分）、研究开发组织管理水平（≤20 分）、企业成长性（≤20 分）四项评价，综合得分达到 70 分以上（不含 70 分）为符合要求", basis: { name: "32 号文第十一条（七）· 195 号指引三（七）", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" } }
+          { name: "境内研发费用占比 ≥ 60%", required: true, weight: 2, description: "第十一条（五）：企业在中国境内发生的研究开发费用总额占全部研究开发费用总额的比例不低于 60%；委托境外机构或个人（含港澳台）完成的研发活动费用不计入境内（195 号指引三（六）3）", evidence: "研发费用专项审计报告（境内/境外费用分列）", basis: { name: "32 号文第十一条（五）· 195 号指引三（六）3", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" } },
+          { name: "高新技术产品/服务收入占比 ≥ 60%", required: true, weight: 2, description: "第十一条（六）：近一年高新技术产品（服务）收入占企业同期总收入比例 ≥60%；总收入＝收入总额减不征税收入，按《企业所得税法》及其实施条例计算；技术性收入含技术转让、技术服务、接受委托研究开发收入（195 号指引三（四））", evidence: "近一年高新技术产品（服务）收入专项审计/鉴证报告", basis: { name: "32 号文第十一条（六）· 195 号指引三（四）", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" } },
+          { name: "创新能力评价综合得分 ≥ 70 分（满分 100）", required: true, weight: 3, description: "第十一条（七）：企业创新能力评价应达到相应要求；195 号指引三（七）：按知识产权（≤30 分）、科技成果转化能力（≤30 分）、研究开发组织管理水平（≤20 分）、企业成长性（≤20 分）四项评价，综合得分达到 70 分以上（不含 70 分）为符合要求", evidence: "知识产权、科技成果转化、研发组织管理、成长性四类佐证材料（专项报告与证明材料质量直接决定得分）", basis: { name: "32 号文第十一条（七）· 195 号指引三（七）", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" } }
         ]
       },
       {
         category: "创新能力评价得分项（195 号指引三（七），评审打分）",
         items: [
-          { name: "科技成果转化能力强（近 3 年平均 ≥4 项）", required: false, weight: 2, description: "195 号指引三（七）科技成果转化能力 ≤30 分：近 3 年内科技成果转化年平均 ≥4 项得 19-24 分、≥5 项得 25-30 分；同一科技成果转化为多个产品只计 1 项", basis: { name: "195 号指引三（七）科技成果转化能力", url: "https://hainan.chinatax.gov.cn/xxgk_6_1/22162477.html" } },
-          { name: "设立研发机构并开展产学研合作", required: false, weight: 1, description: "195 号指引三（七）研究开发组织管理水平 ≤20 分：设立符合行业特征、能持续运行的研发机构并具备科研条件，开展产学研合作（≤6 分）；另有研发立项与辅助账（≤6 分）、成果转化激励与开放式创新创业平台（≤4 分）、人才绩效制度（≤4 分）", basis: { name: "195 号指引三（七）研发组织管理水平", url: "https://hainan.chinatax.gov.cn/xxgk_6_1/22162477.html" } },
-          { name: "参与编制国家/行业标准", required: false, weight: 2, description: "195 号指引三（七）知识产权指标内加分项（≤2 分，加分后总分不超过 30 分）：参与编制国家标准、行业标准、检测方法、技术规范的情况", basis: { name: "195 号指引三（七）知识产权加分项", url: "https://hainan.chinatax.gov.cn/xxgk_6_1/22162477.html" } },
+          { name: "科技成果转化能力强（近 3 年平均 ≥4 项）", required: false, weight: 2, description: "195 号指引三（七）科技成果转化能力 ≤30 分：近 3 年内科技成果转化年平均 ≥4 项得 19-24 分、≥5 项得 25-30 分；同一科技成果转化为多个产品只计 1 项", evidence: "近 3 年科技成果转化证明材料（转化合同、检测报告、用户证明等，逐年对应）", basis: { name: "195 号指引三（七）科技成果转化能力", url: "https://hainan.chinatax.gov.cn/xxgk_6_1/22162477.html" } },
+          { name: "设立研发机构并开展产学研合作", required: false, weight: 1, description: "195 号指引三（七）研究开发组织管理水平 ≤20 分：设立符合行业特征、能持续运行的研发机构并具备科研条件，开展产学研合作（≤6 分）；另有研发立项与辅助账（≤6 分）、成果转化激励与开放式创新创业平台（≤4 分）、人才绩效制度（≤4 分）", evidence: "研发机构设立文件、产学研合作协议、研发立项书与辅助账、人才绩效制度文件", basis: { name: "195 号指引三（七）研发组织管理水平", url: "https://hainan.chinatax.gov.cn/xxgk_6_1/22162477.html" } },
+          { name: "参与编制国家/行业标准", required: false, weight: 2, description: "195 号指引三（七）知识产权指标内加分项（≤2 分，加分后总分不超过 30 分）：参与编制国家标准、行业标准、检测方法、技术规范的情况", evidence: "参与编制标准、检测方法、技术规范的证明材料", basis: { name: "195 号指引三（七）知识产权加分项", url: "https://hainan.chinatax.gov.cn/xxgk_6_1/22162477.html" } },
           { name: "企业成长性（净资产/销售收入增长率）", required: false, weight: 2, description: "195 号指引三（七）企业成长性 ≤20 分：净资产增长率、销售收入增长率各 ≤10 分，按近三个会计年度计算；增长率为负按 0 分计，第一年末净资产为 0 按后两年计算", basis: { name: "195 号指引三（七）企业成长性", url: "https://hainan.chinatax.gov.cn/xxgk_6_1/22162477.html" } }
         ]
       },
@@ -73,6 +73,22 @@ window.ZCT_DATA.national.most.push(
           { name: "全年仅可申报 1 次（按批次）", required: true, weight: 1, description: "903 号通知：广东全年分 3 批次受理，每家企业只能申报 1 次；2023 年认定、2026 年资格期满的企业须提出重新认定申报，2024/2025 年认定的有效期未满不得提前申报", basis: { name: "903 号通知批次安排", url: "http://gdstc.gd.gov.cn/pro/tzgg_if/content/post_4904066.html" } }
         ]
       }
+    ],
+    // zct-diag 2026-08-14：申报材料清单（依据 195 号指引二 + 粤科函产字〔2026〕903 号通知；广东全程网办，附件在省阳光政务平台上传）
+    materials: [
+      { name: "高新技术企业认定申请书（省阳光政务平台填写生成，法定代表人签字、加盖公章）", required: true, basis: { name: "粤科函产字〔2026〕903 号通知", url: "http://gdstc.gd.gov.cn/pro/tzgg_if/content/post_4904066.html" } },
+      { name: "企业营业执照副本", required: true },
+      { name: "知识产权相关材料", required: true, note: "证书；受让/受赠/并购的附协议与备案证明；Ⅱ类知产仅限使用一次" },
+      { name: "科技人员名单及情况说明", required: true, note: "职工总数与科技人员全年月平均人数、183 天口径" },
+      { name: "近三个会计年度研发费用专项审计/鉴证报告", required: true, note: "须由成立三年以上、注册会计师/税务师占比 ≥30% 的中介机构出具，附研发费用辅助核算账目", basis: { name: "195 号指引二（三）", url: "https://hainan.chinatax.gov.cn/xxgk_6_1/22162477.html" } },
+      { name: "近一年高新技术产品（服务）收入专项审计/鉴证报告", required: true },
+      { name: "近三个会计年度财务会计报告（审计报告）", required: true },
+      { name: "近三个会计年度所得税年度纳税申报表", required: true },
+      { name: "科技成果转化证明材料", required: true, note: "近 3 年逐年对应（转化合同、检测报告、用户证明等）" },
+      { name: "研究开发组织管理水平证明材料", required: true, note: "研发机构、产学研合作、立项与辅助账、人才绩效制度" },
+      { name: "属于国家重点支持的高新技术领域说明", required: true },
+      { name: "《税务数据使用授权书》（广东）", required: true, note: "加盖公章；申报财务数据与税务汇算清缴数据比对，不一致将影响审核", basis: { name: "粤科函产字〔2026〕903 号通知", url: "http://gdstc.gd.gov.cn/pro/tzgg_if/content/post_4904066.html" } },
+      { name: "无重大安全、质量、环保事故承诺/证明", required: true }
     ],
     changesTitle: "2026 年度申报变化要点",
     changesNote: "依据广东省 2026 年认定通知（粤科函产字〔2026〕903 号）与延长通知（粤科函产字〔2026〕1359 号）；认定条件仍按 2016 年 32 号文执行，无门槛变化",

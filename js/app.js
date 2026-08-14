@@ -726,6 +726,7 @@ function renderPathCategory(cat, policy, nextInput, nextItem) {
                 <strong>${item.name}</strong>（满分 ${maxScore} 分）
                 <span class="cond-tag required-tag">计分项</span>
                 <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
+                ${item.evidence ? `<div style="font-size:12px;color:var(--text-primary);margin-top:2px;">📎 佐证：${item.evidence}</div>` : ''}
                 ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">${item.basis.name}</a></div>` : ''}
               </div>
               <div style="margin-top:6px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:4px;">
@@ -798,6 +799,7 @@ function loadDiagnosis() {
                 ${item.veto ? '<span class="cond-tag" style="background:var(--bg-danger);color:var(--danger);border:1px solid var(--danger);">一票否决</span>' : ''}
                 <span class="cond-tag ${item.required ? 'required-tag' : 'optional-tag'}">${item.required ? '必选' : '可选'}</span>
                 <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
+                ${item.evidence ? `<div style="font-size:12px;color:var(--text-primary);margin-top:2px;">📎 佐证：${item.evidence}</div>` : ''}
                 ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">${item.basis.name}</a></div>` : ''}
               </div>
               <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
@@ -1028,7 +1030,7 @@ function generateReport(policyId) {
         <h4 style="color:var(--danger);">一票否决条件未满足（独立否决项 · ${vetoGaps.length} 项）</h4>
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">这些条件单项即可否决申报资格，须最优先解决</div>
         <ul>
-          ${vetoGaps.map(g => `<li class="gap-critical">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
+          ${vetoGaps.map(g => `<li class="gap-critical">[${g.category}] ${g.name} — ${g.description}${g.evidence ? ` <span style="color:var(--text-secondary);font-size:12px;">佐证：${g.evidence}</span>` : ''}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
         </ul>
       </div>
       ` : ''}
@@ -1038,7 +1040,7 @@ function generateReport(policyId) {
         <h4 style="color:var(--warning);">一票否决条件待核实（${unverifiedVeto.length} 项）</h4>
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">以下否决项尚未确认「符合」或「不符合」——未核验不等于不满足，但一票否决为硬性资格线，申报前必须逐项核实</div>
         <ul>
-          ${unverifiedVeto.map(g => `<li class="gap-important">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
+          ${unverifiedVeto.map(g => `<li class="gap-important">[${g.category}] ${g.name} — ${g.description}${g.evidence ? ` <span style="color:var(--text-secondary);font-size:12px;">佐证：${g.evidence}</span>` : ''}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
         </ul>
       </div>
       ` : ''}
@@ -1071,7 +1073,7 @@ function generateReport(policyId) {
       <div class="report-section">
         <h4 style="color:var(--danger);">关键缺口（必选条件未满足 · ${criticalGaps.length} 项）</h4>
         <ul>
-          ${criticalGaps.map(g => `<li class="gap-critical">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
+          ${criticalGaps.map(g => `<li class="gap-critical">[${g.category}] ${g.name} — ${g.description}${g.evidence ? ` <span style="color:var(--text-secondary);font-size:12px;">佐证：${g.evidence}</span>` : ''}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
         </ul>
       </div>
       ` : ''}
@@ -1080,7 +1082,7 @@ function generateReport(policyId) {
       <div class="report-section">
         <h4 style="color:var(--warning);">建议补齐（可选条件 · ${optionalGaps.length} 项）</h4>
         <ul>
-          ${optionalGaps.map(g => `<li class="gap-important">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
+          ${optionalGaps.map(g => `<li class="gap-important">[${g.category}] ${g.name} — ${g.description}${g.evidence ? ` <span style="color:var(--text-secondary);font-size:12px;">佐证：${g.evidence}</span>` : ''}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
         </ul>
       </div>
       ` : ''}
@@ -1090,7 +1092,7 @@ function generateReport(policyId) {
         <h4 style="color:var(--warning);">待核实条件（未确认符合/不符合 · ${unverifiedOthers.length} 项）</h4>
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">以下条件尚未确认——未核验不等于不满足，为获得可靠结论请逐项核实后重新生成报告</div>
         <ul>
-          ${unverifiedOthers.map(g => `<li class="gap-important">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
+          ${unverifiedOthers.map(g => `<li class="gap-important">[${g.category}] ${g.name} — ${g.description}${g.evidence ? ` <span style="color:var(--text-secondary);font-size:12px;">佐证：${g.evidence}</span>` : ''}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
         </ul>
       </div>
       ` : ''}
@@ -1126,7 +1128,7 @@ function generateReport(policyId) {
       <div class="no-print" style="margin-top:16px;padding:12px 14px;background:var(--bg-info);border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
         <button class="btn btn-primary" onclick="window.print()">打印 / 导出 PDF 报告</button>
         <button class="btn btn-primary" onclick="renderManual()" style="margin-left:6px;">📋 生成申报作战手册</button>
-        <span style="font-size:12px;color:var(--text-secondary);">含诊断结果、缺口清单、日期戳和否决条件标记。打印时请选择「另存为 PDF」即可导出。</span>
+        <span style="font-size:12px;color:var(--text-secondary);">含诊断结果、缺口清单、申报作战手册、日期戳和否决条件标记。打印时请选择「另存为 PDF」即可导出。</span>
       </div>
     </div>
   `;
@@ -1822,7 +1824,7 @@ function renderManual() {
   const docs = extractSupportDocs(policy);
   const tl = manualTimeline(policy);
   const gapUl = (list, cls) => list.map(g =>
-    `<li class="${cls}">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('');
+    `<li class="${cls}">[${g.category}] ${g.name} — ${g.description}${g.evidence ? ` <span style="color:var(--text-secondary);font-size:12px;">佐证：${g.evidence}</span>` : ''}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('');
 
   box.innerHTML = `
   <div class="diagnosis-report manual">
@@ -1844,6 +1846,8 @@ function renderManual() {
       <h4>② 材料清单</h4>
       <div style="margin-bottom:8px;"><strong>通用材料</strong>（各申报通用）：</div>
       <ul>${MANUAL_COMMON_MATERIALS.map(m => `<li>${m}</li>`).join('')}</ul>
+      ${policy.materials && policy.materials.length ? `<div style="margin-bottom:8px;margin-top:10px;"><strong>本政策申报材料</strong>（${policy.materials.filter(m => m.required).length} 项必需 / ${policy.materials.filter(m => !m.required).length} 项建议——逐项核对备齐）：</div>
+      <ul>${policy.materials.map(m => `<li><strong>${m.name}</strong>${m.required ? ' <span style="color:var(--danger);">[必需]</span>' : ' <span style="color:var(--warning);">[建议]</span>'}${m.note ? `——${m.note}` : ''}${m.basis ? ` <a href="${m.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">（${m.basis.name}）</a>` : ''}</li>`).join('')}</ul>` : ''}
       ${docs.length ? `<div style="margin-bottom:8px;margin-top:10px;"><strong>专项佐证提示</strong>（${docs.length} 项条件要求外部材料——逐条核对备齐）：</div>
       <ul>${docs.map(d => `<li><strong>${d.name}</strong>——${d.desc}${d.basis ? ` <a href="${d.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">（政策依据）</a>` : ''}</li>`).join('')}</ul>` : ''}
     </div>
