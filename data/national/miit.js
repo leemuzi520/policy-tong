@@ -539,7 +539,7 @@ window.ZCT_DATA.national.miit.push(
       "工信部企业〔2026〕2 号《优质中小企业梯度培育管理办法》第三十条：科技型与创新型合并新标准发布前，评价沿用 115 号办法 + 63 号文创新型评价细则"
     ]
   },
-  {
+    {
     id: "gjsf",
     order: 17,
     column: "gjpt",
@@ -562,36 +562,47 @@ window.ZCT_DATA.national.miit.push(
       {
         category: "申报基本条件（540 号文第六条，须同时满足）",
         items: [
-          { name: "在中国境内注册、独立法人资格，财务管理制度健全", required: true, weight: 3, autoMatch: "type", rule: () => true, description: "第六条（一）：具有独立法人资格，财务管理制度健全；表单四种企业类型均为依法设立独立法人，此条件自动通过；会计信用、纳税信用和银行信用良好需人工核实（国家企业信用信息公示系统、信用中国）", basis: { name: "540 号文第六条（一）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
-          { name: "在国内建有科研、生产基地且中方拥有控制权", required: true, weight: 3, description: "第六条（二）；外资参股但中方控股/中方实际控制的企业通常符合，需按股权结构人工核实", basis: { name: "540 号文第六条（二）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
-          { name: "已认定为省级以上企业技术中心", required: true, weight: 3, description: "第六条（三）；含省级企业技术中心和国家企业技术中心（后者见政策库「国家企业技术中心」）；企业技术中心认定与有效情况需人工核实", basis: { name: "540 号文第六条（三）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
-          { name: "技术创新成果通过实施技术改造取得较显著成效", required: true, weight: 2, description: "第六条（四）；需提供技术改造项目与创新成果佐证材料", basis: { name: "540 号文第六条（四）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
-          { name: "生产经营规模：从业人员 ≥300 人、年销售收入 ≥3000 万元、资产总额 ≥4000 万元", required: true, weight: 3, autoMatch: "revenue", rule: v => v === ">4亿" || v === "1亿-4亿" || v === "5000万-1亿" ? true : v === "2000万-5000万" ? undefined : false, description: "第六条（五）：表单营收档「2000万-5000万」跨 3000 万元分界无法精确判断，需人工核年销售收入与从业人员数、资产总额（表单无后两字段）；<500 万/500 万-2000 万明确不满足", basis: { name: "540 号文第六条（五）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } }
+          { name: "在中国境内注册、独立法人资格，财务管理制度健全", required: true, weight: 3, autoMatch: "type", rule: () => true, description: "第六条（一）：具有独立法人资格，财务管理制度健全；表单四种企业类型均为依法设立独立法人，此条件自动通过；会计信用、纳税信用和银行信用良好需人工核实（国家企业信用信息公示系统、信用中国）", basis: { name: "540 号文第六条（一）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "企业营业执照副本 + 财务报表或审计报告（财务管理制度健全）" },
+          { name: "在国内建有科研、生产基地且中方拥有控制权", required: true, weight: 3, description: "第六条（二）；外资参股但中方控股/中方实际控制的企业通常符合，需按股权结构人工核实", basis: { name: "540 号文第六条（二）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "股权结构与科研/生产基地情况说明" },
+          { name: "已认定为省级以上企业技术中心", required: true, weight: 3, description: "第六条（三）；含省级企业技术中心和国家企业技术中心（后者见政策库「国家企业技术中心」）；企业技术中心认定与有效情况需人工核实", basis: { name: "540 号文第六条（三）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "省级以上企业技术中心认定文件（含有效期）" },
+          { name: "技术创新成果通过实施技术改造取得较显著成效", required: true, weight: 2, description: "第六条（四）；需提供技术改造项目与创新成果佐证材料", basis: { name: "540 号文第六条（四）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "技术改造项目立项/验收文件与创新成果佐证" },
+          { name: "生产经营规模：从业人员 ≥300 人、年销售收入 ≥3000 万元、资产总额 ≥4000 万元", required: true, weight: 3, autoMatch: "revenue", rule: v => v === ">4亿" || v === "1亿-4亿" || v === "5000万-1亿" ? true : v === "2000万-5000万" ? undefined : false, description: "第六条（五）：表单营收档「2000万-5000万」跨 3000 万元分界无法精确判断，需人工核年销售收入与从业人员数、资产总额（表单无后两字段）；<500 万/500 万-2000 万明确不满足", basis: { name: "540 号文第六条（五）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "年度审计报告（销售收入、资产总额）+ 从业人员人数证明" }
         ]
       },
       {
         category: "认定基本标准（540 号文第七条，须同时满足）",
         items: [
-          { name: "掌握核心技术并具有自主知识产权，技术水平居行业领先", required: true, weight: 3, autoMatch: "ipr", rule: v => v === "6-15" || v === ">15" ? true : v === "1-5" ? undefined : false, description: "第七条（一）：核心技术领先无法仅凭知产数量判定，1-5 件时需人工核实是否掌握行业领先核心技术；0 件明确不满足", basis: { name: "540 号文第七条（一）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
-          { name: "积极主导或参与国际、国家或行业技术标准制定", required: true, weight: 2, description: "第七条（一）；需提供标准制定佐证（标准文本、参与证明等）", basis: { name: "540 号文第七条（一）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
-          { name: "研发投入占年销售收入比例 ≥3%", required: true, weight: 3, autoMatch: "rd", rule: v => v === "3%-5%" || v === "5%-8%" || v === ">8%", description: "第七条（二）：研发投入占年销售收入比例 3% 以上；以审计报告研发费用口径核实", basis: { name: "540 号文第七条（二）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
-          { name: "建有健全研发机构或与大学/科研机构长期稳定合作", required: true, weight: 2, description: "第七条（二）；需提供研发机构设立文件或产学研合作协议", basis: { name: "540 号文第七条（二）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
-          { name: "在行业发展中具有较强带动性，形成有知名度的自主品牌", required: true, weight: 2, description: "第七条（三）；需提供品牌知名度佐证（商标注册、行业排名等）", basis: { name: "540 号文第七条（三）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
-          { name: "近 3 年连续盈利、财务状况良好", required: true, weight: 2, description: "第七条（四）；以近三年审计报告核实", basis: { name: "540 号文第七条（四）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
-          { name: "建有较完善的知识产权管理体系和质量保证体系", required: true, weight: 2, autoMatch: "certs", rule: v => v.includes("ISO9001"), description: "第七条（四）：ISO9001 认证可佐证质量保证体系部分，知识产权管理体系需人工核实（如贯标/知识产权管理体系认证）", basis: { name: "540 号文第七条（四）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
-          { name: "积极实施技术改造，具有重大科技成果转化能力，节能减排降耗有较强示范作用", required: true, weight: 2, description: "第七条（五）；需提供技改项目、成果转化与节能降耗佐证", basis: { name: "540 号文第七条（五）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } },
-          { name: "把技术创新和自主品牌创新作为经营发展战略的重要内容", required: true, weight: 1, description: "第七条（六）；需提供企业发展战略与创新规划文件", basis: { name: "540 号文第七条（六）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } }
-        ]
-      },
-      {
-        category: "认定程序与动态管理（540 号文第三章/第四章 + 260 号文）",
-        items: [
-          { name: "按属地推荐名额申报（省级工信部门联合同级财政审查推荐）", required: true, weight: 1, description: "第三章 + 260 号文：推荐名额——各省 ≤3 家、已开展省级认定的 ≤4 家，计划单列市/新疆生产建设兵团/中央企业各 1 家；广东转发（2023-09-28）：广州 ≤3 家、其他地市 ≤2 家，各地市 10 月 20 日前报省工信厅（制造业创新处），省属企业在注册地申报", basis: { name: "260 号文推荐要求", url: "https://www.miit.gov.cn/jgsj/kjs/jscx/art/2023/art_e177228281514552bffa2caf3046b3cd.html" } },
-          { name: "申报材料齐全（申报书、基本情况表、技术创新评价指标、上年度审计报告等）", required: true, weight: 1, description: "第三章 + 260 号文：纸质版一式两份、电子版光盘一份（广东纸质一式三份）；材料含《技术创新示范企业申报书》《企业基本情况表》《企业技术创新评价指标》（创新机制 30 分 + 技术与人才 30 分 + 产出与效益 40 分）及经会计师事务所审计的上年度会计报表", basis: { name: "260 号文材料要求", url: "https://www.miit.gov.cn/jgsj/kjs/jscx/art/2023/art_e177228281514552bffa2caf3046b3cd.html" } },
-          { name: "每三年接受复核评价，合格确认、不合格撤销称号", required: true, weight: 1, description: "第四章动态管理：每三年评价一次，合格者予以确认，不合格者撤销称号并摘牌；2023 年复核评价：248 家通过、5 家撤销称号（工信部科函〔2024〕7 号）", basis: { name: "540 号文第四章 · 工信部科函〔2024〕7 号", url: "https://www.miit.gov.cn/threestrategy/zcgh/zcfg/art/2024/art_38e449006d9f4bd8b49e50c327a94832.html" } },
-          { name: "每年 4 月 30 日前上报上年度技术创新发展情况", required: true, weight: 1, description: "第四章动态管理：示范企业须于每年 4 月 30 日前上报上年度技术创新发展情况；弄虚作假的，除撤销批复文件和称号外，暂停其所在省（区、市、计划单列市）下一年度的申报工作", basis: { name: "540 号文第四章", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" } }
+          { name: "掌握核心技术并具有自主知识产权，技术水平居行业领先", required: true, weight: 3, autoMatch: "ipr", rule: v => v === "6-15" || v === ">15" ? true : v === "1-5" ? undefined : false, description: "第七条（一）：核心技术领先无法仅凭知产数量判定，1-5 件时需人工核实是否掌握行业领先核心技术；0 件明确不满足", basis: { name: "540 号文第七条（一）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "核心技术与自主知识产权说明（技术领先对照）+ 知识产权证书清单" },
+          { name: "积极主导或参与国际、国家或行业技术标准制定", required: true, weight: 2, description: "第七条（一）；需提供标准制定佐证（标准文本、参与证明等）", basis: { name: "540 号文第七条（一）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "标准文本（起草单位排序）或参与证明" },
+          { name: "研发投入占年销售收入比例 ≥3%", required: true, weight: 3, autoMatch: "rd", rule: v => v === "3%-5%" || v === "5%-8%" || v === ">8%", description: "第七条（二）：研发投入占年销售收入比例 3% 以上；以审计报告研发费用口径核实", basis: { name: "540 号文第七条（二）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "年度审计报告（研发投入与销售收入口径）" },
+          { name: "建有健全研发机构或与大学/科研机构长期稳定合作", required: true, weight: 2, description: "第七条（二）；需提供研发机构设立文件或产学研合作协议", basis: { name: "540 号文第七条（二）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "研发机构设立文件或产学研合作协议" },
+          { name: "在行业发展中具有较强带动性，形成有知名度的自主品牌", required: true, weight: 2, description: "第七条（三）；需提供品牌知名度佐证（商标注册、行业排名等）", basis: { name: "540 号文第七条（三）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "商标注册证、品牌知名度与行业排名佐证" },
+          { name: "近 3 年连续盈利、财务状况良好", required: true, weight: 2, description: "第七条（四）；以近三年审计报告核实", basis: { name: "540 号文第七条（四）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "近三年年度审计报告（连续盈利）" },
+          { name: "建有较完善的知识产权管理体系和质量保证体系", required: true, weight: 2, autoMatch: "certs", rule: v => v.includes("ISO9001"), description: "第七条（四）：ISO9001 认证可佐证质量保证体系部分，知识产权管理体系需人工核实（如贯标/知识产权管理体系认证）", basis: { name: "540 号文第七条（四）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "ISO9001 认证证书 + 知识产权管理体系认证/贯标文件" },
+          { name: "积极实施技术改造，具有重大科技成果转化能力，节能减排降耗有较强示范作用", required: true, weight: 2, description: "第七条（五）；需提供技改项目、成果转化与节能降耗佐证", basis: { name: "540 号文第七条（五）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "技改项目、科技成果转化、节能降耗佐证材料" },
+          { name: "把技术创新和自主品牌创新作为经营发展战略的重要内容", required: true, weight: 1, description: "第七条（六）；需提供企业发展战略与创新规划文件", basis: { name: "540 号文第七条（六）", url: "https://wap.miit.gov.cn/gyhxxhb/jgsj/kjs/wzpz/ztzl/gjjscxsfqy/tzgg/art/2020/art_1cd6b9bf44444bedb642f08a52f3eaba.html" }, evidence: "企业发展战略与技术创新规划文件" }
         ]
       }
+    ],
+    // zct-diag 2026-08-14：申报材料清单（依据 260 号文附件 4 + 广东转发；纸质一式两份/广东一式三份 + 光盘）
+    materials: [
+      { name: "《国家技术创新示范企业申报书》（含《企业基本情况表》：资产总额、负债总额、主营业务收入、新产品销售收入、上缴税金等；申报单位公章 + 推荐单位公章）", required: true, basis: { name: "广东转发 260 号文附件 4", url: "http://www.yangjiang.gov.cn/zfxxgkml/yjsgyhxxhj/gzdt/gzbg/content/post_743085.html" } },
+      { name: "《企业技术创新评价指标》表（创新机制 30 分 + 技术与人才 30 分 + 产出与效益 40 分）", required: true },
+      { name: "经会计师事务所审计的上年度会计报表", required: true, note: "财务数据按已审计的最近年度报表填写" },
+      { name: "推荐企业汇总表（推荐单位填写，盖章正式上报）", required: true, basis: { name: "260 号文附件 3", url: "https://www.miit.gov.cn/jgsj/kjs/jscx/art/2023/art_e177228281514552bffa2caf3046b3cd.html" } },
+      { name: "名称变更或重组证明材料", required: false, note: "发生更名或重组的企业提供（260 号文复核评价要求）" },
+      { name: "复核评价材料（附件 5）", required: false, note: "复核评价企业适用：评价材料填报 + 必需的附件及证明材料（数据截至 2022 年底）" }
+    ],
+    // 2026-08-14 修复：申报要求从诊断条件拆出（流程信息仅作提示展示，不进 conditions、不计分）
+    diagNotes: [
+      "名额制：各省 ≤3 家（已开展省级认定 ≤4 家），计划单列市/新疆生产建设兵团/中央企业各 1 家；广东：广州 ≤3 家、其他地市 ≤2 家，各地市 10 月 20 日前报省工信厅（制造业创新处），省属企业在注册地申报（260 号文 + 广东转发）",
+      "报送方式：申请认定企业汇总表及申报材料（纸质版一式两份、电子版光盘一份；广东纸质一式三份）正式报工信部，材料收集委托机械工业信息研究院受理；2023 年度批次 10 月 30 日前报送",
+      "最近批次为 2023 年度（2024-01-17 公布 68 家新认定）；2024 年度起国家层面暂未组织新认定，申报安排以工信部最新公告为准，谨防不良中介借「新年度申报」名义收费",
+      "获评后动态管理：每三年复核评价一次（2023 年复核 248 家通过、5 家撤销称号），不合格撤销称号并摘牌；每年 4 月 30 日前上报上年度技术创新发展情况（540 号文第四章）",
+      "弄虚作假：撤销批复文件和称号，并暂停其所在省（区、市、计划单列市）下一年度的申报工作（540 号文第四章）"
+    ],
+    revisions: [
+      { at: "2026-08-14", note: "zct-diag 细化：原「认定程序与动态管理」类 4 条流程/义务条件移出 conditions（推荐流程、材料清单、复核评价、年度上报分别进 diagNotes/materials），申报与认定标准全部补 evidence，新增 materials 与 diagNotes", basis: "540 号文 · 260 号文附件 3/4" }
     ],
     changesTitle: "时效性说明",
     changesNote: "依据工信部联科〔2010〕540 号 + 工信厅科函〔2023〕260 号 + 工信部科函〔2024〕7 号",
@@ -604,7 +615,7 @@ window.ZCT_DATA.national.miit.push(
     ],
     tips: "这是「认荣誉不奖钱」的国家级创新平台资质：无中央统一资金奖补，价值在国家级荣誉背书与创新平台链条——申报前提之一是已认定为省级以上企业技术中心（第六条（三）），与国家企业技术中心（研发经费 ≥3000 万门槛）同链条，中小企业通常从省级企业技术中心起步。申报硬门槛（第六条）：营收 ≥3000 万、从业 ≥300 人、资产 ≥4000 万 + 省级以上企业技术中心 + 研发占比 ≥3%；第七条六项认定标准须同时满足，材料要求实证（核心技术、标准制定、品牌、连续盈利、技改与节能降耗佐证）。名额制是核心竞争点：每省 ≤3 家（广东：广州 ≤3、其他地市 ≤2），属地工信部门先遴选，不是报了就评——建议先与属地工信部门沟通本年度是否有申报安排。⚠️ 时效：最近批次为 2023 年度（2023-10-30 截止），2024 年度起国家层面暂未组织新认定（截至 2026-08-03），申报安排以工信部最新公告为准，谨防不良中介借「2026 年度申报」名义收费。获评后非一劳永逸：每三年复核评价一次（2023 年 5 家被撤销称号），每年 4 月 30 日前上报上年度技术创新发展情况。"
   },
-  {
+    {
     id: "gysjzx",
     order: 21,
     column: "gjpt",
@@ -627,11 +638,11 @@ window.ZCT_DATA.national.miit.push(
       {
         category: "基础合规（93 号文第六条、第七条）",
         items: [
-          { name: "境内注册、独立法人（或不具备法人资格的中心由设立单位申报）", required: true, weight: 3, description: "第七条：申报主体需在中华人民共和国境内注册，具备独立法人资格；制造业企业等单位设立的不具备法人资格的企业工业设计中心，由其具备法人资格的设立单位申报。表单四种企业类型均为依法设立的独立法人，此条件自动通过；未选类型时归为未核验", basis: { name: "93 号文第七条", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" }, autoMatch: "type", rule: () => true },
-          { name: "已认定为省级工业设计中心（核心前置条件）", required: true, weight: 3, description: "第六条（一）：申报国家级工业设计中心须为省级工业设计中心；梯度培育「省级→国家级」逐级申报（第十条）。尚未开展省级工业设计中心认定的地区，原可于办法印发后 2 年内从非省级中心择优推荐（93 号文印发通知），该过渡期已于 2025-07 结束。表单无省级工业设计中心字段，需人工核实省级认定文件", basis: { name: "93 号文第六条（一）· 第十条", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" } },
-          { name: "工业设计中心稳定运营满 3 年（截至申报日期）", required: true, weight: 3, description: "第六条：需稳定运营 3 年（截至申报日期），有固定的工作场所、良好的软硬件条件、健全的管理制度、稳定的人员配置，满足评价指标（附件 1）要求。运营年限自工业设计中心设立起算（非企业成立年限），需人工按设立文件核实", basis: { name: "93 号文第六条", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" } },
-          { name: "3 年内无重大环保、质量和安全事故，未被列为严重失信主体", required: true, weight: 3, veto: true, autoMatch: "accident", rule: v => v === "无", description: "第六条（二）：遵守国家法律法规，3 年内未发生重大环保、质量和安全事故，未被列为严重失信主体，没有重大违法行为或涉嫌重大违法正在接受有关部门审查的情况。表单口径「近三年无重大事故（含经营异常/失信/重大违法违规）」与本条一致，选「有」从严判不满足", basis: { name: "93 号文第六条（二）", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" } },
-          { name: "企业工业设计中心为专门成立、独立运行的分支机构或内设部门", required: true, weight: 2, description: "第六条（三）：制造业企业等单位设立的企业工业设计中心需是专门成立、独立运行的分支机构或内设部门——需提供设立文件、组织架构、独立运行证明；工业设计企业类型不适用本项", basis: { name: "93 号文第六条（三）", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" } }
+          { name: "境内注册、独立法人（或不具备法人资格的中心由设立单位申报）", required: true, weight: 3, description: "第七条：申报主体需在中华人民共和国境内注册，具备独立法人资格；制造业企业等单位设立的不具备法人资格的企业工业设计中心，由其具备法人资格的设立单位申报。表单四种企业类型均为依法设立的独立法人，此条件自动通过；未选类型时归为未核验", basis: { name: "93 号文第七条", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" }, autoMatch: "type", rule: () => true, evidence: "企业营业执照副本" },
+          { name: "已认定为省级工业设计中心（核心前置条件）", required: true, weight: 3, description: "第六条（一）：申报国家级工业设计中心须为省级工业设计中心；梯度培育「省级→国家级」逐级申报（第十条）。尚未开展省级工业设计中心认定的地区，原可于办法印发后 2 年内从非省级中心择优推荐（93 号文印发通知），该过渡期已于 2025-07 结束。表单无省级工业设计中心字段，需人工核实省级认定文件", basis: { name: "93 号文第六条（一）· 第十条", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" }, evidence: "省级工业设计中心认定文件（有效期内）" },
+          { name: "工业设计中心稳定运营满 3 年（截至申报日期）", required: true, weight: 3, description: "第六条：需稳定运营 3 年（截至申报日期），有固定的工作场所、良好的软硬件条件、健全的管理制度、稳定的人员配置，满足评价指标（附件 1）要求。运营年限自工业设计中心设立起算（非企业成立年限），需人工按设立文件核实", basis: { name: "93 号文第六条", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" }, evidence: "工业设计中心设立文件（运营起始时间）+ 工作场所与软硬件条件说明" },
+          { name: "3 年内无重大环保、质量和安全事故，未被列为严重失信主体", required: true, weight: 3, veto: true, autoMatch: "accident", rule: v => v === "无", description: "第六条（二）：遵守国家法律法规，3 年内未发生重大环保、质量和安全事故，未被列为严重失信主体，没有重大违法行为或涉嫌重大违法正在接受有关部门审查的情况。表单口径「近三年无重大事故（含经营异常/失信/重大违法违规）」与本条一致，选「有」从严判不满足", basis: { name: "93 号文第六条（二）", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" }, evidence: "「信用中国」（creditchina.gov.cn）报告 + 国家企业信用信息公示系统（gsxt.gov.cn）查询结果" },
+          { name: "企业工业设计中心为专门成立、独立运行的分支机构或内设部门", required: true, weight: 2, description: "第六条（三）：制造业企业等单位设立的企业工业设计中心需是专门成立、独立运行的分支机构或内设部门——需提供设立文件、组织架构、独立运行证明；工业设计企业类型不适用本项", basis: { name: "93 号文第六条（三）", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" }, evidence: "工业设计中心设立文件、组织架构与独立运行证明" }
         ]
       },
       {
@@ -642,18 +653,18 @@ window.ZCT_DATA.national.miit.push(
             name: "企业工业设计中心（制造业企业设立，主要为本单位提供设计服务）",
             anyOf: true,
             items: [
-              { name: "设计团队人员 ≥50 人", required: true, weight: 3, description: "199 号文第六批申报要求（企业工业设计中心）：设计团队人员 50 人以上；需提供设计人员名单及任职证明，人工核实", basis: { name: "199 号文申报要求（企业工业设计中心）", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" } },
-              { name: "具有工业设计学科本科及以上学历或工业设计专业技术职称人员比例 ≥50%", required: true, weight: 3, description: "199 号文申报要求；工业设计学科口径见 93 号文附件 1 注释（《普通高等学校本科专业目录（2020 年版）》艺术学设计学类相关专业、工学机械类工业设计专业；《研究生教育学科专业目录（2022 年）》艺术学设计类、交叉学科设计学相关专业）；需提供学历/职称证书，人工核实", basis: { name: "199 号文申报要求 · 93 号文附件 1 注释", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" } },
-              { name: "近三年获得国内外授权专利及版权年均 ≥15 项，或成立以来累计 ≥100 项", required: true, weight: 3, description: "199 号文申报要求；知识产权含专利（外观、实用新型、发明专利）与登记版权（产品设计图纸及说明、设计造型图像等，附件 1 注释）；表单「有效知识产权数量」为存量专利总数口径，与本条「近三年年均新增专利及版权」不同，需人工按专利版权清单核实", basis: { name: "199 号文申报要求 · 93 号文附件 1 注释", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" } }
+              { name: "设计团队人员 ≥50 人", required: true, weight: 3, description: "199 号文第六批申报要求（企业工业设计中心）：设计团队人员 50 人以上；需提供设计人员名单及任职证明，人工核实", basis: { name: "199 号文申报要求（企业工业设计中心）", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" }, evidence: "设计团队人员名单及任职证明" },
+              { name: "具有工业设计学科本科及以上学历或工业设计专业技术职称人员比例 ≥50%", required: true, weight: 3, description: "199 号文申报要求；工业设计学科口径见 93 号文附件 1 注释（《普通高等学校本科专业目录（2020 年版）》艺术学设计学类相关专业、工学机械类工业设计专业；《研究生教育学科专业目录（2022 年）》艺术学设计类、交叉学科设计学相关专业）；需提供学历/职称证书，人工核实", basis: { name: "199 号文申报要求 · 93 号文附件 1 注释", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" }, evidence: "设计团队学历证书/工业设计专业技术职称证书（比例计算表）" },
+              { name: "近三年获得国内外授权专利及版权年均 ≥15 项，或成立以来累计 ≥100 项", required: true, weight: 3, description: "199 号文申报要求；知识产权含专利（外观、实用新型、发明专利）与登记版权（产品设计图纸及说明、设计造型图像等，附件 1 注释）；表单「有效知识产权数量」为存量专利总数口径，与本条「近三年年均新增专利及版权」不同，需人工按专利版权清单核实", basis: { name: "199 号文申报要求 · 93 号文附件 1 注释", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" }, evidence: "近三年专利及版权清单（专利号、权利人、授权单位、授权时间）" }
             ]
           },
           {
             name: "工业设计企业（面向市场提供工业设计服务）",
             anyOf: true,
             items: [
-              { name: "设计团队人员 ≥70 人", required: true, weight: 3, description: "199 号文第六批申报要求（工业设计企业）：设计团队人员 70 人以上；需提供设计人员名单及任职证明，人工核实", basis: { name: "199 号文申报要求（工业设计企业）", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" } },
-              { name: "学历/职称人员比例 ≥50%", required: true, weight: 3, description: "199 号文申报要求：具有工业设计学科本科及以上学历或取得工业设计专业技术职称的人员比例合计不低于 50%；需提供学历/职称证书，人工核实", basis: { name: "199 号文申报要求（工业设计企业）", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" } },
-              { name: "近三年工业设计服务年均营业收入 ≥2000 万元且占企业总营收比例 ≥50%", required: true, weight: 3, description: "199 号文申报要求；需提供前三年度专项审计报告中的设计经营数据、服务业绩核实，人工核实", basis: { name: "199 号文申报要求（工业设计企业）", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" } }
+              { name: "设计团队人员 ≥70 人", required: true, weight: 3, description: "199 号文第六批申报要求（工业设计企业）：设计团队人员 70 人以上；需提供设计人员名单及任职证明，人工核实", basis: { name: "199 号文申报要求（工业设计企业）", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" }, evidence: "设计团队人员名单及任职证明" },
+              { name: "学历/职称人员比例 ≥50%", required: true, weight: 3, description: "199 号文申报要求：具有工业设计学科本科及以上学历或取得工业设计专业技术职称的人员比例合计不低于 50%；需提供学历/职称证书，人工核实", basis: { name: "199 号文申报要求（工业设计企业）", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" }, evidence: "设计团队学历证书/职称证书（比例计算表）" },
+              { name: "近三年工业设计服务年均营业收入 ≥2000 万元且占企业总营收比例 ≥50%", required: true, weight: 3, description: "199 号文申报要求；需提供前三年度专项审计报告中的设计经营数据、服务业绩核实，人工核实", basis: { name: "199 号文申报要求（工业设计企业）", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" }, evidence: "前三年度专项审计报告（工业设计服务营收及占比数据）" }
             ]
           }
         ]
@@ -661,19 +672,33 @@ window.ZCT_DATA.national.miit.push(
       {
         category: "加分项（93 号文附件 1 评价指标）",
         items: [
-          { name: "设计费用投入规模及占比行业领先", required: false, weight: 1, description: "附件 1 设计投入类：设计费用投入及占比；设计费用口径见附件 1 注释（设计人员工资奖金津贴等人工费用、市场咨询/样品试制/检验检测等直接投入、设备折旧与无形资产摊销等）", basis: { name: "93 号文附件 1（设计投入）", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" } },
-          { name: "近三年获国家级/省部级工业设计奖项、牵头或参与制定设计相关标准", required: false, weight: 1, description: "附件 1 设计水平类（获奖质量及数量 + 制定标准数量）：国家级奖项=经党中央、国务院批准开展的工业设计评奖工作，省部级=国务院各组成部门、各省级人民政府批准开展的设计类评奖（附件 1 注释）；标准指工业设计、产品设计直接相关的国家标准、行业标准、团体标准", basis: { name: "93 号文附件 1（设计水平）", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" } },
-          { name: "完成重要工业设计项目且成果产业化、面向产业链开放设计", required: false, weight: 1, description: "附件 1 设计水平类（完成项目质量及数量）+ 政策导向加分项（公共服务）：完成的工业设计项目及成果产业化情况，需提供项目与产业化佐证；面向产业链供应链中小企业开放设计项目、增强产业链协同设计能力（第十条工信部推动方向）", basis: { name: "93 号文附件 1（设计水平 + 政策导向加分项）· 第十条", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" } }
-        ]
-      },
-      {
-        category: "申报程序（93 号文第八条 · 199 号文）",
-        items: [
-          { name: "经省级主管部门审核推荐（名额制）", required: true, weight: 2, description: "第八条：省级主管部门为唯一推荐渠道——申报主体向省级工信部门申请，在指定信息平台提交申请表（附件 2）及申请材料，省级审核确定推荐名单后报工信部；199 号文推荐名额：已开展省级工业设计中心认定的省 ≤10 家、未开展 ≤6 家、计划单列市 ≤3 家。属地先遴选，不是报了就评", basis: { name: "93 号文第八条 · 199 号文推荐要求", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" } },
-          { name: "通过工业设计中心管理系统在线填报且申报材料齐全", required: true, weight: 1, description: "199 号文：省级向推荐企业分配网上登录账号，通过工业设计中心管理系统（www.id-center.org.cn）在线填报，在线打印纸质材料加盖公章后由省级统一报送（一式一份），确保线上线下内容一致；企业工业设计中心材料含《国家级工业设计中心申请表》、前三年度专项审计报告、设立独立工业设计中心佐证、设计团队人员情况（学历/职称）、获奖证书、专利版权清单、标准清单、项目及成果产业化佐证等，工业设计企业另含设计经营数据、服务业绩、发展规划材料", basis: { name: "199 号文申报方式与材料要求", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" } },
-          { name: "免费申报，不得以任何形式向企业收费", required: true, weight: 1, description: "199 号文：申报及复核工作不得以任何形式向企业收取费用；谨防「内部渠道」「包过」中介收费", basis: { name: "199 号文有关要求", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" } }
+          { name: "设计费用投入规模及占比行业领先", required: false, weight: 1, description: "附件 1 设计投入类：设计费用投入及占比；设计费用口径见附件 1 注释（设计人员工资奖金津贴等人工费用、市场咨询/样品试制/检验检测等直接投入、设备折旧与无形资产摊销等）", basis: { name: "93 号文附件 1（设计投入）", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" }, evidence: "前三年度专项审计报告（设计费用投入及占比）" },
+          { name: "近三年获国家级/省部级工业设计奖项、牵头或参与制定设计相关标准", required: false, weight: 1, description: "附件 1 设计水平类（获奖质量及数量 + 制定标准数量）：国家级奖项=经党中央、国务院批准开展的工业设计评奖工作，省部级=国务院各组成部门、各省级人民政府批准开展的设计类评奖（附件 1 注释）；标准指工业设计、产品设计直接相关的国家标准、行业标准、团体标准", basis: { name: "93 号文附件 1（设计水平）", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" }, evidence: "工业设计成果获奖证书复印件 + 牵头或参与制定标准清单及佐证" },
+          { name: "完成重要工业设计项目且成果产业化、面向产业链开放设计", required: false, weight: 1, description: "附件 1 设计水平类（完成项目质量及数量）+ 政策导向加分项（公共服务）：完成的工业设计项目及成果产业化情况，需提供项目与产业化佐证；面向产业链供应链中小企业开放设计项目、增强产业链协同设计能力（第十条工信部推动方向）", basis: { name: "93 号文附件 1（设计水平 + 政策导向加分项）· 第十条", url: "https://www.miit.gov.cn/jgsj/zfs/wjfb/art/2023/art_6266a1ce99974ffa920e5533e0b3aab3.html" }, evidence: "重要工业设计项目及主要成果产业化佐证材料" }
         ]
       }
+    ],
+    // zct-diag 2026-08-14：申报材料清单（依据 199 号文附件官方清单：企业工业设计中心 9 项 / 工业设计企业 8 项）
+    materials: [
+      { name: "《国家级工业设计中心申请表》（工业设计中心管理系统在线填报）", required: true, basis: { name: "199 号文附件《国家级工业设计中心申报材料清单》", url: "https://www.miit.gov.cn/jgsj/zfs/gzdt/art/2023/art_2904e3c40f1c46d28e986eaa91d54ce1.html" } },
+      { name: "前三年度专项审计报告（含企业生产经营主要数据、工业设计中心前三年度运营主要情况；工业设计企业另含设计经营数据、工业设计服务业绩）", required: true },
+      { name: "企业设立独立的工业设计中心佐证材料", required: true, note: "企业工业设计中心适用（第六条（三）独立运行要求）" },
+      { name: "工业设计中心设计团队人员情况（含学历、工业设计专业技术职称等佐证材料）", required: true },
+      { name: "工业设计成果获奖证书复印件", required: true },
+      { name: "工业设计成果获得专利、版权等清单（含产品或项目名称、专利名称、专利号、权利人、授权单位、授权时间等）", required: true },
+      { name: "牵头或参与制定标准清单及佐证材料", required: true, note: "企业工业设计中心清单第 7 项；设计企业适用第 6 项获奖+第 7 项项目产业化" },
+      { name: "重要工业设计项目及主要成果产业化佐证材料", required: true },
+      { name: "企业管理、知识产权保护、发展规划等方面材料", required: false, note: "工业设计企业适用" }
+    ],
+    // 2026-08-14 修复：申报要求从诊断条件拆出（流程信息仅作提示展示，不进 conditions、不计分）
+    diagNotes: [
+      "申报经省级主管部门初审：省级向初审合格的申报主体分配网上登录账号，申报主体通过工业设计中心管理系统（www.id-center.org.cn）在线填报所需信息；在线打印申报材料一式一份、加盖推荐单位（省级主管部门）公章，以正式文件报送工信部（199 号文）",
+      "推荐名额（199 号文）：已开展省级工业设计中心认定的省 ≤10 家、未开展 ≤6 家、计划单列市 ≤3 家——属地先遴选，不是报了就评；第六批 2023-08-31 前报送，第七批以工信部公告为准",
+      "申报推荐和复核相关工作中，不得以任何形式向企业收取费用（199 号文）；工信部不委托任何机构代理申报",
+      "认定及复核有效期 4 年；动态管理（93 号文第十一条）：未按规定参加复核/复核不合格/自行要求撤销 → 公布撤销、2 年内不得重新申报；弄虚作假/重大环保质量安全事故/严重失信 → 公布撤销、4 年内不得重新申报"
+    ],
+    revisions: [
+      { at: "2026-08-14", note: "zct-diag 细化：原「申报程序」类 3 条流程条件移出 conditions（省级推荐、在线填报、免费申报进 diagNotes，材料清单进 materials），基础合规与量化门槛全部补 evidence，新增 materials（199 号文官方清单）与 diagNotes", basis: "93 号文 · 199 号文附件申报材料清单" }
     ],
     changesTitle: "认定机制与申报现状要点",
     changesNote: "工信部政法〔2023〕93 号 + 工信厅政法函〔2023〕199 号 + 工信部政法函〔2023〕332 号，逐条有官方依据",
