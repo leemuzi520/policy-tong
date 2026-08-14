@@ -703,9 +703,18 @@ body {
 .filter-bar select { min-width: 140px; }
 
 /* ---- 筛选折叠区（2026-08-14：默认只留搜索/级别/行业，部门/地区/月份/排序收进「更多筛选」） ---- */
-.filter-more { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
+/* 2026-08-14 修复：display 必须写在 :not([hidden]) 下——作者样式 display:flex 会覆盖 UA 的 [hidden]{display:none}，
+   导致 hidden 属性失效、按钮无视觉作用（compareBar 同病，见 .compare-bar） */
+.filter-more { flex-wrap: wrap; gap: 8px; width: 100%; }
+.filter-more:not([hidden]) { display: flex; }
+.filter-more[hidden] { display: none; }
 .filter-more select { min-width: 140px; }
 .filter-more-toggle { padding: 4px 12px; font-size: 12.5px; white-space: nowrap; }
+
+/* 政策对比栏（2026-08-14 修复：同 filter-more——display 写在 :not([hidden]) 下，否则覆盖 hidden 属性导致空栏常显） */
+.compare-bar { align-items: center; gap: 10px; flex-wrap: wrap; }
+.compare-bar:not([hidden]) { display: flex; }
+.compare-bar[hidden] { display: none; }
 
 /* ---- 专栏 ---- */
 .policy-column { margin-bottom: 30px; }
@@ -1202,7 +1211,8 @@ body {
       </div>
     </div>
     <!-- Phase 3.4 多政策对比（2026-08-14）：2-3 条政策条件差异并排 -->
-    <div class="card no-print" id="compareBar" style="margin-bottom:10px;padding:8px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;" hidden>
+    <!-- 2026-08-14 修复：display:flex 从内联样式移除（会覆盖 hidden 属性），改由 .compare-bar:not([hidden]) 控制 -->
+    <div class="card no-print compare-bar" id="compareBar" style="margin-bottom:10px;padding:8px 12px;" hidden>
       <span id="compareCount" style="font-size:13px;font-weight:600;">已选 0 条政策</span>
       <button class="btn btn-primary" onclick="showCompare()" style="padding:3px 14px;font-size:13px;">开始对比</button>
       <button class="btn" onclick="clearCompare()" style="padding:3px 14px;font-size:13px;">清空</button>
@@ -1302,15 +1312,15 @@ body {
 
 </main>
 
-<script src="data/national/most.js"></script>
-<script src="data/national/miit.js"></script>
-<script src="data/national/ndrc.js"></script>
-<script src="data/guangdong/gd.js"></script>
-<script src="data/cities/city.js"></script>
-<script src="js/fields.js"></script>
-<script src="js/templates.js"></script>
-<script src="js/engine.js"></script>
-<script src="js/app.js"></script>
+<script src="data/national/most.js?v=20260814-1705"></script>
+<script src="data/national/miit.js?v=20260814-1705"></script>
+<script src="data/national/ndrc.js?v=20260814-1705"></script>
+<script src="data/guangdong/gd.js?v=20260814-1705"></script>
+<script src="data/cities/city.js?v=20260814-1705"></script>
+<script src="js/fields.js?v=20260814-1705"></script>
+<script src="js/templates.js?v=20260814-1705"></script>
+<script src="js/engine.js?v=20260814-1705"></script>
+<script src="js/app.js?v=20260814-1705"></script>
 
 
 </body>
