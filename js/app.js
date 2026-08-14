@@ -769,6 +769,7 @@ function renderPathCategory(cat, policy, nextInput, nextItem) {
 function loadDiagnosis() {
   const id = $('#diagPolicySelect').value;
   $('#diagnosisReport').innerHTML = '';
+  $('#manualBox').innerHTML = ''; // 2026-08-14 修复：切换政策清空作战手册，避免上一政策手册残留误导
 
   if (!id) {
     $('#diagnosisChecklist').innerHTML = '';
@@ -841,6 +842,7 @@ function loadDiagnosis() {
 
 function generateReport(policyId) {
   const policy = POLICIES.find(p => p.id === policyId);
+  $('#manualBox').innerHTML = ''; // 2026-08-14 修复：生成新报告时旧手册失效（与新报告不匹配），需重新生成
   let totalRequired = 0, metRequired = 0;
   let totalOptional = 0, metOptional = 0;
   let totalWeight = 0, metWeight = 0;
@@ -1164,11 +1166,10 @@ function generateReport(policyId) {
         报告由「政策通」自动生成 · ${today} · 条件数据最后更新：${DATA_VERSION}
       </div>
 
-      <!-- 导出按钮（打印时隐藏）；2026-08-14 修复：唯一打印入口——含诊断报告 + 申报作战手册（已生成时） -->
+      <!-- 导出按钮区（打印时隐藏）；2026-08-14 修复：操作顺序 = 生成诊断报告 → 生成申报作战手册 → 打印（打印按钮在手册尾部，见 renderManual） -->
       <div class="no-print" style="margin-top:16px;padding:12px 14px;background:var(--bg-info);border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-        <button class="btn btn-primary" onclick="window.print()">打印 / 导出 PDF（含诊断报告与申报作战手册）</button>
-        <button class="btn btn-primary" onclick="renderManual()" style="margin-left:6px;">📋 生成申报作战手册</button>
-        <span style="font-size:12px;color:var(--text-secondary);">生成手册后，打印输出将同时包含诊断报告与五模块作战手册。打印时请选择「另存为 PDF」即可导出。</span>
+        <button class="btn btn-primary" onclick="renderManual()">📋 生成申报作战手册</button>
+        <span style="font-size:12px;color:var(--text-secondary);">生成手册后，在手册末尾使用「打印 / 导出 PDF」即可一次导出诊断报告与五模块作战手册。</span>
       </div>
     </div>
   `;
@@ -1891,10 +1892,10 @@ function renderManual() {
 
     <div class="report-section">
       <h4>② 材料清单</h4>
-      <div style="margin-bottom:8px;"><strong>通用材料</strong>（各申报通用）：</div>
-      <ul>${MANUAL_COMMON_MATERIALS.map(m => `<li>${m}</li>`).join('')}</ul>
-      ${policy.materials && policy.materials.length ? `<div style="margin-bottom:8px;margin-top:10px;"><strong>本政策申报材料</strong>（${policy.materials.filter(m => m.required).length} 项必需 / ${policy.materials.filter(m => !m.required).length} 项建议——逐项核对备齐）：</div>
-      <ul>${policy.materials.map(m => `<li><strong>${m.name}</strong>${m.required ? ' <span style="color:var(--danger);">[必需]</span>' : ' <span style="color:var(--warning);">[建议]</span>'}${m.note ? `——${m.note}` : ''}${m.basis ? ` <a href="${m.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">（${m.basis.name}）</a>` : ''}</li>`).join('')}</ul>` : ''}
+      <!-- 2026-08-14 修复：删除「通用材料」伪通用清单（无官方依据，且各政策材料差异大）——
+           材料一律以官方数据为准：有 policy.materials 显示官方清单，无则提示以官方通知为准 -->
+      ${policy.materials && policy.materials.length ? `<div style="margin-bottom:8px;"><strong>本政策申报材料</strong>（${policy.materials.filter(m => m.required).length} 项必需 / ${policy.materials.filter(m => !m.required).length} 项建议——逐项核对备齐）：</div>
+      <ul>${policy.materials.map(m => `<li><strong>${m.name}</strong>${m.required ? ' <span style="color:var(--danger);">[必需]</span>' : ' <span style="color:var(--warning);">[建议]</span>'}${m.note ? `——${m.note}` : ''}${m.basis ? ` <a href="${m.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">（${m.basis.name}）</a>` : ''}</li>`).join('')}</ul>` : '<div style="font-size:12.5px;color:var(--text-secondary);">该政策材料清单尚未录入官方数据——请以政策原文与申报通知的要求为准（按 zct-diag 工作流补录后此处自动显示）。</div>'}
       ${docs.length ? `<div style="margin-bottom:8px;margin-top:10px;"><strong>专项佐证提示</strong>（${docs.length} 项条件要求外部材料——逐条核对备齐）：</div>
       <ul>${docs.map(d => `<li><strong>${d.name}</strong>——${d.desc}${d.basis ? ` <a href="${d.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">（政策依据）</a>` : ''}</li>`).join('')}</ul>` : ''}
     </div>
@@ -1921,8 +1922,11 @@ function renderManual() {
       </div>
     </div>
 
-    <!-- 2026-08-14 修复：打印按钮合并——统一走报告尾部「打印 / 导出 PDF（含诊断报告与申报作战手册）」，
-         本手册尾部不再放独立打印按钮（window.print 本就输出整页，两个按钮内容相同且冗余） -->
+    <!-- 2026-08-14 修复：打印按钮为操作流程终点——置于手册尾部（顺序：生成诊断报告 → 生成申报作战手册 → 打印/导出 PDF） -->
+    <div class="no-print" style="margin-top:16px;padding:12px 14px;background:var(--bg-info);border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="window.print()">打印 / 导出 PDF（含诊断报告与申报作战手册）</button>
+      <span style="font-size:12px;color:var(--text-secondary);">打印输出包含上方诊断报告与本五模块作战手册。打印时请选择「另存为 PDF」即可导出。</span>
+    </div>
   </div>`;
   box.scrollIntoView({ behavior: 'smooth' });
 }
