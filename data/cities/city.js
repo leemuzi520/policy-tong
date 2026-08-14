@@ -223,7 +223,7 @@ window.ZCT_DATA.city.push(
   {
     id: "zhtech",
     order: 31,
-    column: "zjzj",
+    column: "city",
     name: "珠海市企业技术改造资金（市级）",
     issuingBody: "珠海市工业和信息化局",
     level: "市级",
@@ -317,7 +317,7 @@ window.ZCT_DATA.city.push(
   {
     id: "hztech",
     order: 32,
-    column: "zjzj",
+    column: "city",
     name: "惠州市企业技术改造资金（市级）",
     issuingBody: "惠州市工业和信息化局",
     level: "市级",
@@ -385,7 +385,7 @@ window.ZCT_DATA.city.push(
   {
     id: "jmtech",
     order: 33,
-    column: "zjzj",
+    column: "city",
     name: "江门市设备更新及企业技术改造资金（市级）",
     issuingBody: "江门市工业和信息化局",
     level: "市级",
@@ -451,7 +451,7 @@ window.ZCT_DATA.city.push(
   {
     id: "hzse",
     order: 34,
-    column: "zjt",
+    column: "city",
     name: "惠州市专精特新等称号奖励（市级）",
     issuingBody: "惠州市工业和信息化局",
     level: "市级",
@@ -505,7 +505,7 @@ window.ZCT_DATA.city.push(
   {
     id: "jmst",
     order: 35,
-    column: "gjpt",
+    column: "city",
     name: "江门市科技支撑「百千万工程」项目（市级）",
     issuingBody: "江门市科学技术局",
     level: "市级",
@@ -557,7 +557,7 @@ window.ZCT_DATA.city.push(
   {
     id: "zhtiexi",
     order: 37,
-    column: "zjzj",
+    column: "city",
     name: "珠海市工业投资贷款贴息（市级）",
     issuingBody: "珠海市工业和信息化局",
     level: "市级",
@@ -626,7 +626,7 @@ window.ZCT_DATA.city.push(
   {
     id: "zhfund",
     order: 38,
-    column: "zjzj",
+    column: "city",
     name: "珠海市促进实体经济高质量发展专项资金（管理办法·总框架）",
     issuingBody: "珠海市工业和信息化局 · 珠海市财政局",
     level: "市级",
