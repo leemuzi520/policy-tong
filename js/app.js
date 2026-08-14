@@ -1559,9 +1559,22 @@ function renderCompanyHistory() {
   }
   box.innerHTML = hs.map(h => `
     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--border);font-size:12.5px;flex-wrap:wrap;">
-      <span><button class="btn" style="padding:1px 8px;font-size:11px;" onclick="goDiag('${h.policyId}')">回看</button> ${h.policyName}</span>
+      <span><button class="btn" style="padding:1px 8px;font-size:11px;" onclick="goDiag('${h.policyId}')">回看</button> <button class="btn" style="padding:1px 8px;font-size:11px;color:var(--danger);border-color:var(--danger);" onclick="deleteCompanyHistory('${h.policyId}','${h.at}')">删除</button> ${h.policyName}</span>
       <span style="color:var(--text-secondary);">${h.at} · 达标度 <strong>${h.score}%</strong> · ${h.tier}</span>
     </div>`).join('');
+}
+
+// 2026-08-14 加功能：诊断历史单条删除（当前企业；policyId+at 定位，同政策同日覆盖规则下唯一）
+function deleteCompanyHistory(policyId, at) {
+  const st = companiesState();
+  const c = st.companies.find(x => x.id === st.currentId);
+  if (!c || !Array.isArray(c.history)) return;
+  const hit = c.history.find(h => h.policyId === policyId && h.at === at);
+  if (!hit) return;
+  if (!confirm(`删除诊断记录「${hit.policyName}」（${hit.at}）？该操作不可恢复。`)) return;
+  c.history = c.history.filter(h => !(h.policyId === policyId && h.at === at));
+  saveCompanies(st);
+  renderCompanyHistory();
 }
 
 function restoreMatchState() {
