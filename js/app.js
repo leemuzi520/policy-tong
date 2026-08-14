@@ -205,6 +205,7 @@ function policyCardHtml(p) {
         ${p.alert ? `<div class="policy-alert ${p.alert.level}"><strong>⚠️ 政策重要变更</strong>：${p.alert.text} <a href="${p.alert.link}" target="_blank" rel="noopener">${p.alert.linkLabel}</a></div>` : ''}
         <div class="policy-summary"><strong>政策简介</strong>：${p.summary}</div>
         ${p.changes ? `<div class="policy-changes"><strong>${p.changesTitle || '2026 新标准变化要点'}</strong>（${p.changesNote || '依据《优质中小企业梯度培育管理办法》2026 年 2 号文，门槛总体提高'}）：<ul>${p.changes.map(c => `<li>${c}</li>`).join('')}</ul></div>` : ''}
+        ${p.revisions && p.revisions.length ? `<div class="policy-changes"><strong>版本记录</strong>（政策数据变更历史）：<ul>${p.revisions.map(r => `<li>${r.at}：${r.note}${r.basis ? `（依据：${r.basis}）` : ''}</li>`).join('')}</ul></div>` : ''}
         <div style="margin-bottom:10px;font-size:13px;color:var(--text-secondary);">
           适用行业：${p.applicableIndustries.join(' / ')} &nbsp;|&nbsp; 奖补：${p.subsidy} &nbsp;|&nbsp; 数据更新：${p.updated}
         </div>
@@ -213,7 +214,7 @@ function policyCardHtml(p) {
             <div class="condition-cat-title">${cat.category}</div>
             ${cat.paths
               ? cat.paths.map(path => `
-                  <div style="font-size:12.5px;font-weight:600;color:#1e3a5f;margin:6px 0 2px;">${path.name}</div>
+                  <div style="font-size:12.5px;font-weight:600;color:var(--primary);margin:6px 0 2px;">${path.name}</div>
                   ${path.items.map(item => `
                     <div class="condition-item">
                       <span class="dot ${item.required ? 'required' : 'optional'}" title="${item.required ? '必选条件' : '可选条件'}"></span>
@@ -674,7 +675,7 @@ function populateDiagSelect() {
 // 双计数器：inputIdx 每个 input（含每个 radio 档位）独立序号，供持久化精确恢复；itemIdx 条件项序号，供报告按项映射
 function renderPathCategory(cat, policy, nextInput, nextItem) {
   return cat.paths.map(path => {
-    const head = `<div style="font-weight:600;font-size:13.5px;color:#1e3a5f;padding:10px 14px 2px;margin-top:4px;">${path.name}</div>`;
+    const head = `<div style="font-weight:600;font-size:13.5px;color:var(--primary);padding:10px 14px 2px;margin-top:4px;">${path.name}</div>`;
     if (path.scoreBased) {
       const minInfo = path.minParts ? `分项底线：${Object.entries(path.minParts).map(([k, v]) => `${k} ≥${v} 分`).join('、')}` : '';
       return head +
@@ -688,7 +689,7 @@ function renderPathCategory(cat, policy, nextInput, nextItem) {
                 <strong>${item.name}</strong>（满分 ${maxScore} 分）
                 <span class="cond-tag required-tag">计分项</span>
                 <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
-                ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${item.basis.name}</a></div>` : ''}
+                ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">${item.basis.name}</a></div>` : ''}
               </div>
               <div style="margin-top:6px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:4px;">
                 ${item.scoreOptions.map((opt, oi) => `
@@ -714,7 +715,7 @@ function renderPathCategory(cat, policy, nextInput, nextItem) {
               ${item.name}
               <span class="cond-tag required-tag">必选</span>
               <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
-              ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${item.basis.name}</a></div>` : ''}
+              ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">${item.basis.name}</a></div>` : ''}
             </span>
           </label>`;
       }).join('');
@@ -741,8 +742,8 @@ function loadDiagnosis() {
         ${policy.issuingBody} · ${policy.level} · ${policy.deadline} · 数据更新：${policy.updated}
       </div>
       <div style="font-size:13px;margin-bottom:12px;line-height:1.9;">
-        <div>政策原文：<a href="${policy.source.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${policy.source.name}</a></div>
-        ${policy.notice ? `<div>申报通知：<a href="${policy.notice.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${policy.notice.name}</a>${policy.notice.timeline ? `<div style="font-size:12px;color:var(--text-secondary);">${policy.notice.timeline}</div>` : ''}</div>` : ''}
+        <div>政策原文：<a href="${policy.source.url}" target="_blank" rel="noopener" style="color:var(--primary);">${policy.source.name}</a></div>
+        ${policy.notice ? `<div>申报通知：<a href="${policy.notice.url}" target="_blank" rel="noopener" style="color:var(--primary);">${policy.notice.name}</a>${policy.notice.timeline ? `<div style="font-size:12px;color:var(--text-secondary);">${policy.notice.timeline}</div>` : ''}</div>` : ''}
       </div>
       ${policy.alert ? `<div class="policy-alert ${policy.alert.level}"><strong>⚠️ 政策重要变更</strong>：${policy.alert.text} <a href="${policy.alert.link}" target="_blank" rel="noopener">${policy.alert.linkLabel}</a></div>` : ''}
     </div>
@@ -759,7 +760,7 @@ function loadDiagnosis() {
                 ${item.veto ? '<span class="cond-tag" style="background:var(--bg-danger);color:var(--danger);border:1px solid var(--danger);">一票否决</span>' : ''}
                 <span class="cond-tag ${item.required ? 'required-tag' : 'optional-tag'}">${item.required ? '必选' : '可选'}</span>
                 <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
-                ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${item.basis.name}</a></div>` : ''}
+                ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">${item.basis.name}</a></div>` : ''}
               </span>
             </label>
           `;
@@ -936,8 +937,8 @@ function generateReport(policyId) {
   $('#diagnosisReport').innerHTML = `
     <div class="diagnosis-report">
       <!-- 打印专用头部 -->
-      <div class="print-only" style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #1e3a5f;">
-        <div style="font-size:18px;font-weight:700;color:#1e3a5f;">政策通 — 企业申报条件诊断报告</div>
+      <div class="print-only" style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--primary);">
+        <div style="font-size:18px;font-weight:700;color:var(--primary);">政策通 — 企业申报条件诊断报告</div>
         <div style="font-size:12px;color:#666;margin-top:4px;">目标政策：${policy.name}（${policy.issuingBody}）</div>
         <div style="font-size:12px;color:#666;">生成日期：${today}</div>
       </div>
@@ -959,7 +960,7 @@ function generateReport(policyId) {
         <h4 style="color:var(--danger);">一票否决条件未满足（独立否决项 · ${vetoGaps.length} 项）</h4>
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">这些条件单项即可否决申报资格，须最优先解决</div>
         <ul>
-          ${vetoGaps.map(g => `<li class="gap-critical">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
+          ${vetoGaps.map(g => `<li class="gap-critical">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
         </ul>
       </div>
       ` : ''}
@@ -992,7 +993,7 @@ function generateReport(policyId) {
       <div class="report-section">
         <h4 style="color:var(--danger);">关键缺口（必选条件未满足 · ${criticalGaps.length} 项）</h4>
         <ul>
-          ${criticalGaps.map(g => `<li class="gap-critical">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
+          ${criticalGaps.map(g => `<li class="gap-critical">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
         </ul>
       </div>
       ` : ''}
@@ -1001,7 +1002,7 @@ function generateReport(policyId) {
       <div class="report-section">
         <h4 style="color:var(--warning);">建议补齐（可选条件 · ${optionalGaps.length} 项）</h4>
         <ul>
-          ${optionalGaps.map(g => `<li class="gap-important">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
+          ${optionalGaps.map(g => `<li class="gap-important">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
         </ul>
       </div>
       ` : ''}
@@ -1024,8 +1025,8 @@ function generateReport(policyId) {
 
       <div class="report-section" style="margin-top:12px;font-size:13px;color:var(--text-secondary);">
         <h4>政策依据</h4>
-        <div>申报依据文件：<a href="${policy.source.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${policy.source.name}</a>（点击查看政府官网原文）</div>
-        ${(policy.basis || []).map(b => `<div style="margin-top:4px;">评价细则依据：<a href="${b.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${b.name}</a></div>`).join('')}
+        <div>申报依据文件：<a href="${policy.source.url}" target="_blank" rel="noopener" style="color:var(--primary);">${policy.source.name}</a>（点击查看政府官网原文）</div>
+        ${(policy.basis || []).map(b => `<div style="margin-top:4px;">评价细则依据：<a href="${b.url}" target="_blank" rel="noopener" style="color:var(--primary);">${b.name}</a></div>`).join('')}
       </div>
 
       <!-- 打印专用尾部 -->
@@ -1709,7 +1710,7 @@ function renderManual() {
   const docs = extractSupportDocs(policy);
   const tl = manualTimeline(policy);
   const gapUl = (list, cls) => list.map(g =>
-    `<li class="${cls}">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">政策依据：${g.basis.name}</a>` : ''}</li>`).join('');
+    `<li class="${cls}">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('');
 
   box.innerHTML = `
   <div class="diagnosis-report manual">
@@ -1732,7 +1733,7 @@ function renderManual() {
       <div style="margin-bottom:8px;"><strong>通用材料</strong>（各申报通用）：</div>
       <ul>${MANUAL_COMMON_MATERIALS.map(m => `<li>${m}</li>`).join('')}</ul>
       ${docs.length ? `<div style="margin-bottom:8px;margin-top:10px;"><strong>专项佐证提示</strong>（${docs.length} 项条件要求外部材料——逐条核对备齐）：</div>
-      <ul>${docs.map(d => `<li><strong>${d.name}</strong>——${d.desc}${d.basis ? ` <a href="${d.basis.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">（政策依据）</a>` : ''}</li>`).join('')}</ul>` : ''}
+      <ul>${docs.map(d => `<li><strong>${d.name}</strong>——${d.desc}${d.basis ? ` <a href="${d.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">（政策依据）</a>` : ''}</li>`).join('')}</ul>` : ''}
     </div>
 
     <div class="report-section">
@@ -1751,9 +1752,9 @@ function renderManual() {
     <div class="report-section">
       <h4>⑤ 官方链接</h4>
       <div style="line-height:2;">
-        <div>政策原文：<a href="${policy.source.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${policy.source.name}（政府官网）</a></div>
-        ${policy.notice ? `<div>申报通知：<a href="${policy.notice.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${policy.notice.name}（政府官网）</a>${policy.notice.timeline ? `<div style="font-size:12px;color:var(--text-secondary);">${policy.notice.timeline}</div>` : ''}</div>` : ''}
-        ${(policy.basis || []).map(b => `<div>评价细则依据：<a href="${b.url}" target="_blank" rel="noopener" style="color:#1e3a5f;">${b.name}</a></div>`).join('')}
+        <div>政策原文：<a href="${policy.source.url}" target="_blank" rel="noopener" style="color:var(--primary);">${policy.source.name}（政府官网）</a></div>
+        ${policy.notice ? `<div>申报通知：<a href="${policy.notice.url}" target="_blank" rel="noopener" style="color:var(--primary);">${policy.notice.name}（政府官网）</a>${policy.notice.timeline ? `<div style="font-size:12px;color:var(--text-secondary);">${policy.notice.timeline}</div>` : ''}</div>` : ''}
+        ${(policy.basis || []).map(b => `<div>评价细则依据：<a href="${b.url}" target="_blank" rel="noopener" style="color:var(--primary);">${b.name}</a></div>`).join('')}
       </div>
     </div>
 

@@ -13,29 +13,6 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ---------- 默认变量（A 政务金蓝） ---------- */
-:root {
-  --primary: #14305c;
-  --primary-light: #1d4e89;
-  --accent: #c9a227;
-  --success: #1f7a4d;
-  --warning: #b7791f;
-  --danger: #b3382c;
-  --bg: #f4f1ea;
-  --card: #ffffff;
-  --text: #22262e;
-  --text-secondary: #6a7280;
-  --border: #e2dccb;
-  --radius: 3px;
-  --shadow: 0 1px 2px rgba(20,48,92,0.05);
-  --shadow-md: 0 4px 12px rgba(20,48,92,0.08);
-  /* 语义浅底（供 JS 内联警示条引用） */
-  --bg-success: #e8f5ee;
-  --bg-warning: #fbf3e0;
-  --bg-danger: #fbe9e7;
-  --bg-info: #eaf1f8;
-  --font-head: "Songti SC", "STSong", "SimSun", serif;
-}
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
@@ -64,7 +41,7 @@ body {
   .match-score.medium { color: #d97706 !important; }
   .match-score.low { color: #dc2626 !important; }
   .match-score.veto { color: #b71c1c !important; }
-  a { color: #1e3a5f; text-decoration: underline; }
+  a { color: var(--primary); text-decoration: underline; }
 }
 
 
@@ -574,6 +551,7 @@ body {
   --card: #fcfaf3;
   --text: #2e2a24;
   --text-secondary: #7a7367;
+  --text-primary: #2e2a24; /* 强调色（2026-08-14 UI 统一：补全未定义变量，app.js 引用） */
   --border: #d6cdb7;
   --radius: 1px;
   --shadow: 0 1px 3px rgba(58, 58, 58, 0.06);
@@ -1309,6 +1287,7 @@ body {
 <script src="data/guangdong/gd.js"></script>
 <script src="data/cities/city.js"></script>
 <script src="js/fields.js"></script>
+<script src="js/templates.js"></script>
 <script src="js/engine.js"></script>
 <script src="js/app.js"></script>
 

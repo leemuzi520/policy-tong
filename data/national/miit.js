@@ -28,8 +28,8 @@ window.ZCT_DATA.national.miit.push(
         items: [
           { name: "在境内注册、独立法人", required: true, weight: 3, description: "符合《中小企业划型标准规定》（工信部联企业〔2011〕300 号）" },
           { name: "已获专精特新中小企业称号（3 年有效期内）", required: true, weight: 3, autoMatch: "level", rule: v => v >= 2, description: "2 号文附件 2（一）：申报「小巨人」须先认定为省级专精特新中小企业，且在有效期内" },
-          { name: "截至上年末从事特定细分市场 ≥3 年", required: true, weight: 3, autoMatch: "segYears", rule: v => v === "3-5年" || v === "5-10年" || v === ">10年", description: "2 号文附件 2（一）；原 63 号文「关键领域补短板/填空白企业可放宽至 2 年」条款已废止；以从事细分市场的实际年限计，非成立年限" },
-          { name: "近三年无重大安全/质量/环境事故", required: true, weight: 3, veto: true, description: "含较大生产安全事故、重大网络和数据安全事件、重大环境违法行为、严重质量问题、数据造假等（2 号文附件 3 说明）；数据造假将取消创新型/专精特新/小巨人称号且三年内不得再申报（117 号通知）", autoMatch: "accident", rule: v => v === "无" },
+          { name: "截至上年末从事特定细分市场 ≥3 年", required: true, weight: 3, tpl: "seg_years_min", params: { min: "3-5年" }, description: "2 号文附件 2（一）；原 63 号文「关键领域补短板/填空白企业可放宽至 2 年」条款已废止；以从事细分市场的实际年限计，非成立年限" },
+          { name: "近三年无重大安全/质量/环境事故", required: true, weight: 3, veto: true, description: "含较大生产安全事故、重大网络和数据安全事件、重大环境违法行为、严重质量问题、数据造假等（2 号文附件 3 说明）；数据造假将取消创新型/专精特新/小巨人称号且三年内不得再申报（117 号通知）", tpl: "no_accident" },
           { name: "非制造业单项冠军企业", required: true, weight: 3, description: "已获制造业单项冠军示范企业或单项冠军产品的企业，不再推荐新申请（117 号通知推荐要求（四））" },
           { name: "无控股/同质关联冲突", required: true, weight: 3, description: "与已认定「小巨人」企业存在控股关系的企业、同一集团内生产相似主导产品的企业不予推荐（117 号通知推荐要求（四））" }
         ]
@@ -37,14 +37,14 @@ window.ZCT_DATA.national.miit.push(
       {
         category: "认定条件（须同时满足，2 号文附件 2 七项指标）",
         items: [
-          { name: "上年度营业收入 ≥ 5000 万元", required: true, weight: 2, description: "2 号文附件 2（二）经营规模门槛；以审计报告为准", autoMatch: "revenue", rule: v => v === "5000万-1亿" || v === "1亿-4亿" || v === ">4亿" },
-          { name: "主营业务收入占营收 ≥ 90%", required: true, weight: 2, description: "2 号文附件 2（二），由原 70% 提高；主营业务收入、主营业务成本须纳入审计报告（117 号通知）", autoMatch: "mainRatio", rule: v => v === "≥90%" ? true : v === "80%-90%" || v === "<80%" ? false : undefined },
-          { name: "近两年营业收入复合增长率 ≥ 5%", required: true, weight: 2, autoMatch: "growth", rule: v => v === "≥5%" ? true : v === "<5%" ? false : undefined, description: "2 号文附件 2（二）；复核企业不考查该项指标" },
-          { name: "上年末资产负债率 ≤ 75%", required: true, weight: 1, autoMatch: "debt", rule: v => v === "≤55%" || v === "55%-75%", description: "2 号文附件 2（二）财务健康指标" },
+          { name: "上年度营业收入 ≥ 5000 万元", required: true, weight: 2, description: "2 号文附件 2（二）经营规模门槛；以审计报告为准", tpl: "revenue_min", params: { min: "5000万-1亿" } },
+          { name: "主营业务收入占营收 ≥ 90%", required: true, weight: 2, description: "2 号文附件 2（二），由原 70% 提高；主营业务收入、主营业务成本须纳入审计报告（117 号通知）", tpl: "main_ratio_min", params: { min: "≥90%" } },
+          { name: "近两年营业收入复合增长率 ≥ 5%", required: true, weight: 2, tpl: "growth_min", params: { min: "≥5%" }, description: "2 号文附件 2（二）；复核企业不考查该项指标" },
+          { name: "上年末资产负债率 ≤ 75%", required: true, weight: 1, tpl: "debt_max", params: { max: "55%-75%" }, description: "2 号文附件 2（二）财务健康指标" },
           { name: "近两年研发费用合计 ≥1200 万元且每年占营收比重 ≥3%", required: true, weight: 3, autoMatch: "rd", rule: (v, profile) => v === "<3%" ? false : profile.rdTotal === "≥1200万" ? true : profile.rdTotal === "100万-1200万" || profile.rdTotal === "<100万" ? false : undefined, description: "2 号文附件 2（三）；两年合计金额与每年占比均须达标，以审计报告为准" },
           { name: "主导产品市占率 ≥10% 或国内前三", required: true, weight: 3, autoMatch: "marketShare", rule: v => v === "全球前3" || v === "国内前三或≥10%", description: "2 号文附件 2（五）：在国内或国际细分市场占有率达到 10% 以上或国内前三名，且享有较高知名度、影响力；企业如实说明即可，无需第三方证明（附件 3 说明 + 117 号通知）" },
           { name: "主导产品属于六基/产业链关键环节", required: true, weight: 3, autoMatch: "sixBase", rule: v => v === "是" ? true : v === "否" ? false : undefined, description: "2 号文附件 2（六）：属于制造业核心基础零部件、核心基础元器件、关键软件、先进基础工艺、关键基础材料、产业技术基础，或属于改造提升传统产业、培育壮大新兴产业、布局建设未来产业，位于产业链关键环节，对提升产业链供应链韧性和安全水平发挥重要作用" },
-          { name: "专精特新发展评价得分 ≥ 60 分", required: true, weight: 3, autoMatch: "eval", rule: v => v === "未查询" ? undefined : v === "≥60分", description: "由培育平台按《中小企业专精特新发展评价指标体系》（工信厅企业〔2024〕75 号）自动计算，登录 zjtx.miit.gov.cn 查询本年度得分，无需自行测算；未查询前此项无法核验。复核企业近两年任意一年达 60 分以上即可（2 号文附件 2（七））" }
+          { name: "专精特新发展评价得分 ≥ 60 分", required: true, weight: 3, tpl: "eval_min", params: { min: "≥60分" }, description: "由培育平台按《中小企业专精特新发展评价指标体系》（工信厅企业〔2024〕75 号）自动计算，登录 zjtx.miit.gov.cn 查询本年度得分，无需自行测算；未查询前此项无法核验。复核企业近两年任意一年达 60 分以上即可（2 号文附件 2（七））" }
         ]
       },
       {
@@ -73,7 +73,7 @@ window.ZCT_DATA.national.miit.push(
       {
         category: "加分项（非认定硬条件）",
         items: [
-          { name: "取得质量管理体系认证", required: false, weight: 1, description: "如 ISO9001 或同等级别质量管理体系认证；2 号文七项指标不含此项，但复核企业按 63 号文标准仍会考查（精细化指标）", autoMatch: "certs", rule: v => v.includes("ISO9001") },
+          { name: "取得质量管理体系认证", required: false, weight: 1, description: "如 ISO9001 或同等级别质量管理体系认证；2 号文七项指标不含此项，但复核企业按 63 号文标准仍会考查（精细化指标）", tpl: "cert_has", params: { cert: "ISO9001" } },
           { name: "拥有自主品牌", required: false, weight: 2, description: "拥有注册商标或品牌；63 号文复核标准特色化指标要求，2 号文新申请非硬性" },
           { name: "产品通过国际/国内权威认证", required: false, weight: 1, description: "如 CE、UL、CCC 等产品认证；63 号文复核标准精细化指标（管理体系认证或发达国家和地区产品认证）" },
           { name: "自建或联合建立研发机构", required: false, weight: 2, description: "如技术中心、实验室、博士后工作站等；63 号文复核标准创新能力一般性条件，2 号文新申请非硬性" },
@@ -337,6 +337,9 @@ window.ZCT_DATA.national.miit.push(
       { label: "2026 年度·广东第 3 批（最后一批）", date: "2026-08-31" }
     ],
     updated: "2026-08-03",
+    revisions: [
+      { at: "2026-08-14", note: "补全 2026 年度广东 3 批申报批次（6.30 / 7.31 / 8.31，此前仅保留最后一批）", basis: "粤科函产字〔2026〕1055 号" }
+    ],
     source: { name: "《科技型中小企业评价办法》（国科发政〔2017〕115 号，科技部/财政部/税务总局 2017-05-03 印发）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" },
     notice: { name: "《工业和信息化部中小企业局关于开展2026年度科技型中小企业评价工作的通知》（工企业函〔2026〕160 号）", url: "https://zjtx.miit.gov.cn/zxqySy/tzggView?id=0b50ccb0a4584f2b8878a4ec33fd1444", timeline: "2026-06-01 发布；评价系统开放 2026-06-01 至 08-31；广东转发粤科函产字〔2026〕1055 号（2026-06-08）：分 3 批（6-8 月每月一批，批次截止=当月最后一日），10 月 15 日前完成全部批次公示" },
     basis: [

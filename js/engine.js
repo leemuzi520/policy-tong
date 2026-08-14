@@ -17,6 +17,10 @@ const POLICIES = [
   ...(window.ZCT_DATA.city || [])
 ].sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
 
+// Phase 4 条件模板库（2026-08-14）：展开 { tpl, params } 引用为完整条件项（模板字段被 item 显式字段覆盖）
+// 依赖 js/templates.js（window.ZCT_TEMPLATES.expandPolicyTemplates）；模板缺失的条件保留原样（数据校验脚本负责报错）
+if (window.ZCT_TEMPLATES?.expandPolicyTemplates) POLICIES.forEach(window.ZCT_TEMPLATES.expandPolicyTemplates);
+
 // 启动断言：数据挂载完整性（缺失即报错，避免静默空库）
 // 2026-08-14 修复：补 city 文件检查（2b.1 新增 city.js 后断言未同步，city 缺失时静默空转）
 if (!(window.ZCT_DATA?.national?.most?.length > 0 && window.ZCT_DATA?.national?.miit?.length > 0 && window.ZCT_DATA?.national?.ndrc?.length > 0 && window.ZCT_DATA?.guangdong?.length > 0 && window.ZCT_DATA?.city?.length > 0)) {
