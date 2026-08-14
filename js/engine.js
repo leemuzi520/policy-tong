@@ -442,7 +442,10 @@ function buildRoadmap(profile, now = new Date()) {
   POLICIES.forEach(p => {
     const r = Object.assign(scorePolicy(p, profile, now), { policy: p }); // 挂 policy 供 UI 渲染（政策名/详情跳转）
     if (r.failedVeto.length) { layers.vetoed.push(r); return; }
-    if (r.insufficient) { layers.insufficient.push(r); return; }
+    // 2026-08-14 修复（遗留 #18）：核验进度门槛与匹配页 high 档同口径（方案 B progress≥0.7）——
+    // 此前近层仅 fit≥70，只填 4 个字段也能大量落「近期可申报」（虚高）；progress 不足归「信息不足」先补数据
+    const progress = autoCheckableWeight(p) > 0 ? r.verifiedWeight / autoCheckableWeight(p) : 0;
+    if (r.insufficient || progress < 0.7) { layers.insufficient.push(r); return; }
     const gapCount = r.failedRequired.length;
     if (r.fit >= 70 && gapCount === 0) { layers.near.push(r); return; }
     if (gapCount <= 2) { layers.mid.push(r); return; }

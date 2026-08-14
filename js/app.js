@@ -752,17 +752,23 @@ function loadDiagnosis() {
         <div style="font-weight:600;font-size:14px;color:var(--primary);padding:10px 14px 4px;margin-top:6px;border-left:3px solid var(--primary-light);">${cat.category}${cat.anyOf ? '（满足其中 1 项即可）' : ''}</div>
         ${cat.items.map(item => {
           const iIdx = nextItem();
+          // 2026-08-14 三态升级（遗留 #17）：checkbox（勾/不勾）→ 三态 radio（符合/不符合/不清楚）
+          // 未选=待核实（unknown），报告区分「确认不满足」与「未核验」，消除未勾选被误判为未满足的误导
           return `
-            <label class="checklist-item">
-              <input type="checkbox" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}">
-              <span class="cond-label">
+            <div class="checklist-item">
+              <div class="cond-label">
                 ${item.name}
                 ${item.veto ? '<span class="cond-tag" style="background:var(--bg-danger);color:var(--danger);border:1px solid var(--danger);">一票否决</span>' : ''}
                 <span class="cond-tag ${item.required ? 'required-tag' : 'optional-tag'}">${item.required ? '必选' : '可选'}</span>
                 <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
                 ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">${item.basis.name}</a></div>` : ''}
-              </span>
-            </label>
+              </div>
+              <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                <label style="display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="yes"> 符合</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="no"> 不符合</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="unknown"> 不清楚</label>
+              </div>
+            </div>
           `;
         }).join('')}
       `).join('')}
@@ -770,11 +776,16 @@ function loadDiagnosis() {
     <button class="btn btn-primary" onclick="generateReport('${policy.id}')" style="margin-top:16px;">生成诊断报告</button>
   `;
 
-  // 恢复该政策已保存的勾选状态（P0-1.4 持久化：checkbox 与评分档位 radio 共用索引，页面刷新或切换政策回来时生效）
+  // 恢复该政策已保存的勾选状态（P0-1.4 持久化；2026-08-14 三态升级：按 idx → value 精确恢复 radio 档位/三态）
   const savedDiag = getDiagState();
-  (savedDiag.checked[id] || []).forEach(idx => {
-    const el = document.querySelector(`.diag-check[data-policy="${id}"][data-idx="${idx}"], .diag-score[data-policy="${id}"][data-idx="${idx}"]`);
-    if (el) el.checked = true;
+  Object.entries(savedDiag.checked[id] || {}).forEach(([idx, v]) => {
+    if (typeof v === 'string' && v.startsWith('score:')) {
+      const el = document.querySelector(`.diag-score[data-policy="${id}"][data-idx="${idx}"][value="${v.slice(6)}"]`);
+      if (el) el.checked = true;
+    } else {
+      const el = document.querySelector(`.diag-check[data-policy="${id}"][data-idx="${idx}"][value="${v}"]`);
+      if (el) el.checked = true;
+    }
   });
 }
 
@@ -791,7 +802,8 @@ function generateReport(policyId) {
     else cat.items.forEach(item => flatItems.push({ ...item, category: cat.category }));
   });
   // 采集 checkbox 与评分档位 radio，按 data-item 映射到条件项（2026-08-02 拆细：同一项可对应多个 radio 档位）
-  const selState = {}; // itemIndex -> { checked, opt, score }
+  // 2026-08-14 三态升级（遗留 #17）：普通条件为三态 radio（yes/no/unknown），按选中值采集；未选兜底 unknown（待核实）
+  const selState = {}; // itemIndex -> { checked, opt, score }（普通条件为 { state: 'yes'|'no'|'unknown' }）
   $$(`[data-policy="${policyId}"].diag-check, [data-policy="${policyId}"].diag-score`).forEach(el => {
     // data-item 优先；旧结构（无 data-item）按 data-idx 兜底，保证其他政策回归
     const itemIdx = el.dataset.item !== undefined ? Number(el.dataset.item) : Number(el.dataset.idx);
@@ -801,28 +813,33 @@ function generateReport(policyId) {
       if (item.scoreOptions) {
         const opt = item.scoreOptions[Number(el.value)];
         selState[itemIdx] = { checked: true, opt, score: opt ? opt.score : 0 };
+      } else if (el.value === 'yes' || el.value === 'no' || el.value === 'unknown') {
+        selState[itemIdx] = { state: el.value }; // 三态 radio
       } else {
-        selState[itemIdx] = { checked: true };
+        selState[itemIdx] = { checked: true }; // 多选一 checkbox（直通路径）
       }
     } else if (!selState[itemIdx]) {
-      selState[itemIdx] = item.scoreOptions ? { checked: false, score: 0 } : { checked: false };
+      selState[itemIdx] = item.scoreOptions ? { checked: false, score: 0 } : { state: 'unknown' }; // 未选 = 待核实
     }
   });
 
   const pathCats = policy.conditions.filter(c => c.paths);
   const pathCatNames = new Set(pathCats.map(c => c.category));
 
-  // 逐项统计（路径类整体判定，跳过）
+  // 逐项统计（路径类整体判定，跳过）；2026-08-14：三态统计——yes=满足 / no=缺口 / unknown=待核实（unverifiedItems）
+  const unverifiedItems = [];
   flatItems.forEach((item, idx) => {
     if (pathCatNames.has(item.category)) return;
-    const st = selState[idx] || { checked: false };
+    const st = selState[idx] || { state: 'unknown' };
     totalWeight += item.weight;
-    if (st.checked) {
+    if (st.state === 'yes' || st.checked) {
       metWeight += item.weight;
       if (item.required) metRequired++;
       else metOptional++;
-    } else {
+    } else if (st.state === 'no') {
       gaps.push(item);
+    } else {
+      unverifiedItems.push(item); // unknown = 未核验，待核实（不判未满足）
     }
     if (item.required) totalRequired++;
     else totalOptional++;
@@ -891,16 +908,29 @@ function generateReport(policyId) {
 
   const vetoGaps = gaps.filter(g => g.veto);
   const hasVetoGap = vetoGaps.length > 0;
+  // 2026-08-14 三态升级（遗留 #17）：未核验（unknown）与「确认不满足」分离——否决/必选失败仅计确认不满足项
+  const unverifiedVeto = unverifiedItems.filter(g => g.veto);
+  const unverifiedRequired = unverifiedItems.filter(g => g.required && !g.veto);
+  const hasUnverifiedVeto = unverifiedVeto.length > 0;
+  const hasUnverifiedRequired = unverifiedRequired.length > 0;
 
   let tier, tierColor, suggestion;
   if (hasVetoGap) {
     tier = '存在一票否决条件不满足';
     tierColor = 'var(--danger)';
     suggestion = '以下条件为独立否决项，任一不满足即不具备申报资格。其他条件无论完成度如何，当前均不建议申报。请优先攻克以下一票否决条件。';
+  } else if (hasUnverifiedVeto) {
+    tier = '一票否决条件待核实';
+    tierColor = 'var(--warning)';
+    suggestion = '以下一票否决条件尚未确认「符合」或「不符合」。一票否决为独立硬性资格线，请先逐项核实后再做申报判断（未核验不等于不满足，也不等于满足）。';
   } else if (baseReqScore < 100) {
     tier = '暂不具备申报条件';
     tierColor = 'var(--danger)';
     suggestion = '存在必选条件未满足，建议优先补齐以下标注为"关键缺口"的条件后再申报。';
+  } else if (hasUnverifiedRequired) {
+    tier = '关键条件待核实';
+    tierColor = 'var(--warning)';
+    suggestion = '以下必选条件尚未确认「符合」或「不符合」。为获得可靠结论，请在清单中逐项确认后再生成报告（未核验不等于不满足）。';
   } else if (pathCatResults.some(r => !r.met)) {
     // 路径类未达标（创新型：直通/评分均未满足；专精特新：知识产权/豁免均未满足）
     const unmetNames = pathCatResults.filter(r => !r.met).map(r => r.cat.category.replace(/（.*/, '')).join('、');
@@ -928,6 +958,7 @@ function generateReport(policyId) {
 
   const criticalGaps = gaps.filter(g => g.required && !g.veto);
   const optionalGaps = gaps.filter(g => !g.required);
+  const unverifiedOthers = unverifiedItems.filter(g => !g.veto); // 报告「待核实条件」区块（不含一票否决，其单独区块）
 
   const today = new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric' });
 
@@ -961,6 +992,16 @@ function generateReport(policyId) {
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">这些条件单项即可否决申报资格，须最优先解决</div>
         <ul>
           ${vetoGaps.map(g => `<li class="gap-critical">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
+        </ul>
+      </div>
+      ` : ''}
+
+      ${unverifiedVeto.length > 0 ? `
+      <div class="report-section">
+        <h4 style="color:var(--warning);">一票否决条件待核实（${unverifiedVeto.length} 项）</h4>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">以下否决项尚未确认「符合」或「不符合」——未核验不等于不满足，但一票否决为硬性资格线，申报前必须逐项核实</div>
+        <ul>
+          ${unverifiedVeto.map(g => `<li class="gap-important">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
         </ul>
       </div>
       ` : ''}
@@ -1007,7 +1048,17 @@ function generateReport(policyId) {
       </div>
       ` : ''}
 
-      ${gaps.length === 0 ? `
+      ${unverifiedOthers.length > 0 ? `
+      <div class="report-section">
+        <h4 style="color:var(--warning);">待核实条件（未确认符合/不符合 · ${unverifiedOthers.length} 项）</h4>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">以下条件尚未确认——未核验不等于不满足，为获得可靠结论请逐项核实后重新生成报告</div>
+        <ul>
+          ${unverifiedOthers.map(g => `<li class="gap-important">[${g.category}] ${g.name} — ${g.description}${g.basis ? ` <a href="${g.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">政策依据：${g.basis.name}</a>` : ''}</li>`).join('')}
+        </ul>
+      </div>
+      ` : ''}
+
+      ${gaps.length === 0 && unverifiedItems.length === 0 ? `
       <div class="report-section" style="text-align:center;color:var(--success);font-weight:600;font-size:15px;">
         全部条件已满足，建议尽快启动申报流程。
       </div>
@@ -1180,7 +1231,8 @@ function syncMatchToPlan() {
 // ============================================================
 const LS_MATCH = 'zct_v1_matchForm2'; // 2026-08-02 匹配页字段拆细：新增 13 字段（level/segYears/mainRatio/growth/debt/equity/rdTotal/eval/marketShare/sixBase/listed/invest/direct），升键一次性清旧值
 // 2026-08-02 自诊断拆细：索引语义由「条件项序号」变为「input 序号」，升键 v2 一次性清掉旧索引，避免旧 0-5 错勾到新渲染项；xjr 拆细再次改变 xjr 索引映射，升键 v3 一次性清旧勾选；keygiant 拆细 6→14 项改变索引映射，升键 v4 一次性清旧勾选
-const LS_DIAG = 'zct_v1_diag4';
+// 2026-08-14 三态升级（遗留 #17）：普通条件 checkbox → 三态 radio，勾选状态从「idx 集合」升级为「idx → yes/no/unknown（diag-score 为 score:档位序）」——旧 v4 集合无法映射三态，升键 v5 一次性清旧勾选（项目惯例，重新勾选成本低）
+const LS_DIAG = 'zct_v1_diag5';
 
 function storageGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
 function storageSet(key, val) { try { localStorage.setItem(key, val); } catch (e) { /* 存储不可用时静默降级 */ } }
@@ -1444,9 +1496,15 @@ function getDiagState() {
 
 function saveDiagCheck(policyId) {
   const st = getDiagState();
-  // 2026-08-02 拆细：诊断清单含 checkbox（diag-check）与评分档位 radio（diag-score），统一按已选中的 data-idx 保存
-  st.checked[policyId] = Array.from(document.querySelectorAll(`[data-policy="${policyId}"]:checked`))
-    .map(el => Number(el.dataset.idx));
+  // 2026-08-14 三态升级：按 data-idx 保存选中值——普通条件三态 radio 存 yes/no/unknown；
+  // 评分档位 radio（diag-score）存 score:档位序（每档独立 idx）；多选一 checkbox（直通路径）存 yes
+  const sel = {};
+  document.querySelectorAll(`[data-policy="${policyId}"]:checked`).forEach(el => {
+    const idx = Number(el.dataset.idx);
+    if (el.classList.contains('diag-score')) sel[idx] = 'score:' + el.value;
+    else sel[idx] = el.value || 'yes'; // 多选一 checkbox 无 value → yes（直通路径勾选=满足）
+  });
+  st.checked[policyId] = sel;
   storageSet(LS_DIAG, JSON.stringify(st));
 }
 
