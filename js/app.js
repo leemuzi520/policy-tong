@@ -237,7 +237,7 @@ function policyCardHtml(p) {
                 `).join('')}
           </div>
         `).join('')}
-        ${p.tips ? `<div class="policy-tips"><strong>实操提醒（来自 49 家企业申报经验）</strong>：${p.tips}</div>` : ''}
+        ${p.tips ? `<div class="policy-tips"><strong>实操提醒</strong>：${p.tips}</div>` : ''}
         <div class="policy-source">
           <span class="src-tag">政策原文</span>
           <div class="src-docs">
@@ -303,26 +303,50 @@ function togglePolicy(id) {
 function renderGradientChain() {
   const container = $('#gradientChain');
   if (!container) return;
+  // 2026-08-14 折叠为导航条：链条职责 = 路径导航（层级概览 + 点击直达对应政策），条件详情归政策卡片
+  // 折叠态 = 横向层级条（5 层名，末两层并列）；展开态 = 原完整链条（每层 5 行详情）
   container.innerHTML = `
     <div class="gradient-chain">
-      <div class="chain-title">专精特新梯度培育全链条（5 层：前三层逐级申报，末两层并列方向）</div>
-      ${GRADIENT_CHAIN.map((n, i) => `
-        <div class="chain-node">
-          <div class="chain-node-head">
-            <span class="chain-badge">${i + 1}</span>
-            <span class="chain-name">${n.name}</span>
-            <span class="chain-level">${n.level}</span>
+      <div class="chain-head">
+        <span class="chain-title">专精特新梯度培育全链条（5 层：前三层逐级申报，末两层并列方向）</span>
+        <button type="button" class="btn chain-toggle" id="chainToggle" onclick="toggleGradientChain()">展开完整链条 ▾</button>
+      </div>
+      <div class="chain-strip">
+        ${GRADIENT_CHAIN.map((n, i) => `
+          <span class="chain-pill" title="点击查看该层政策详情" onclick="goPolicy('${n.policyId}')">
+            <span class="chain-badge">${i + 1}</span>${n.name}${i >= 3 ? '<span class="chain-pill-note">并列方向</span>' : ''}
+          </span>
+          ${i < GRADIENT_CHAIN.length - 1 ? `<span class="chain-pill-arrow">${i >= 3 ? '｜' : '→'}</span>` : ''}
+        `).join('')}
+      </div>
+      <div id="chainFull" hidden>
+        ${GRADIENT_CHAIN.map((n, i) => `
+          <div class="chain-node">
+            <div class="chain-node-head">
+              <span class="chain-badge">${i + 1}</span>
+              <span class="chain-name">${n.name}</span>
+              <span class="chain-level">${n.level}</span>
+            </div>
+            <div class="chain-row"><span class="chain-k">谁评</span>${n.org}</div>
+            <div class="chain-row"><span class="chain-k">文件依据</span>${n.doc}</div>
+            <div class="chain-row"><span class="chain-k">解读指标</span>${n.std}</div>
+            <div class="chain-row"><span class="chain-k">申报窗口</span>${n.window}</div>
+            <div class="chain-row"><span class="chain-k">申报了有什么用</span>${n.value}</div>
+            ${n.policyId ? `<button class="btn btn-primary" style="margin-top:6px;padding:4px 12px;font-size:12px;" onclick="goPolicy('${n.policyId}')">查看该层政策详情</button>` : '<div class="chain-no-card">省级细则以属地为准</div>'}
           </div>
-          <div class="chain-row"><span class="chain-k">谁评</span>${n.org}</div>
-          <div class="chain-row"><span class="chain-k">文件依据</span>${n.doc}</div>
-          <div class="chain-row"><span class="chain-k">解读指标</span>${n.std}</div>
-          <div class="chain-row"><span class="chain-k">申报窗口</span>${n.window}</div>
-          <div class="chain-row"><span class="chain-k">申报了有什么用</span>${n.value}</div>
-          ${n.policyId ? `<button class="btn btn-primary" style="margin-top:6px;padding:4px 12px;font-size:12px;" onclick="goPolicy('${n.policyId}')">查看该层政策详情</button>` : '<div class="chain-no-card">省级细则以属地为准</div>'}
-        </div>
-        ${i < GRADIENT_CHAIN.length - 1 ? `<div class="chain-arrow ${i >= 3 ? 'branch' : ''}">${i >= 3 ? '↳ 并列方向（与小巨人衔接，非前后递进）' : '↓ 逐级申报'}</div>` : ''}
-      `).join('')}
+          ${i < GRADIENT_CHAIN.length - 1 ? `<div class="chain-arrow ${i >= 3 ? 'branch' : ''}">${i >= 3 ? '↳ 并列方向（与小巨人衔接，非前后递进）' : '↓ 逐级申报'}</div>` : ''}
+        `).join('')}
+      </div>
     </div>`;
+}
+
+function toggleGradientChain() {
+  const full = $('#chainFull');
+  const btn = $('#chainToggle');
+  if (!full || !btn) return;
+  const hidden = full.hasAttribute('hidden');
+  if (hidden) full.removeAttribute('hidden'); else full.setAttribute('hidden', '');
+  btn.textContent = hidden ? '收起链条 ▴' : '展开完整链条 ▾';
 }
 
 // 2b.3 申报时间轴（2026-08-06）：未来 12 个月申报窗口一览 + 滚动申报/窗口未定分区
@@ -378,6 +402,16 @@ function toggleTimeline() {
   if (hidden) body.removeAttribute('hidden'); else body.setAttribute('hidden', '');
   const btn = $('#windowTimeline .timeline-toggle');
   if (btn) btn.textContent = hidden ? '📅 申报窗口时间轴 · 未来 12 个月 ▴' : '📅 申报窗口时间轴 · 未来 12 个月 ▾';
+}
+
+// 2026-08-14 筛选收敛：部门/地区/月份/排序默认收进「更多筛选」（折叠不影响已选筛选值生效）
+function toggleMoreFilters() {
+  const more = $('#filterMore');
+  const btn = $('#filterMoreToggle');
+  if (!more || !btn) return;
+  const hidden = more.hasAttribute('hidden');
+  if (hidden) more.removeAttribute('hidden'); else more.setAttribute('hidden', '');
+  btn.textContent = hidden ? '收起筛选 ▴' : '更多筛选 ▾';
 }
 
 function goPolicy(id) {
@@ -1426,9 +1460,12 @@ function importCompanyFile(file) {
   const reader = new FileReader();
   reader.onload = () => {
     let data;
-    try { data = JSON.parse(reader.result); } catch (e) { alert('导入失败：JSON 解析错误，请选择政策通导出的企业档案文件'); return; }
+    try { data = JSON.parse(reader.result); } catch (e) {
+      alert('导入失败：仅支持 .json 文件（政策通「导出」按钮生成的备份文件）。Word/PDF 文档无法直接导入，如需 Word/PDF 报告，请在匹配结果或自诊断页使用「打印 / 导出 PDF」。');
+      return;
+    }
     if (!data || data.type !== 'zct-companies' || !Array.isArray(data.companies)) {
-      alert('导入失败：文件格式不正确（应为政策通「导出」生成的企业档案 JSON）');
+      alert('导入失败：文件内容不是政策通导出的企业档案（仅支持 .json 格式）。Word/PDF 文档无法直接导入，如需 Word/PDF 报告，请在匹配结果或自诊断页使用「打印 / 导出 PDF」。');
       return;
     }
     const st = companiesState();
@@ -1541,6 +1578,9 @@ function restoreDiagState() {
 // 统一委托监听（change 事件冒泡，覆盖动态渲染的诊断勾选）
 document.addEventListener('change', e => {
   const t = e.target;
+  // 2026-08-14 修复：企业档案下拉必须先于 #tab-match select 通配分支处理——
+  // 否则「切换档案」被拦截成普通表单变更（只存画像不切企业），导致删除/重命名永远作用于当前企业（默认企业）
+  if (t.id === 'companySelect') { switchCompany(t.value); return; }
   if (t.id === 'diagPolicySelect') { saveDiagSel(t.value); return; }
   if (t.matches('#tab-match select, #tab-match .mCert')) { saveMatchState(); syncMatchToPlan(); return; }
   if (t.matches('#tab-roadmap select, #tab-roadmap .mCert')) { saveMatchState(); return; } // Phase 3.2 画像表单与匹配表单同键持久化

@@ -702,6 +702,11 @@ body {
 .filter-bar input { flex: 1; min-width: 200px; }
 .filter-bar select { min-width: 140px; }
 
+/* ---- 筛选折叠区（2026-08-14：默认只留搜索/级别/行业，部门/地区/月份/排序收进「更多筛选」） ---- */
+.filter-more { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
+.filter-more select { min-width: 140px; }
+.filter-more-toggle { padding: 4px 12px; font-size: 12.5px; white-space: nowrap; }
+
 /* ---- 专栏 ---- */
 .policy-column { margin-bottom: 30px; }
 .policy-column:last-child { margin-bottom: 0; }
@@ -856,6 +861,18 @@ body {
 .chain-arrow { text-align: center; color: var(--accent); font-size: 14px; line-height: 2; }
 .chain-arrow.branch { color: var(--text-secondary); font-size: 12px; }
 .chain-no-card { font-size: 12px; color: var(--warning); margin-top: 4px; }
+
+/* ---- 梯度链条：折叠导航条（2026-08-14：链条职责收敛为路径导航，条件详情归政策卡片） ---- */
+.chain-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.chain-head .chain-title { margin-bottom: 0; }
+.chain-toggle { padding: 4px 12px; font-size: 12.5px; }
+.chain-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.chain-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px 5px 5px; border: 1px solid var(--border); border-radius: 999px; background: #fdfcf7; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text); }
+.chain-pill:hover { border-color: var(--primary); background: #f9f6ec; }
+.chain-pill .chain-badge { width: 18px; height: 18px; font-size: 11px; }
+.chain-pill-note { font-size: 11px; font-weight: 400; color: var(--text-secondary); background: #eef2f9; padding: 1px 6px; border-radius: 999px; }
+.chain-pill-arrow { color: var(--text-secondary); font-size: 14px; font-weight: 700; }
+@media (max-width: 640px) { .chain-pill { font-size: 12px; padding: 4px 10px 4px 4px; } }
 
 /* ---- 表单 ---- */
 .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
@@ -1156,30 +1173,33 @@ body {
   <!-- ========== 标签1：政策库 ========== -->
   <section class="tab-panel active" id="tab-browse">
     <div class="timeline-block no-print" id="windowTimeline">
-      <button type="button" class="timeline-toggle" onclick="toggleTimeline()">📅 申报窗口时间轴 · 未来 12 个月 ▾</button>
-      <div class="timeline-body" id="timelineBody" hidden></div>
+      <button type="button" class="timeline-toggle" onclick="toggleTimeline()">📅 申报窗口时间轴 · 未来 12 个月 ▴</button>
+      <div class="timeline-body" id="timelineBody"></div>
     </div>
     <div class="filter-bar">
       <input type="text" id="policySearch" placeholder="搜索政策名称、发文机关或条件描述...">
-      <select id="filterDept">
-        <option value="">全部部门</option>
-      </select>
       <select id="filterLevel">
         <option value="">全部级别</option>
       </select>
       <select id="filterIndustry">
         <option value="">全部行业</option>
       </select>
-      <select id="filterRegion">
-        <option value="">全部地区</option>
-      </select>
-      <select id="filterMonth">
-        <option value="">全部月份</option>
-      </select>
-      <select id="filterSort">
-        <option value="">默认排序</option>
-        <option value="deadline">按截止日升序</option>
-      </select>
+      <button type="button" class="btn filter-more-toggle" id="filterMoreToggle" onclick="toggleMoreFilters()">更多筛选 ▾</button>
+      <div id="filterMore" class="filter-more" hidden>
+        <select id="filterDept">
+          <option value="">全部部门</option>
+        </select>
+        <select id="filterRegion">
+          <option value="">全部地区</option>
+        </select>
+        <select id="filterMonth">
+          <option value="">全部月份</option>
+        </select>
+        <select id="filterSort">
+          <option value="">默认排序</option>
+          <option value="deadline">按截止日升序</option>
+        </select>
+      </div>
     </div>
     <!-- Phase 3.4 多政策对比（2026-08-14）：2-3 条政策条件差异并排 -->
     <div class="card no-print" id="compareBar" style="margin-bottom:10px;padding:8px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;" hidden>
@@ -1201,11 +1221,12 @@ body {
         <button class="btn" onclick="newCompany()" style="padding:4px 12px;font-size:13px;">＋ 新建</button>
         <button class="btn" onclick="renameCompany()" style="padding:4px 12px;font-size:13px;">重命名</button>
         <button class="btn" onclick="deleteCompany()" style="padding:4px 12px;font-size:13px;">删除</button>
-        <button class="btn" onclick="exportCompany()" style="padding:4px 12px;font-size:13px;">导出</button>
-        <button class="btn" onclick="importCompany()" style="padding:4px 12px;font-size:13px;">导入</button>
+        <button class="btn" onclick="exportCompany()" style="padding:4px 12px;font-size:13px;" title="导出为 .json 备份文件（供本工具导入/迁移）；如需 Word/PDF 报告，请在匹配结果或自诊断页使用「打印 / 导出 PDF」">导出</button>
+        <button class="btn" onclick="importCompany()" style="padding:4px 12px;font-size:13px;" title="仅支持 .json 文件（政策通「导出」生成的备份）；Word/PDF 文档无法直接导入，如需 Word/PDF 报告请用「打印 / 导出 PDF」">导入</button>
         <input type="file" id="companyImportInput" accept=".json,application/json" style="display:none;" onchange="importCompanyFile(this.files[0])">
       </div>
       <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;">档案随企业画像自动保存（本浏览器本地存储）。切换档案会保存当前填写内容并载入目标企业；「默认企业」为首次使用时的档案，不可删除。<span id="profileCount" style="font-weight:600;color:var(--text-primary);"></span></div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">📂 档案导出/导入仅支持 <strong>.json</strong> 格式（本工具备份与迁移用）；Word/PDF 文档无法直接导入，如需 Word/PDF 报告请在匹配结果或自诊断页使用「打印 / 导出 PDF」按钮生成。</div>
       <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px;">
         <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">📋 诊断历史（当前企业）</div>
         <div id="companyHistory"></div>
@@ -1268,7 +1289,7 @@ body {
     <div class="card no-print">
       <div class="card-header">申报路线图 — 输入企业画像，输出 1-3 年三层递进申报规划</div>
       <div style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;padding:10px 14px;background:#eff6ff;border-left:4px solid var(--primary-light);border-radius:6px;">
-        三层递进（参考企蒜蒜「初算→精算→深算」分层）：<strong>近期可申报（0-6 月，满足度 ≥70% 无缺口）→ 中期可冲刺（6-12 月，缺 1-2 个关键条件）→ 长期培育（1-3 年，系统性建设 / 资质递进）</strong>。评分口径 = 三维评分（Fit 50% + Timing 25% + Effort 25%），申报窗口消费各政策截止数据。本表单与「智能匹配」为同一套画像字段（自动联动，填任一处即可，本表单不持久化）。
+        三层递进：<strong>近期可申报（0-6 月，满足度 ≥70% 无缺口）→ 中期可冲刺（6-12 月，缺 1-2 个关键条件）→ 长期培育（1-3 年，系统性建设 / 资质递进）</strong>。评分口径 = 三维评分（Fit 50% + Timing 25% + Effort 25%），申报窗口消费各政策截止数据。本表单与「智能匹配」为同一套画像字段（自动联动，填任一处即可，本表单不持久化）。
       </div>
       <div id="roadmapFormFields"></div>
       <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
