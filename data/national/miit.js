@@ -215,7 +215,7 @@ window.ZCT_DATA.national.miit.push(
     ],
     tips: "2026 年度起按新标准 GB/T 36132-2025 评价：新五化指标体系、定量指标权重占比高达 60%，核心还是一个字——省。对照「基准值/引领值」逐项打分，建议用单位产品指标而非总量指标做申报数据——总量指标会因产能波动被评审老师扣分。申报前先确认自己是「省层面绿色工厂名单」成员——国家级申报由省级择优推荐，广东企业还要先过市级遴选这一关。申报方式（2025 年度起）：管理平台自主填报自评价即可，不再要求第三方评价报告，评价费用门槛降低。获评不是终点：每年 4 月 15 日前填报动态管理表，得分连续三年后 5% 移出名单（2025 年度名单移出 132 家）。排污许可证是最基础的合规门槛，缺证直接一票否决；质量/环境/能源/职业健康安全四体系管理认证是通则第 6 章基本要求；负面清单六项（未正常经营、事故偷漏税、被动态调整、督查问题、节能监察未整改、失信被执行人）逐项自查，一票否决。"
   },
-  {
+    {
     id: "battery",
     order: 5,
     column: "green",
@@ -241,29 +241,53 @@ window.ZCT_DATA.national.miit.push(
       {
         category: "基础合规",
         items: [
-          { name: "在中国境内注册、独立法人", required: true, weight: 3, description: "42 号公告规范条件监督管理：以具备独立法人资格的企业为申请主体；集团公司旗下具有独立法人资格的子公司需单独申请", basis: { name: "42 号公告规范条件（监督管理）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" } },
-          { name: "已投产 1 年以上", required: true, weight: 2, description: "42 号公告规范条件监督管理：企业申报时应投产 1 年及以上", basis: { name: "42 号公告规范条件（监督管理）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" } },
-          { name: "近三年无较大及以上安全事故", required: true, weight: 3, veto: true, description: "42 号公告规范条件第六章安全生产：近三年未发生较大及以上安全事故；73 号令第四十二条：违规受行政处罚后两年内不得申报公告、已列入的予以撤销", basis: { name: "42 号公告规范条件（安全生产）· 73 号令第四十二条", url: "https://www.gov.cn/gongbao/2026/issue_12686/202604/content_7066104.html" }, autoMatch: "accident", rule: v => v === "无" },
-          { name: "已办理投资核准/备案、环评并取得排污许可", required: true, weight: 3, veto: true, description: "73 号令第十八条：未依法办理投资核准或者备案手续、完成环境影响评价、建设配套环保安全设施并取得排污许可（或办理排污登记）的，不得从事废旧动力电池综合利用活动", basis: { name: "73 号令第十八条", url: "https://www.gov.cn/gongbao/2026/issue_12686/202604/content_7066104.html" }, autoMatch: "emission", rule: v => v === "是" }
+          { name: "在中国境内注册、独立法人", required: true, weight: 3, description: "42 号公告规范条件监督管理：以具备独立法人资格的企业为申请主体；集团公司旗下具有独立法人资格的子公司需单独申请", basis: { name: "42 号公告规范条件（监督管理）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" }, evidence: "企业营业执照副本 + 注册资本与实缴资本证明（章程/验资报告）" },
+          { name: "已投产 1 年以上", required: true, weight: 2, description: "42 号公告规范条件监督管理：企业申报时应投产 1 年及以上", basis: { name: "42 号公告规范条件（监督管理）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" }, evidence: "投产时间证明（环评验收文件、运行记录、投产日期说明）" },
+          { name: "近三年无较大及以上安全事故", required: true, weight: 3, veto: true, description: "42 号公告规范条件第六章安全生产：近三年未发生较大及以上安全事故；73 号令第四十二条：违规受行政处罚后两年内不得申报公告、已列入的予以撤销", basis: { name: "42 号公告规范条件（安全生产）· 73 号令第四十二条", url: "https://www.gov.cn/gongbao/2026/issue_12686/202604/content_7066104.html" }, autoMatch: "accident", rule: v => v === "无", evidence: "「信用中国」（creditchina.gov.cn）报告 + 国家企业信用信息公示系统（gsxt.gov.cn）查询结果" },
+          { name: "已办理投资核准/备案、环评并取得排污许可", required: true, weight: 3, veto: true, description: "73 号令第十八条：未依法办理投资核准或者备案手续、完成环境影响评价、建设配套环保安全设施并取得排污许可（或办理排污登记）的，不得从事废旧动力电池综合利用活动", basis: { name: "73 号令第十八条", url: "https://www.gov.cn/gongbao/2026/issue_12686/202604/content_7066104.html" }, autoMatch: "emission", rule: v => v === "是", evidence: "投资核准/备案文件 + 环评批复及验收文件 + 排污许可证（或排污登记回执）" }
         ]
       },
       {
         category: "技术能力",
         items: [
-          { name: "具备再生利用产业化工艺能力", required: true, weight: 3, description: "42 号公告规范条件再生利用企业要求：具备安全拆解机械化作业平台及湿法、火法或材料修复等产业化工艺；应兼顾处理电动自行车废锂离子电池等（梯次利用条款已于 2026-07-30 废止）", basis: { name: "42 号公告规范条件（再生利用企业要求）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" } },
-          { name: "产能原则上不低于 5000 吨/年", required: true, weight: 3, description: "42 号公告规范条件综合利用能力通用要求：再生利用企业产能原则上不低于 5000 吨/年；注册资本不少于 1000 万元、实缴资本不少于 500 万元（梯次利用产能要求已随 2026 年第 20 号公告废止）", basis: { name: "42 号公告规范条件（综合利用能力）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" } },
-          { name: "主要金属回收率达标", required: true, weight: 3, description: "42 号公告规范条件再生利用企业要求：铜、铝回收率不低于 98%，电极粉料回收率不低于 98%，锂回收率不低于 90%，镍、钴、锰回收率不低于 98%；碳酸锂生产综合能耗低于 2200 千克标准煤/吨", basis: { name: "42 号公告规范条件（再生利用企业要求）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" } },
-          { name: "原料来源合法（供应商管理）", required: true, weight: 2, description: "42 号公告规范条件社会责任：加强供应商管理，确保原料来源合法；不得接收来源不明废旧动力电池", basis: { name: "42 号公告规范条件（社会责任）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" } }
+          { name: "具备再生利用产业化工艺能力", required: true, weight: 3, description: "42 号公告规范条件再生利用企业要求：具备安全拆解机械化作业平台及湿法、火法或材料修复等产业化工艺；应兼顾处理电动自行车废锂离子电池等（梯次利用条款已于 2026-07-30 废止）", basis: { name: "42 号公告规范条件（再生利用企业要求）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" }, evidence: "工艺设备清单、拆解机械化作业平台与产线运行记录" },
+          { name: "产能原则上不低于 5000 吨/年", required: true, weight: 3, description: "42 号公告规范条件综合利用能力通用要求：再生利用企业产能原则上不低于 5000 吨/年；注册资本不少于 1000 万元、实缴资本不少于 500 万元（梯次利用产能要求已随 2026 年第 20 号公告废止）", basis: { name: "42 号公告规范条件（综合利用能力）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" }, evidence: "产能设计文件（环评批复产能/备案产能）+ 近一年实际处理量数据" },
+          { name: "主要金属回收率达标", required: true, weight: 3, description: "42 号公告规范条件再生利用企业要求：铜、铝回收率不低于 98%，电极粉料回收率不低于 98%，锂回收率不低于 90%，镍、钴、锰回收率不低于 98%；碳酸锂生产综合能耗低于 2200 千克标准煤/吨", basis: { name: "42 号公告规范条件（再生利用企业要求）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" }, evidence: "回收率检测报告或第三方验证数据（铜/铝/电极粉料/锂/镍钴锰逐项）" },
+          { name: "原料来源合法（供应商管理）", required: true, weight: 2, description: "42 号公告规范条件社会责任：加强供应商管理，确保原料来源合法；不得接收来源不明废旧动力电池", basis: { name: "42 号公告规范条件（社会责任）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" }, evidence: "供应商管理制度 + 原料采购台账与来源证明" }
         ]
       },
       {
         category: "环保合规",
         items: [
-          { name: "废水/废气/噪声达标排放", required: true, weight: 3, description: "73 号令第十八条 + 42 号公告规范条件环境保护：执行环评制度与「三同时」要求，取得排污许可证，排放符合相关标准；需提供近一年第三方检测报告", basis: { name: "73 号令第十八条 · 42 号公告规范条件（环境保护）", url: "https://www.gov.cn/gongbao/2026/issue_12686/202604/content_7066104.html" }, autoMatch: "emission", rule: v => v === "是" },
-          { name: "一般工业固废和危废依法处置", required: true, weight: 3, description: "42 号公告规范条件环境保护：贮存设施符合相关污染控制标准，危废交有资质单位处置并保留转移联单；再生利用企业定期开展清洁生产审核", basis: { name: "42 号公告规范条件（环境保护）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" } },
-          { name: "建立完整的溯源管理体系", required: true, weight: 2, description: "73 号令第四条：全国新能源汽车动力电池溯源信息平台，全生命周期流向监控；第二十四条（七）：综合利用企业接收废旧动力电池后 30 日内报送入库信息、综合利用产品移交出库后 30 日内报送出库信息", basis: { name: "73 号令第四条、第二十四条", url: "https://www.gov.cn/gongbao/2026/issue_12686/202604/content_7066104.html" } }
+          { name: "废水/废气/噪声达标排放", required: true, weight: 3, description: "73 号令第十八条 + 42 号公告规范条件环境保护：执行环评制度与「三同时」要求，取得排污许可证，排放符合相关标准；需提供近一年第三方检测报告", basis: { name: "73 号令第十八条 · 42 号公告规范条件（环境保护）", url: "https://www.gov.cn/gongbao/2026/issue_12686/202604/content_7066104.html" }, autoMatch: "emission", rule: v => v === "是", evidence: "近一年第三方环境检测报告（废水/废气/噪声逐项）" },
+          { name: "一般工业固废和危废依法处置", required: true, weight: 3, description: "42 号公告规范条件环境保护：贮存设施符合相关污染控制标准，危废交有资质单位处置并保留转移联单；再生利用企业定期开展清洁生产审核", basis: { name: "42 号公告规范条件（环境保护）", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" }, evidence: "危废处置合同与转移联单 + 清洁生产审核报告 + 固废贮存设施说明" },
+          { name: "建立完整的溯源管理体系", required: true, weight: 2, description: "73 号令第四条：全国新能源汽车动力电池溯源信息平台，全生命周期流向监控；第二十四条（七）：综合利用企业接收废旧动力电池后 30 日内报送入库信息、综合利用产品移交出库后 30 日内报送出库信息", basis: { name: "73 号令第四条、第二十四条", url: "https://www.gov.cn/gongbao/2026/issue_12686/202604/content_7066104.html" }, evidence: "溯源系统接入证明（全国新能源汽车动力电池溯源信息平台）+ 30 日入库/出库报送记录" }
         ]
       }
+    ],
+    // zct-diag 2026-08-14：申报材料清单（依据 42 号公告监督管理（一）申请流程 + 73 号令合规手续）
+    materials: [
+      { name: "《新能源汽车废旧动力电池综合利用行业规范公告申请书》（42 号公告附 1）", required: true, basis: { name: "42 号公告监督管理（一）2", url: "https://www.miit.gov.cn/jgsj/jns/wjfb/art/2024/art_a05ad4164f20482088a97fcbff80b987.html" } },
+      { name: "通过「工业节能与绿色发展管理平台」（green.miit.gov.cn）提供的相关材料", required: true },
+      { name: "企业营业执照、注册资本与实缴资本证明", required: true, note: "注册资本不少于 1000 万元、实缴不少于 500 万元" },
+      { name: "投资核准/备案文件 + 环评批复及验收文件 + 排污许可证", required: true, note: "73 号令第十八条合规手续，未办理不得从事综合利用活动" },
+      { name: "主要金属回收率检测/第三方验证报告", required: true, note: "铜铝 ≥98%、电极粉料 ≥98%、锂 ≥90%、镍钴锰 ≥98%" },
+      { name: "投产 1 年以上证明（环评验收文件与运行记录）", required: true },
+      { name: "溯源系统接入证明与 30 日入库/出库报送记录", required: true },
+      { name: "危废处置合同与转移联单、安全生产设施佐证", required: true },
+      { name: "供应商管理与原料来源台账", required: true },
+      { name: "上年度《规范条件执行情况和企业发展年度报告》（42 号公告附 2）", required: false, note: "已公告企业每年第一季度结束前通过管理平台提交" }
+    ],
+    // 2026-08-14 修复：申报要求从诊断条件拆出（流程信息仅作提示展示）
+    diagNotes: [
+      "自愿申请：编制《综合利用行业规范公告申请书》经「工业节能与绿色发展管理平台」提交 → 省级工信主管部门核实并出具审核意见 → 工信部组织专家复审和现场核查 → 公示无异议后公告（42 号公告监督管理（一））",
+      "已公告企业每年第一季度结束前通过管理平台提交上年度《年度报告》（附 2）；不能保持规范条件、不按要求提交年度报告、报送材料弄虚作假、拒绝接受监督检查、主体生产设备连续 2 年关停或开工负荷不足 10% 的责令限期整改，1 年整改不到位撤销公告",
+      "被撤销公告的企业原则上自整改完成之日起 2 年后方可重新提出申请；发生一般及以上安全、环保等事故，或严重违反法律法规的，撤销公告",
+      "2026-07-30 起仅再生利用企业可申请公告（第 20 号公告废止梯次利用条款）；废旧动力电池不得用于电动自行车等禁止领域（73 号令第二十二条）",
+      "白名单为自愿申请的行业引导性公告；73 号令第十八条的合规手续（投资核准/备案 + 环评 + 排污许可）是强制底线，未办理不得从事综合利用活动"
+    ],
+    revisions: [
+      { at: "2026-08-14", note: "zct-diag 细化：全部条件补 evidence（工艺/回收率/环保/溯源佐证），新增 materials（42 号公告申请书 + 平台材料 + 合规手续证明）与 diagNotes（申请流程、年度报告、撤销与重新申请规则）", basis: "42 号公告监督管理（一）· 73 号令第十八条" }
     ],
     changesTitle: "2026 监管框架变化要点",
     changesNote: "73 号令 + 第 20 号公告落地，逐条有官方依据",
@@ -274,9 +298,9 @@ window.ZCT_DATA.national.miit.push(
       "回收率门槛（42 号规范条件）：铜铝 ≥98%、电极粉料 ≥98%、锂 ≥90%、镍钴锰 ≥98%",
       "信息报送：综合利用企业接收废旧动力电池 30 日内报入库、综合利用产品出库 30 日内报出库（73 号令第二十四条）"
     ],
-    tips: "先把定位说清楚：白名单是工信部的行业引导性公告，自愿申请，不是强制准入（42 号公告规范条件原文明说「不具有行政审批的前置性和强制性」）。强制的是合规手续——投资核准/备案 + 环评 + 排污许可，办不下来谁都不能干（73 号令第十八条）。那白名单的价值在哪？① 地方奖励大多挂钩白名单（福建每家 20 万 + 按回收量最高 1000 万、成都再生利用按采购金额 5%）；② 整车厂/电池厂回收的废旧电池要「交由依法设立的综合利用企业」（73 号令第十九条），白名单是行业里最好的信任背书；③ 监管趋严后（73 号令 + 20 号公告落地），白名单企业是回收渠道和采购订单的优先选择。硬指标（42 号规范条件）：再生利用产能原则上 ≥5000 吨/年、铜铝回收率 ≥98%、锂 ≥90%、镍钴锰 ≥98%、溯源平台 30 日内入库/出库报送。注意锂回收率是 ≥90%（不是旧口径 85%），别按旧数据准备。环评+排污许可+危废处置+溯源系统四样是合规底线。"
+    tips: "先把定位说清楚：白名单是工信部的行业引导性公告，自愿申请，不是强制准入（42 号公告规范条件原文明说「不具有行政审批的前置性和强制性」）。强制的是合规手续——投资核准/备案 + 环评 + 排污许可，办不下来谁都不能干（73 号令第十八条）。那白名单的价值在哪？① 地方奖励大多挂钩白名单（福建每家 20 万 + 按回收量最高 1000 万、成都再生利用按采购金额 5%）；② 整车厂/电池厂回收的废旧电池要「交由依法设立的综合利用企业」（73 号令第十九条），白名单是行业里最好的信任背书；③ 监管趋严后（73 号令 + 20 号公告落地），白名单企业是回收渠道和采购订单的优先选择。硬指标（42 号规范条件）：再生利用产能原则上 ≥5000 吨/年、铜铝回收率 ≥98%、锂 ≥90%、镍钴锰 ≥98%、溯源平台 30 日内入库/出库报送。注意锂回收率是 ≥90%（不是旧口径 85%），别按旧数据准备。环评+排污许可+危废处置+溯源系统四样是合规底线。申请流程：编制申请书经管理平台提交 → 省级核实 → 工信部专家复审+现场核查 → 公示公告；已公告企业每年第一季度结束前交年度报告，别漏——不交年度报告会限期整改，1 年整改不到位撤销公告。"
   },
-  {
+    {
     id: "champion",
     order: 8,
     column: "zjt",
@@ -288,33 +312,61 @@ window.ZCT_DATA.national.miit.push(
     updated: "2026-08-01",
     source: { name: "《制造业单项冠军企业认定管理办法》（工信部政法〔2023〕138 号）", url: "http://gxj.anshan.gov.cn/html/GXJ/202310/0169830047576117.html" },
     notice: { name: "《关于开展 2024 年制造业单项冠军企业遴选认定和复核评价工作的通知》（工信厅政法函〔2024〕328 号）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_af92d3d91e2342cd91b2221c9348580b.html", timeline: "最近一次国家级遴选（2024 年）：培育平台 excellent-ent.cn 线上填报，2024-10-27 前报送；2025 年起暂无国家级遴选新通知" },
-    summary: "制造业细分领域的天花板级荣誉：单项产品（生产性服务）市场占有率全球前 3。硬门槛（138 号文）：从事细分领域 ≥10 年（新产品 ≥5 年）、近 3 年平均主营收入 ≥4 亿元（省级以上专精特新可降至 2 亿）、申请产品市占率全球前 3、生产技术或工艺国际先进。专精特新「小巨人」企业可优先推荐——从梯度培育链条走向顶层的官方通道。原则上每年认定一次，证书有效期 3 年，有效期内每年 5 月 31 日前在培育平台更新企业信息。国家级遴选 2025-2026 年暂无新通知，申报安排以工信部公告为准。",
+    summary: "制造业细分领域的天花板级荣誉：单项产品（生产性服务）市场占有率全球前 3。硬门槛（138 号文附件 1）：从事细分领域 ≥10 年（新产品 ≥5 年）、近 3 年平均主营收入 ≥4 亿元（省级以上专精特新可降至 2 亿）、申请产品市占率全球前 3、生产技术或工艺国际先进。专精特新「小巨人」企业可优先推荐——从梯度培育链条走向顶层的官方通道。原则上每年认定一次，证书有效期 3 年，有效期内每年 5 月 31 日前在培育平台更新企业信息。国家级遴选 2025-2026 年暂无新通知，申报安排以工信部公告为准。",
     subsidy: "无中央统一资金奖补；部分省市对国家级/省级单项冠军给予一次性奖励（50-100 万元级，各地不一，以属地政策为准）",
     applicableIndustries: ["制造业（通用）","电子信息","生物与新医药","航空航天","新材料","新能源与节能","资源与环境","先进制造与自动化","汽车","化工"],
     conditions: [
       {
-        category: "基础合规",
+        category: "基础合规（138 号文第十三条动态管理口径）",
         items: [
-          { name: "境内注册、独立法人", required: true, weight: 3, description: "未被列入经营异常名录或严重失信主体名单" },
-          { name: "产品不属于国家禁止、限制或淘汰类", required: true, weight: 2, description: "主导产品（生产性服务）合规" },
-          { name: "近 3 年无重大安全/质量/环境事故及偷漏税", required: true, weight: 3, veto: true, autoMatch: "accident", rule: v => v === "无", description: "含网络安全、数据安全、数据造假等违法违规行为" }
+          { name: "境内注册、独立法人", required: true, weight: 3, description: "未被列入经营异常名录或严重失信主体名单（第十三条动态管理口径：严重失信撤销认定）", basis: { name: "138 号文第十三条", url: "http://jyh.huangshi.gov.cn/pub/hsjxj/cyks/cyzck/cyzckwjfb/202309/t20230927_1054867.html" }, evidence: "企业营业执照副本（统一社会信用代码）" },
+          { name: "未被列入经营异常名录或严重失信主体名单", required: true, weight: 2, description: "138 号文第十三条：严重失信等违法违规行为经核实后撤销认定，3 年内不得再次申报；以「信用中国」和「国家企业信用信息公示系统」为准", basis: { name: "138 号文第十三条", url: "http://jyh.huangshi.gov.cn/pub/hsjxj/cyks/cyzck/cyzckwjfb/202309/t20230927_1054867.html" }, evidence: "「信用中国」（creditchina.gov.cn）报告 + 国家企业信用信息公示系统（gsxt.gov.cn）查询结果" },
+          { name: "产品不属于国家禁止、限制或淘汰类", required: true, weight: 2, description: "主导产品（生产性服务）合规", basis: { name: "138 号文附件 1（认定标准）", url: "http://jyh.huangshi.gov.cn/pub/hsjxj/cyks/cyzck/cyzckwjfb/202309/t20230927_1054867.html" }, evidence: "主导产品（生产性服务）情况说明" },
+          { name: "近 3 年无重大安全/质量/环境事故、严重失信、偷漏税及数据造假", required: true, weight: 3, veto: true, autoMatch: "accident", rule: v => v === "无", description: "138 号文第十三条：发生重大安全（含网络安全、数据安全、安全保密）、质量、环境污染等事故，或严重失信、偷漏税等违法违规行为，或数据造假，经核实后撤销认定、3 年内不得再次申报", basis: { name: "138 号文第十三条", url: "http://jyh.huangshi.gov.cn/pub/hsjxj/cyks/cyzck/cyzckwjfb/202309/t20230927_1054867.html" }, evidence: "「信用中国」报告 + 国家企业信用信息公示系统查询结果 + 事故情况自检说明" }
         ]
       },
       {
-        category: "认定标准（138 号文）",
+        category: "认定标准（138 号文附件 1，专业发展/市场竞争/自主创新/经营管理）",
         items: [
-          { name: "从事细分领域 ≥10 年（新产品 ≥5 年）", required: true, weight: 3, autoMatch: "segYears", rule: v => v === ">10年" ? true : v === "5-10年" ? undefined : false, description: "截至上年末从事相关领域时间，体现「十年磨一剑」导向；选「5-10 年」档时无法区分新产品 ≥5 年场景，需人工核实" },
-          { name: "近 3 年平均主营收入 ≥4 亿元", required: true, weight: 3, autoMatch: "revenue", rule: v => v === ">4亿", description: "省级以上专精特新企业可降至 ≥2 亿元（表单按 >4亿 档从严判定）" },
-          { name: "申请产品市占率全球前 3 位", required: true, weight: 3, description: "按《统计用产品分类目录》8 位或 10 位代码界定，需权威佐证（行业协会/海关数据等）", autoMatch: "marketShare", rule: v => v === "全球前3" ? true : v === "国内前三或≥10%" || v === "较为靠前" || v === "一般" ? false : undefined },
-          { name: "生产技术或工艺国际先进", required: true, weight: 2, description: "关键性能指标国际同类领先，主导产品能耗达行业能耗限额先进值" },
-          { name: "拥有高水平研发机构与核心自主知识产权", required: true, weight: 2, description: "研发投入强度行业领先，国际/国内专利数量行业领先" },
-          { name: "主导或参与制定国际/国家/行业标准", required: false, weight: 2, description: "加分项：参与国家重大创新平台、强链补链行动、卡脖子技术攻关等" }
+          { name: "从事细分领域 ≥10 年（新产品 ≥5 年）", required: true, weight: 3, autoMatch: "segYears", rule: v => v === ">10年" ? true : v === "5-10年" ? undefined : false, description: "附件 1 专业发展 1：截至上年末从事相关领域时间达到 10 年及以上，属于新产品的应达到 5 年及以上；选「5-10 年」档时无法区分新产品 ≥5 年场景，需人工核实", basis: { name: "138 号文附件 1（专业发展 1）", url: "http://jyh.huangshi.gov.cn/pub/hsjxj/cyks/cyzck/cyzckwjfb/202309/t20230927_1054867.html" }, evidence: "从事相关领域年限说明（细分市场界定与经营起始时间，以审计报告等佐证）" },
+          { name: "近 3 年平均主营收入 ≥4 亿元", required: true, weight: 3, autoMatch: "revenue", rule: v => v === ">4亿", description: "附件 1 专业发展 2：近 3 年平均主营业务收入须达到 4 亿元及以上；表单按 >4 亿档从严判定（省级以上专精特新可降至 2 亿需人工核实）", basis: { name: "138 号文附件 1（专业发展 2）", url: "http://jyh.huangshi.gov.cn/pub/hsjxj/cyks/cyzck/cyzckwjfb/202309/t20230927_1054867.html" }, evidence: "近 3 年年度审计报告（主营业务收入数据）" },
+          { name: "申请产品市占率全球前 3 位", required: true, weight: 3, description: "附件 1 市场竞争 1：申请产品（生产性服务）市场占有率位居全球前 3 位；按《统计用产品分类目录》8 位或 10 位代码界定，需权威佐证（行业协会/海关数据等）", autoMatch: "marketShare", rule: v => v === "全球前3" ? true : v === "国内前三或≥10%" || v === "较为靠前" || v === "一般" ? false : undefined, basis: { name: "138 号文附件 1（市场竞争 1）", url: "http://jyh.huangshi.gov.cn/pub/hsjxj/cyks/cyzck/cyzckwjfb/202309/t20230927_1054867.html" }, evidence: "细分市场界定与全球市占率佐证（行业协会、海关数据、咨询机构报告等权威来源，注明口径与出处）" },
+          { name: "生产技术或工艺国际先进", required: true, weight: 2, description: "附件 1 市场竞争 2：申请产品质量精良，生产技术或制造工艺国际先进，关键性能指标处于国际同类产品领先水平，主导产品能耗达到行业能耗限额标准先进值", basis: { name: "138 号文附件 1（市场竞争 2）", url: "http://jyh.huangshi.gov.cn/pub/hsjxj/cyks/cyzck/cyzckwjfb/202309/t20230927_1054867.html" }, evidence: "关键性能指标与国际同类产品对比说明 + 能耗数据（行业能耗限额先进值对照）" },
+          { name: "拥有高水平研发机构与核心自主知识产权", required: true, weight: 2, description: "附件 1 自主创新 1、2：拥有高水平研发机构，研发投入强度行业领先；拥有核心自主知识产权，国际、国内专利数量行业领先", basis: { name: "138 号文附件 1（自主创新 1、2）", url: "http://jyh.huangshi.gov.cn/pub/hsjxj/cyks/cyzck/cyzckwjfb/202309/t20230927_1054867.html" }, evidence: "研发机构设立文件与研发投入数据 + 核心知识产权证书及专利清单" },
+          { name: "科技成果转化成效明显（知产实际应用产生经济效益）", required: false, weight: 1, description: "附件 1 自主创新 3：科技成果转化成效明显，相关知识产权已实际应用并产生经济效益", basis: { name: "138 号文附件 1（自主创新 3）", url: "http://jyh.huangshi.gov.cn/pub/hsjxj/cyks/cyzck/cyzckwjfb/202309/t20230927_1054867.html" }, evidence: "知识产权应用与效益说明（产品收入对应关系）" },
+          { name: "重视国际化经营和品牌战略（国际业务收入行业领先）", required: false, weight: 1, description: "附件 1 市场竞争 3：重视并实施国际化经营和品牌战略，国际业务收入行业领先，全球资源配置能力强", basis: { name: "138 号文附件 1（市场竞争 3）", url: "http://jyh.huangshi.gov.cn/pub/hsjxj/cyks/cyzck/cyzckwjfb/202309/t20230927_1054867.html" }, evidence: "国际业务收入数据、海外布局与品牌注册佐证" },
+          { name: "经营业绩优秀（主营收入或利润行业领先）", required: false, weight: 1, description: "附件 1 经营管理 1：经营业绩优秀，主营业务收入或利润行业领先", basis: { name: "138 号文附件 1（经营管理 1）", url: "http://jyh.huangshi.gov.cn/pub/hsjxj/cyks/cyzck/cyzckwjfb/202309/t20230927_1054867.html" }, evidence: "近 3 年审计报告（主营收入、利润与行业对比）" },
+          { name: "主导或参与制定国际/国家/行业标准", required: false, weight: 2, description: "附件 1 自主创新 2：主导或参与制定国际、国家和行业标准（加分项：参与国家重大创新平台、强链补链行动、卡脖子技术攻关等）", basis: { name: "138 号文附件 1（自主创新 2）", url: "http://jyh.huangshi.gov.cn/pub/hsjxj/cyks/cyzck/cyzckwjfb/202309/t20230927_1054867.html" }, evidence: "标准文本（起草单位排序）或参与证明" }
         ]
       }
     ],
-    tips: "链条顶层，通常是从小巨人成长 3-5 年后的目标（138 号文明确小巨人优先推荐）。国家级遴选 2025 年起暂无新通知，申报安排务必以工信部最新公告为准，谨防不良中介。各省有省级单项冠军认定（标准低于国家级，如市占率国内领先即可），可先冲省级。市占率全球前 3 需要严谨的第三方佐证，不要凭感觉填报。"
+    // zct-diag 2026-08-14：申报材料清单（依据 328 号文报送要求 + 申请书附件 1 佐证项；申请书线上填报后线下纸质一致报送）
+    materials: [
+      { name: "制造业单项冠军企业申请书（培育平台 excellent-ent.cn 填报下载，申请企业加盖公章与骑缝章）", required: true, basis: { name: "工信厅政法函〔2024〕328 号", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_af92d3d91e2342cd91b2221c9348580b.html" } },
+      { name: "企业营业执照副本", required: true },
+      { name: "近 3 年年度审计报告（主营业务收入数据）", required: true },
+      { name: "市场占有率全球前 3 位佐证材料", required: true, note: "行业协会、海关数据、咨询机构报告等权威来源，注明统计口径与数据出处" },
+      { name: "核心自主知识产权清单及证书", required: true },
+      { name: "研发机构与研发投入佐证", required: true },
+      { name: "参与制定国际/国家/行业标准佐证", required: false },
+      { name: "质量管理体系认证、产品认证等经营管理佐证", required: false },
+      { name: "国际化经营与品牌战略佐证", required: false },
+      { name: "重点领域（附件 3）佐证", required: false, note: "属重点领域的企业优先推荐，附领域对应说明" }
+    ],
+    // 2026-08-14 修复：申报要求从诊断条件拆出（流程信息仅作提示展示）
+    diagNotes: [
+      "报送方式：培育平台（excellent-ent.cn）线上填报 + 线下纸质报送，线上线下材料应保持一致；申请书纸质版加盖公章与骑缝章，佐证材料扫描电子版（光盘）一并报送（328 号文）",
+      "省级推荐名额有上限（328 号文附件 2），重点领域（附件 3）企业优先推荐；2024 年批次 10 月 27 日前报送，2025 年起暂无国家级遴选新通知，以工信部公告为准",
+      "申请不收取任何费用、没有特殊通道或捷径；填写内容为生产经营数据，无需第三方机构辅助（328 号文），谨防不良机构散播虚假信息非法牟利",
+      "有效期内每年 5 月 31 日前通过培育平台更新企业信息，经提示仍未更新的取消复核资格（138 号文第十一条）",
+      "证书有效期 3 年，到期由工信部组织复核（含实地抽查），通过延长 3 年（138 号文第十条）；发生重大变化（更名/分立/合并/重组等）3 个月内报告（第十二条）"
+    ],
+    revisions: [
+      { at: "2026-08-14", note: "zct-diag 细化：基础合规拆出「未被列入经营异常/严重失信」独立条件并对齐 138 号文第十三条，认定标准按附件 1 补齐科技成果转化/国际化经营/经营业绩等评价维度，全部条件补 evidence/basis，新增 materials（328 号文报送要求）与 diagNotes", basis: "138 号文附件 1 · 工信厅政法函〔2024〕328 号" }
+    ],
+    tips: "链条顶层，通常是从小巨人成长 3-5 年后的目标（138 号文明确小巨人优先推荐）。国家级遴选 2025 年起暂无新通知，申报安排务必以工信部最新公告为准，谨防不良中介。各省有省级单项冠军认定（标准低于国家级，如市占率国内领先即可），可先冲省级。市占率全球前 3 需要严谨的第三方佐证，不要凭感觉填报——按《统计用产品分类目录》8 位或 10 位代码界定细分市场，数据注明口径与出处。申报填写内容为生产经营数据，无需第三方机构辅助，申请不收费、无特殊通道。证书有效期 3 年，每年 5 月 31 日前要在培育平台更新企业信息，否则取消复核资格。"
   },
-  {
+    {
     id: "keygiant",
     order: 9,
     column: "zjt",
@@ -333,37 +385,54 @@ window.ZCT_DATA.national.miit.push(
       {
         category: "申报资格（须全部满足，148 号文 + 2026 第三批要求）",
         items: [
-          { name: "工信部认定的有效期内专精特新「小巨人」企业", required: true, weight: 3, autoMatch: "level", rule: v => v >= 3, description: "已获「小巨人」认定且证书在有效期内" },
-          { name: "未在境内外公开发行股票", required: true, weight: 2, autoMatch: "listed", rule: v => v === "未上市" ? true : v === "已上市" ? false : undefined, description: "不含已在上交所、深交所、北交所或境外上市的企业" },
-          { name: "未获过前轮支持", required: true, weight: 2, description: "财建〔2021〕2 号文（上一轮）及新一轮第一、二批已获支持的「小巨人」不再重复支持（2026 第三批口径）" },
-          { name: "未列入经营异常名录、严重失信主体名单，近三年无重大违法违规行为", required: true, weight: 2, autoMatch: "accident", rule: v => v === "无", description: "2026 年第三批遴选明确要求；以信用中国、国家企业信用信息公示系统查询结果为准" }
+          { name: "工信部认定的有效期内专精特新「小巨人」企业", required: true, weight: 3, autoMatch: "level", rule: v => v >= 3, description: "已获「小巨人」认定且证书在有效期内（广州第三批通知申报对象）", basis: { name: "财建〔2024〕148 号 · 广州第三批通知", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html" }, evidence: "「小巨人」证书或培育平台认定信息截图" },
+          { name: "未在境内外公开发行股票", required: true, weight: 2, autoMatch: "listed", rule: v => v === "未上市" ? true : v === "已上市" ? false : undefined, description: "未在上交所、深交所、北交所，以及境外公开发行股票（广州第三批通知申报对象）", basis: { name: "广州第三批通知申报对象", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html" }, evidence: "上市状态自检说明（证券代码/股权结构核查）" },
+          { name: "未获过前轮支持", required: true, weight: 2, description: "财建〔2021〕2 号文（上一轮）及新一轮第一、二批已获支持的「小巨人」不再重复支持（2026 第三批口径）", basis: { name: "广州第三批通知申报对象", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html" } },
+          { name: "未列入经营异常名录、严重失信主体名单，近三年无重大违法违规行为", required: true, weight: 2, autoMatch: "accident", rule: v => v === "无", description: "2026 年第三批遴选明确要求；以信用中国、国家企业信用信息公示系统查询结果为准", evidence: "「信用中国」（creditchina.gov.cn）报告 + 国家企业信用信息公示系统（gsxt.gov.cn）查询结果" }
         ]
       },
       {
         category: "申报要件——「三新一强」推进计划（财建〔2024〕148 号）",
         items: [
-          { name: "提出「三新」「一强」推进计划", required: true, weight: 5, autoMatch: "invest", rule: v => v === "已编制且>2000万" ? true : v === "未编制或不足" ? false : undefined, description: "打造新动能、攻坚新技术、开发新产品、强化产业链配套；可覆盖单个或多个方面，分别提出绩效目标" },
-          { name: "主导产品/业务聚焦重点领域", required: true, weight: 3, description: "重点产业链、工业「六基」及战略性新兴产业、未来产业领域（148 号文称「重点领域」）；与培育规划六基筛选项口径略有差异，需人工确认" },
-          { name: "推进计划投资总额超过 2000 万元", required: true, weight: 5, autoMatch: "invest", rule: v => v === "已编制且>2000万" ? true : v === "未编制或不足" ? false : undefined, description: "土地购置与厂房建设费用不计入；投资未达 2000 万元将被收回奖补资金" },
-          { name: "投资方向合规且计划可实施", required: true, weight: 3, description: "投资用于设备购置、研发投入、产学研建设、人才引育等；计划须具体可行、有操作性，年度投资安排合理有序" }
-        ]
-      },
-      {
-        category: "属地遴选与申报材料（2026 第三批：企业填报→市级初审→省级推荐）",
-        items: [
-          { name: "按属地流程参加遴选推荐", required: true, weight: 3, description: "先参加地方预申报/摸底，再由地方按分配名额评审推荐；省级环节为决定性（材料初审、专家评审答辩、实地核查）；部分地市预申报另加属地筛选要求（如发明专利、研发投入、营收成长性等），以属地通知为准" },
-          { name: "申报材料齐全", required: true, weight: 2, description: "广东第三批要求：企业信息表（含「三新一强」推进计划）、营业执照、2023-2025 年审计报告、2023-2025 年 12 月底社保缴纳人数证明、已实际应用的有效发明专利清单、主持（参与）制修订标准情况、管理体系认证情况、产品国际认证情况、主导产品「补短板」「填空白」情况、产业链配套情况等，以属地通知为准" }
+          { name: "提出「三新」「一强」推进计划", required: true, weight: 5, autoMatch: "invest", rule: v => v === "已编制且>2000万" ? true : v === "未编制或不足" ? false : undefined, description: "打造新动能、攻坚新技术、开发新产品、强化产业链配套；可覆盖单个或多个方面，须分别提出绩效目标（广州第三批通知支持内容）", basis: { name: "财建〔2024〕148 号 · 广州第三批通知", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html" }, evidence: "「三新一强」推进计划文本（绩效目标与投资安排）" },
+          { name: "主导产品/业务聚焦重点领域", required: true, weight: 3, description: "重点产业链、工业「六基」及战略性新兴产业、未来产业领域（148 号文称「重点领域」）；与培育规划六基筛选项口径略有差异，需人工确认", basis: { name: "财建〔2024〕148 号", url: "https://www.miit.gov.cn/jgsj/qyj/bszn/art/2024/art_afa307276f6e40e58b8bc651b1d4cf32.html" }, evidence: "主导产品所属重点领域对应说明" },
+          { name: "推进计划投资总额超过 2000 万元", required: true, weight: 5, autoMatch: "invest", rule: v => v === "已编制且>2000万" ? true : v === "未编制或不足" ? false : undefined, description: "土地购置与厂房建设费用不计入；投资未达 2000 万元将被收回奖补资金", basis: { name: "财建〔2024〕148 号", url: "https://www.miit.gov.cn/jgsj/qyj/bszn/art/2024/art_afa307276f6e40e58b8bc651b1d4cf32.html" }, evidence: "推进计划投资测算表（设备购置、研发投入、产学研建设、人才引育等分项）" },
+          { name: "投资方向合规且计划可实施", required: true, weight: 3, description: "投资用于设备购置、研发投入、产学研建设、人才引育等；计划须具体可行、有操作性，年度投资安排合理有序", basis: { name: "财建〔2024〕148 号", url: "https://www.miit.gov.cn/jgsj/qyj/bszn/art/2024/art_afa307276f6e40e58b8bc651b1d4cf32.html" }, evidence: "年度投资安排与实施计划说明" }
         ]
       },
       {
         category: "加分项（非硬性门槛，省级评审佐证材料）",
         items: [
-          { name: "主持（参与）制修订标准", required: false, weight: 1, description: "国家标准、行业标准、团体标准等，佐证行业话语权" },
-          { name: "通过管理体系认证", required: false, weight: 1, description: "如 ISO9001 质量管理体系、ISO14001 环境管理体系等" },
-          { name: "产品通过国际认证", required: false, weight: 1, description: "如 CE、UL、FCC 等国际权威认证" },
-          { name: "已实际应用的有效发明专利（含「补短板」「填空白」成果）", required: false, weight: 1, description: "专利须实际应用并产生效益；主导产品「补短板」「填空白」情况是省级评审重要佐证" }
+          { name: "主持（参与）制修订标准", required: false, weight: 1, description: "国家标准、行业标准、团体标准等，佐证行业话语权", evidence: "标准文本（起草单位排序）" },
+          { name: "通过管理体系认证", required: false, weight: 1, description: "如 ISO9001 质量管理体系、ISO14001 环境管理体系等", evidence: "体系认证证书" },
+          { name: "产品通过国际认证", required: false, weight: 1, description: "如 CE、UL、FCC 等国际权威认证", evidence: "产品认证证书" },
+          { name: "已实际应用的有效发明专利（含「补短板」「填空白」成果）", required: false, weight: 1, description: "专利须实际应用并产生效益；主导产品「补短板」「填空白」情况是省级评审重要佐证", evidence: "已实际应用的有效发明专利清单和证书" }
         ]
       }
+    ],
+    // zct-diag 2026-08-14：申报材料清单（依据广州第三批通知官方 11 项清单；信息表+佐证按顺序装订成册）
+    materials: [
+      { name: "企业信息表（含「三新」「一强」推进计划，作为信息表附件一并装订）", required: true, note: "3 份（1 份信息表 + 1 份佐证材料按顺序装订成册）", basis: { name: "广州第三批通知三、申报材料", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html" } },
+      { name: "企业营业执照", required: true },
+      { name: "2023、2024、2025 年年度审计报告", required: true, note: "内容需包含营业收入、主营业务收入、销售费用、管理费用、主营业务成本、净利润总额、资产总额、负债总额、研发费用等" },
+      { name: "2023、2024、2025 年 12 月底社保缴纳人数证明", required: true },
+      { name: "主持（参与）制修订国际、国家、行业标准情况", required: true },
+      { name: "企业管理体系认证情况", required: true },
+      { name: "产品通过发达国家和地区产品认证情况", required: true },
+      { name: "已实际应用的有效发明专利清单和证书情况", required: true },
+      { name: "主导产品「补短板」「填空白」情况", required: true },
+      { name: "与行业龙头企业协同创新、技术先进性情况", required: true },
+      { name: "产业链配套、强链补链稳链作用情况", required: true }
+    ],
+    // 2026-08-14 修复：申报要求从诊断条件拆出（推荐制流程信息仅作提示展示，不进 conditions、不计分）
+    diagNotes: [
+      "推荐制专项：先参加地方预申报/摸底，再由地方按分配名额评审推荐，企业不能直接向国家申报。2026 第三批流程：企业填报 → 市级初审 → 省级评审（材料初审、专家评审答辩、实地核查）；广东 2 月 9 日启动、各区 3 月 6 日前报送，3 月上旬完成省级评审——本批次已结束",
+      "企业应如实、自主申报，不得借助第三方机构申请；各区防范不良中介机构围绕申报企业谋取不当利益（广州第三批通知四（一）（二））",
+      "奖补绩效挂钩：实施期初下达 50%、实施期末按绩效评价情况下达剩余 50%；推进计划投资未达 2000 万元的收回资金——投资计划务必可兑现，不要虚报",
+      "2024-2026 三年三批次申报已全部结束，入选企业处于三年实施期；下一轮支持以工信部最新通知为准，谨防不良中介借新批次名义行骗"
+    ],
+    revisions: [
+      { at: "2026-08-14", note: "zct-diag 细化：原「属地遴选与申报材料」类 2 条流程条件移出 conditions（推荐制流程、材料清单分别进 diagNotes/materials），申报资格与推进计划要件全部补 evidence/basis，新增 materials（广州第三批通知官方 11 项清单）与 diagNotes", basis: "财建〔2024〕148 号 · 广州第三批通知（2026-02-12）" }
     ],
     tips: "这是推荐制专项，不是公开申报：先参加地方预申报摸底，再由地方按名额评审推荐（2026 第三批流程：企业填报 → 市级初审 → 省级评审，省级环节含材料初审、专家评审答辩、实地核查）。奖补绩效挂钩：推进计划投资未达 2000 万元会被收回资金，投资计划务必可兑现——不要为拿奖补虚报投资。申报全程免费，不得委托第三方中介机构代理申报。2024-2026 三年三批次申报已全部结束，入选企业正在三年实施期；下一轮支持以工信部最新通知为准，谨防不良中介借新批次名义行骗。"
   },
