@@ -59,7 +59,7 @@ window.ZCT_DATA.guangdong.push(
     ],
     tips: "广东梯度培育（市→省→国家）的中间层：申报省级前先进入市级绿色工厂名单，由市里 6.30 前统一推荐到省厅。评价标准与国家级同源——53 个重点行业按行业标准、其他行业按 GB/T 36132-2025 通则自评价，核心还是能耗、水耗、污染物这些硬指标。已获国家级绿色工厂的企业不用重复申报省级（自动列入）。省级无统一现金补贴，但地市奖励、专项资金申请资格都有；想冲国家级绿色工厂的，省级是必经台阶。"
   },
-  {
+    {
     id: "innovative",
     order: 6,
     column: "zjt",
@@ -71,7 +71,9 @@ window.ZCT_DATA.guangdong.push(
     updated: "2026-08-05",
     source: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号）", url: "https://www.miit.gov.cn/jgsj/qyj/wjfb/art/2026/art_2aa4981e3c9248379bc210c62dbb0569.html" },
     basis: [
-      { name: "《优质中小企业梯度培育管理暂行办法》（工信部企业〔2022〕63 号）附件 1 创新型中小企业评价标准——现行评价细则（2 号文第三十条：合并新标准发布前沿用本标准）", url: "http://www.fugou.gov.cn/sitesources/fgx/upload/e993ee5bb9db00399e2d13cc4193f965/1700817874037.pdf" }
+      { name: "《优质中小企业梯度培育管理暂行办法》（工信部企业〔2022〕63 号）附件 1 创新型中小企业评价标准——现行评价细则（2 号文第三十条：合并新标准发布前沿用本标准）", url: "http://www.fugou.gov.cn/sitesources/fgx/upload/e993ee5bb9db00399e2d13cc4193f965/1700817874037.pdf" },
+      { name: "《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4459/mpost_4459794.html" },
+      { name: "《广东省工业和信息化厅关于开展2026年度创新型中小企业评价和复核工作的通知》（粤工信融资函〔2026〕39 号）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4915/post_4915026.html" }
     ],
     notice: { name: "《广东省工业和信息化厅关于开展 2026 年度创新型中小企业评价和复核工作的通知》（粤工信融资函〔2026〕39 号）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4915/post_4915026.html", timeline: "2026-06-23 发布。流程：企业 2026-07-01 至 07-31 在优质中小企业梯度培育平台（zjtx.miit.gov.cn）线上申报 → 各地审核、官网公示 5 天 → 各地 8.31 前将推荐名单报省厅（各地市提前截止：阳江 7.24、汕头 8.5、惠州 8.6、东莞 8.10、茂名 8.10 等）→ 深圳市自行组织、报省厅备案。2023 年第一至第三批创新型中小企业可提出复核申请；2026 年度申报已截止，下一批 2027 年 6-7 月" },
     summary: "专精特新梯度培育的第一层（基础层），入库是申报省级专精特新、小巨人的起点。2026 年起新口径将科技型中小企业一并纳入。谁能报：广东省注册、符合中小企业划型、合规经营的企业。怎么过（二选一）：① 满足 4 项直通条件之一（近三年国家级/省级科技奖励、高企等有效期内荣誉、省部级研发机构、新增股权融资 ≥500 万元）；② 评价得分 ≥60 分（创新能力 40 分 + 成长性 30 分 + 专业化 30 分，且创新能力 ≥20 分、成长性及专业化均 ≥15 分）。广东省按《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）组织实施：每年 1 批、线上自评（培育平台 zjtx.miit.gov.cn）、市级审核公示后省厅公告；深圳市自行组织评价并报省厅备案。资质有效期 3 年，到期需重新评价。无中央统一资金奖补。",
@@ -79,17 +81,17 @@ window.ZCT_DATA.guangdong.push(
     applicableIndustries: ["制造业（通用）","电子信息","生物与新医药","航空航天","新材料","新能源与节能","资源与环境","先进制造与自动化","汽车","化工","消费品"],
     conditions: [
       {
-        category: "基础合规",
+        category: "基础合规（39 号文申报条件，须同时满足）",
         items: [
-          { name: "在境内注册、符合中小企业划型", required: true, weight: 3, description: "符合《中小企业划型标准规定》" },
-          { name: "未被列入经营异常名录/严重失信名单", required: true, weight: 3, description: "以国家企业信用信息公示系统、信用中国为准" },
-          { name: "近三年无重大安全/质量/环境事故及偷漏税", required: true, weight: 3, veto: true, autoMatch: "accident", rule: v => v === "无", description: "无违法违规行为（事故部分表单可判，偷漏税需人工核验）" },
-          { name: "产品不属于国家禁止、限制或淘汰类", required: true, weight: 2, description: "主导产品（服务）不在禁止、限制、淘汰类产业目录" }
+          { name: "广东省注册、独立法人、符合中小企业划型", required: true, weight: 3, description: "39 号文申报条件（一）（三）：广东省注册登记、具有独立法人资格的企业；符合《中小企业划型标准规定》（工信部联企业〔2011〕300 号）", basis: { name: "粤工信融资函〔2026〕39 号申报条件（一）（三）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4915/post_4915026.html" }, evidence: "企业营业执照扫描件" },
+          { name: "未被列入经营异常名录/严重失信名单", required: true, weight: 3, description: "39 号文申报条件（二）：未被列入经营异常名录或严重失信主体名单；以国家企业信用信息公示系统、信用中国为准", basis: { name: "粤工信融资函〔2026〕39 号申报条件（二）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4915/post_4915026.html" }, evidence: "国家企业信用信息公示系统（gsxt.gov.cn）查询结果 + 「信用中国」（creditchina.gov.cn）报告" },
+          { name: "近三年无较大安全事故、重大网络安全事件、重大环境违法、严重质量问题", required: true, weight: 3, veto: true, autoMatch: "accident", rule: v => v === "无", description: "39 号文申报条件（二）：近三年未发生较大生产安全事故、重大网络和数据安全事件、重大环境违法行为、严重质量问题、严重违反相关行业管理规定", basis: { name: "粤工信融资函〔2026〕39 号申报条件（二）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4915/post_4915026.html" }, evidence: "「信用中国」报告 + 国家企业信用信息公示系统查询结果 + 事故情况自检说明" },
+          { name: "产品不属于国家禁止、限制或淘汰类", required: true, weight: 2, description: "39 号文申报条件（二）：提供的产品（服务）不属于国家禁止、限制或淘汰类", basis: { name: "粤工信融资函〔2026〕39 号申报条件（二）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4915/post_4915026.html" }, evidence: "主导产品（服务）情况说明" }
         ]
       },
       {
         // 二选一路径结构（paths）：直通条件 或 评分路径，满足其一即过
-        // 依据：工信部企业〔2022〕63 号附件 1《创新型中小企业评价标准》+ 粤工信规字〔2024〕5 号
+        // 依据：工信部企业〔2022〕63 号附件 1《创新型中小企业评价标准》+ 粤工信规字〔2024〕5 号 + 39 号文附件 5/6
         // 2026 年 2 号文第三十条：科技和创新型合并新标准发布前，沿用本评价标准
         category: "评价路径（二选一：直通条件 或 评分 ≥60 分）",
         anyOf: true,
@@ -99,10 +101,10 @@ window.ZCT_DATA.guangdong.push(
             anyOf: true,
             autoMatch: "direct",
             items: [
-              { name: "近三年内获得国家级或省级科技奖励", required: true, weight: 5, description: "以获奖证书落款时间为准（近三年内）" },
-              { name: "高企/国家级技术创新示范企业/知识产权优势(示范)企业等荣誉（有效期内）", required: true, weight: 5, description: "高新技术企业、国家级技术创新示范企业、知识产权优势企业和知识产权示范企业等，均须处于有效期内" },
-              { name: "拥有经认定的省部级以上研发机构", required: true, weight: 5, description: "如重点实验室、工程技术研究中心、企业技术中心等，以认定文件为准" },
-              { name: "近三年新增股权融资（合格机构投资者实缴）≥500 万元", required: true, weight: 5, description: "合格机构投资者的实缴出资额，需验资/审计佐证" }
+              { name: "近三年内获得国家级或省级科技奖励", required: true, weight: 5, description: "63 号文附件 1 直通条件（一）：以获奖证书落款时间为准（近三年内），获奖证书需体现企业名称（39 号文附件 5）", basis: { name: "63 号文附件 1 · 39 号文附件 5", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4915/post_4915026.html" }, evidence: "国家级或省级科技奖励获奖证书（2023 年以来，体现企业名称）" },
+              { name: "高企/国家级技术创新示范企业/知识产权优势(示范)企业等荣誉（有效期内）", required: true, weight: 5, description: "63 号文附件 1 直通条件（二）：高新技术企业、国家级技术创新示范企业、知识产权优势企业和知识产权示范企业等，均须处于有效期内", basis: { name: "63 号文附件 1 · 39 号文附件 5", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4915/post_4915026.html" }, evidence: "有效期内的高新技术企业/国家级技术创新示范企业/知识产权优势（示范）企业证书" },
+              { name: "拥有经认定的省部级以上研发机构", required: true, weight: 5, description: "63 号文附件 1 直通条件（三）：如重点实验室、工程技术研究中心、企业技术中心等，以认定文件为准", basis: { name: "63 号文附件 1 · 39 号文附件 5", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4915/post_4915026.html" }, evidence: "省部级以上研发机构认定文件" },
+              { name: "近三年新增股权融资（合格机构投资者实缴）≥500 万元", required: true, weight: 5, description: "63 号文附件 1 直通条件（四）：2023-2025 年新增股权融资总额 500 万元以上，合格机构投资者的实缴出资额，需验资/审计佐证", basis: { name: "63 号文附件 1 · 39 号文附件 5", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4915/post_4915026.html" }, evidence: "合格机构投资者备案材料 + 投（融）资协议 + 银行到账凭证 + 出让股权不超过 30% 证明材料" }
             ]
           },
           {
@@ -114,25 +116,25 @@ window.ZCT_DATA.guangdong.push(
               { name: "① 有效知识产权数量（与主导产品相关）", part: "创新能力", scoreOptions: [
                   { label: "A Ⅰ类高价值 ≥1 项", score: 20 }, { label: "B 自主研发Ⅰ类 ≥1 项", score: 15 },
                   { label: "C Ⅰ类 ≥1 项", score: 10 }, { label: "D Ⅱ类 ≥1 项", score: 5 }, { label: "E 无", score: 0 }],
-                description: "Ⅰ类=发明(含国防专利)/植物新品种/国家级农作物品种/国家新药/国家一级中药保护品种/集成电路布图设计专有权；转让未满 1 年不计入；Ⅰ类高价值=海外同族专利(G20 成员、新加坡、欧专局经实质审查授权)或维持超 10 年或高额质押融资或获国家科技奖/中国专利奖；Ⅱ类=软著(不含商标)、授权后维持超 2 年的实用新型/外观" },
+                description: "Ⅰ类=发明(含国防专利)/植物新品种/国家级农作物品种/国家新药/国家一级中药保护品种/集成电路布图设计专有权；转让未满 1 年不计入；Ⅰ类高价值=海外同族专利(G20 成员、新加坡、欧专局经实质审查授权)或维持超 10 年或高额质押融资或获国家科技奖/中国专利奖；Ⅱ类=软著(不含商标)、授权后维持超 2 年的实用新型/外观", basis: { name: "63 号文附件 1 评价指标（创新能力）", url: "http://www.fugou.gov.cn/sitesources/fgx/upload/e993ee5bb9db00399e2d13cc4193f965/1700817874037.pdf" }, evidence: "知识产权证书（不含转让未满 1 年；Ⅰ类高价值按 39 号文附件 2 说明提供证明材料）" },
               { name: "② 上年度研发费用占营收比重", part: "创新能力", scoreOptions: [
                   { label: "A ≥5%", score: 20 }, { label: "B 3%-5%", score: 15 }, { label: "C 2%-3%", score: 10 },
                   { label: "D 1%-2%", score: 5 }, { label: "E <1%", score: 0 }],
-                description: "边界值按高分档计分（如恰好 3% 按 B 档 15 分；「以上/以下」含本数）" },
+                description: "边界值按高分档计分（如恰好 3% 按 B 档 15 分；「以上/以下」含本数）", basis: { name: "63 号文附件 1 评价指标（创新能力）", url: "http://www.fugou.gov.cn/sitesources/fgx/upload/e993ee5bb9db00399e2d13cc4193f965/1700817874037.pdf" }, evidence: "2025 年审计报告（财政部注册会计师统一监管平台备案，研发费用口径）" },
               { name: "③ 上年度主营业务收入增长率", part: "成长性", scoreOptions: [
                   { label: "A ≥15%", score: 20 }, { label: "B 10%-15%", score: 15 }, { label: "C 5%-10%", score: 10 },
                   { label: "D 0%-5%", score: 5 }, { label: "E <0%", score: 0 }],
-                description: "=（上年主营收入−上上年主营收入）÷上上年主营收入×100%；边界值按高分档计分" },
+                description: "=（上年主营收入−上上年主营收入）÷上上年主营收入×100%；边界值按高分档计分", basis: { name: "63 号文附件 1 评价指标（成长性）", url: "http://www.fugou.gov.cn/sitesources/fgx/upload/e993ee5bb9db00399e2d13cc4193f965/1700817874037.pdf" }, evidence: "2024、2025 年审计报告（主营业务收入数据）" },
               { name: "④ 上年度资产负债率", part: "成长性", scoreOptions: [
                   { label: "A ≤55%", score: 10 }, { label: "B 55%-75%", score: 5 }, { label: "C >75%", score: 0 }],
-                description: "边界值按高分档计分（恰好 55% 按 A 档 10 分）" },
+                description: "边界值按高分档计分（恰好 55% 按 A 档 10 分）", basis: { name: "63 号文附件 1 评价指标（成长性）", url: "http://www.fugou.gov.cn/sitesources/fgx/upload/e993ee5bb9db00399e2d13cc4193f965/1700817874037.pdf" }, evidence: "2025 年审计报告（资产负债数据）" },
               { name: "⑤ 主导产品所属领域", part: "专业化", scoreOptions: [
                   { label: "A 属《战略性新兴产业分类》", score: 10 }, { label: "B 其他领域", score: 5 }],
-                description: "以《战略性新兴产业分类》目录为准" },
+                description: "以《战略性新兴产业分类》目录为准", basis: { name: "63 号文附件 1 评价指标（专业化）", url: "http://www.fugou.gov.cn/sitesources/fgx/upload/e993ee5bb9db00399e2d13cc4193f965/1700817874037.pdf" }, evidence: "主导产品所属领域情况说明（500 字以内；属战略性新兴产业的对照《战略性新兴产业分类》说明）" },
               { name: "⑥ 上年度主营收入占总营收比重", part: "专业化", scoreOptions: [
                   { label: "A ≥70%", score: 20 }, { label: "B 60%-70%", score: 15 }, { label: "C 55%-60%", score: 10 },
                   { label: "D 50%-55%", score: 5 }, { label: "E <50%", score: 0 }],
-                description: "边界值按高分档计分；主导产品=核心技术发挥重要作用且产品收入合计占营收 >50%" }
+                description: "边界值按高分档计分；主导产品=核心技术发挥重要作用且产品收入合计占营收 >50%", basis: { name: "63 号文附件 1 评价指标（专业化）", url: "http://www.fugou.gov.cn/sitesources/fgx/upload/e993ee5bb9db00399e2d13cc4193f965/1700817874037.pdf" }, evidence: "审计报告（须体现主营业务收入；未体现的需会计师事务所出具主营业务收入专项说明）" }
             ]
           }
         ]
@@ -141,13 +143,33 @@ window.ZCT_DATA.guangdong.push(
         // 已入库企业复核/维护自检（粤工信规字〔2024〕5 号 13-15 条）；初次申报企业可跳过
         category: "资质维护（已入库/复核适用）",
         items: [
-          { name: "资质在 3 年有效期内（到期前重新评价/复核，复核通过再延 3 年）", required: false, weight: 1, description: "创新型中小企业有效期 3 年（粤工信规字〔2024〕5 号第十三条）；复核期间原名单继续有效" },
-          { name: "每年 4 月 30 日前已在培育平台更新企业信息", required: false, weight: 1, description: "未及时更新的取消复核资格（第十四条）" },
-          { name: "重大变化（更名/合并/重组/跨省迁移等）3 个月内已在平台报告", required: false, weight: 1, description: "未及时报告的取消复核资格或直接取消公告/认定（第十五条）" }
+          { name: "资质在 3 年有效期内（到期前重新评价/复核，复核通过再延 3 年）", required: false, weight: 1, description: "创新型中小企业有效期 3 年（粤工信规字〔2024〕5 号第十三条）；复核期间原名单继续有效", basis: { name: "粤工信规字〔2024〕5 号第十三条", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4459/mpost_4459794.html" } },
+          { name: "每年 4 月 30 日前已在培育平台更新企业信息", required: false, weight: 1, description: "未及时更新的取消复核资格（第十四条）", basis: { name: "粤工信规字〔2024〕5 号第十四条", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4459/mpost_4459794.html" } },
+          { name: "重大变化（更名/合并/重组/跨省迁移等）3 个月内已在平台报告", required: false, weight: 1, description: "未及时报告的取消复核资格或直接取消公告/认定（第十五条）", basis: { name: "粤工信规字〔2024〕5 号第十五条", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4459/mpost_4459794.html" } }
         ]
       }
     ],
-    tips: "对初创企业最友好的一层：免费、门槛低。最快路径是查自己是否已具备直通条件——比如高企还在有效期内，直接满足第 ② 项。没有直通条件的，评分路径里「研发费用占比」和「Ⅰ类知识产权」分值最大，初创期就要注意留存研发费用归集台账。广东省每年 1 批（2025 年各地 7 月 15 日前报送推荐，珠海等市企业 6 月初前完成自评），全程线上自评、无需纸质材料；深圳市由深圳市自行组织评价。入库满 3 年需重新评价。"
+    // zct-diag 2026-08-14：申报材料清单（依据 39 号文附件 5/6 官方佐证材料清单；以 PDF 压缩包上传培育平台）
+    materials: [
+      { name: "《创新型中小企业自评表》扫描件（平台填写后下载打印：封面企业名称处加盖公章，真实性声明处法定代表人签字并加盖公章，数据与平台填报一致）", required: true, basis: { name: "粤工信融资函〔2026〕39 号附件 5/6", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4915/post_4915026.html" } },
+      { name: "企业营业执照扫描件", required: true },
+      { name: "2025 年 12 月企业社会保险缴费人数证明", required: true, note: "要求体现社保缴费人数；企业以合并财务报表数据申报的，需提供母公司及合并子公司的证明" },
+      { name: "审计报告（直通路径：2025 年度；评分路径：2024、2025 年度）", required: true, note: "须在财政部注册会计师统一监管平台（acc.mof.gov.cn）备案；评分路径审计报告须体现主营业务收入，未体现的需提供会计师事务所出具的主营业务收入专项说明" },
+      { name: "直通车证明材料（获奖证书 / 有效期内高企等证书 / 研发机构认定文件 / 股权融资证明材料，四项之一）", required: false, note: "满足直通条件时提供（39 号文附件 5）" },
+      { name: "与主导产品相关的有效知识产权佐证材料", required: false, note: "评分路径提供（39 号文附件 6）：知识产权证书，均不含转让未满 1 年；Ⅰ类高价值按通知附件 2 说明提供证明材料" },
+      { name: "主导产品所属领域情况说明", required: false, note: "评分路径提供（500 字以内；属战略性新兴产业的对照《战略性新兴产业分类》说明）" }
+    ],
+    // 2026-08-14 修复：申报要求从诊断条件拆出（流程信息仅作提示展示）
+    diagNotes: [
+      "申报全程线上：登录优质中小企业梯度培育平台（zjtx.miit.gov.cn）完整填写《创新型中小企业自评表》，按 39 号文附件 5/6 清单以 PDF 文件压缩包方式上传佐证材料",
+      "2026 年度申报时间 2026-07-01 至 07-31（已截止），各地审核并官网公示 5 天，各地 8 月 31 日前将推荐名单报送省工信厅；下一批 2027 年度预计 6-7 月",
+      "2023 年第一至第三批创新型中小企业可提出复核申请（2026 年度）；深圳市自行组织评价、结果报省厅备案",
+      "申报免费，不委托任何中介机构办理"
+    ],
+    revisions: [
+      { at: "2026-08-14", note: "zct-diag 细化：全部条件补 basis/evidence（39 号文申报条件 + 63 号文附件 1 + 粤 5 号文），基础合规措辞对齐 39 号文，新增 materials（39 号文附件 5/6 官方佐证材料清单）与 diagNotes", basis: "粤工信融资函〔2026〕39 号" }
+    ],
+    tips: "对初创企业最友好的一层：免费、门槛低。最快路径是查自己是否已具备直通条件——比如高企还在有效期内，直接满足第 ② 项。没有直通条件的，评分路径里「研发费用占比」和「Ⅰ类知识产权」分值最大，初创期就要注意留存研发费用归集台账。广东省每年 1 批（2026 年度 7 月 1 日-31 日线上申报，已截止；2027 年度预计 6-7 月），佐证材料按 39 号文附件 5/6 官方清单以 PDF 压缩包上传培育平台；深圳市由深圳市自行组织评价。入库满 3 年需重新评价。"
   },
   {
     id: "prov",

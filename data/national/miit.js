@@ -114,7 +114,7 @@ window.ZCT_DATA.national.miit.push(
     ],
     tips: "小巨人评审最看重专业化程度和细分市场地位。认定条件按 2 号文附件 2 七项指标逐项核对（营收/主营占比/增长率/负债率/研发/市占率/六基/评价得分）；注意：①「专精特新发展评价得分」由培育平台自动计算，登录 zjtx.miit.gov.cn 查询即可，无需自行测算；②Ⅰ类知识产权不含转入、权利人须排名前三，近三年国家级科技奖励（前三）可豁免本项；③质量认证、自主品牌、研发机构等已不是认定硬条件（复核企业按 63 号文标准仍会考查）；④从事细分市场 3 年无放宽例外。申报完全免费，工信部不委托任何机构办理申报业务，谨防不良中介以「内部渠道」「包过」名义收费（117 号通知明确提醒）。2026 年起材料简化：无需第三方市场占有率证明和国内发明专利证书，如实说明市占率并填报发明专利数量即可，专利数据以国家知识产权局数据为准。财务数据须依据会计师事务所审计报告，并上传财政部注册会计师行业统一监管平台（acc.mof.gov.cn）已赋码电子原件。建议重点准备：营收与研发费用的审计数据口径（研发费用须近两年合计 ≥1200 万元且每年占比 ≥3%）。复核安排：2023 年认定的第五批及复核通过的第二批企业须参加 2026 年度复核，复核按 2022 年 63 号文标准把握（117 号通知）。"
   },
-  {
+    {
     id: "greenfactory",
     order: 3,
     column: "green",
@@ -126,45 +126,80 @@ window.ZCT_DATA.national.miit.push(
     updated: "2026-08-02",
     source: { name: "《绿色工厂梯度培育及管理暂行办法》（工信部节〔2024〕13 号）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_aab179dea60b4b77a05070e796c4c994.html" },
     notice: { name: "《关于公布绿色工厂、绿色工业园区（2025年度）名单的通知》（工信厅节函〔2026〕97 号）", url: "https://www.miit.gov.cn/jgsj/jns/gzdt/art/2026/art_ff0367abfedd4a4d86d56599878d2ff3.html", timeline: "2026-03-18 公布：新培育绿色工厂 2038 家、绿色工业园区 128 家；动态管理调整：132 家绿色工厂移出名单、92 家变更名称。年度节奏（13 号文）：各省 3-6 月组织申报 → 省级 7 月 31 日前推荐 → 国家评审、公示 15 日 → 年底公布名单" },
-    summary: "国家级绿色制造体系的核心荣誉，梯度培育「国家/省/市三级」逐级推荐（13 号文）。无直接资金补贴，但入选后享受环保分级管控豁免、错峰生产豁免、政府优先采购、绿色信贷与绿色债券等融资支持（2025-11-20 两部门绿色金融通知）等政策红利，部分省市另有 20-50 万一次性奖励（如福州 20 万、宿州 30 万、广州黄埔/山东平度 50 万，省市区可叠加，以当地政策为准）。2026 年度起按新版《绿色工厂评价通则》GB/T 36132-2025 评价：新五化指标体系（能源低碳化、资源高效化、生产洁净化、产品绿色化、用地集约化），定量指标权重占比高达 60%，以「基准值/引领值」量化评分。硬门槛：依法取得排污许可证、近三年无较大及以上事故、四体系管理认证（质量/环境/能源/职业健康安全，通则第 6 章）。动态管理有进有出：获评后每年 4 月 15 日前填报动态管理表（13 号文第十六条）。适合能耗管理水平较好的制造业企业。",
+    summary: "国家级绿色制造体系的核心荣誉，梯度培育「国家/省/市三级」逐级推荐（13 号文）。无直接资金补贴，但入选后享受环保分级管控豁免、错峰生产豁免、政府优先采购、绿色信贷与绿色债券等融资支持（2025-11-20 两部门绿色金融通知）等政策红利，部分省市另有 20-50 万一次性奖励（如福州 20 万、宿州 30 万、广州黄埔/山东平度 50 万，省市区可叠加，以当地政策为准）。2026 年度起按新版《绿色工厂评价通则》GB/T 36132-2025 评价：新五化指标体系（能源低碳化、资源高效化、生产洁净化、产品绿色化、用地集约化），定量指标权重占比高达 60%，以「基准值/引领值」量化评分。硬门槛：依法取得排污许可证、近三年无较大及以上事故、四体系管理认证（质量/环境/能源/职业健康安全，通则第 6 章）。申报方式（2025 年度起，390 号文）：登录管理平台（green.miit.gov.cn）自主填报申报表完成自评价，不再要求提交第三方评价报告；须先纳入省层面绿色工厂名单，由省级 7 月 31 日前择优推荐（13 号文第十一、十二条）。动态管理有进有出：获评后每年 4 月 15 日前填报动态管理表（13 号文第十六条），得分连续三年处于后 5% 的移出名单（390 号文）。适合能耗管理水平较好的制造业企业。",
     subsidy: "无直接资金补贴，可享受环保分级管控豁免、错峰生产豁免、政府优先采购、绿色信贷/绿色债券等融资支持（2025-11-20 工信部办公厅与央行办公厅《关于用好绿色金融政策支持绿色工厂建设的通知》）。部分省市有 20-50 万一次性奖励（省市区可叠加，以当地政策为准）。",
     applicableIndustries: ["制造业（通用）","化工","汽车","电子信息","消费品","新能源与节能","资源与环境","新材料"],
     conditions: [
       {
-        category: "基础合规",
+        category: "基础合规（13 号文第七条培育对象 + 第十五条负面清单 + GB/T 36132 基本要求）",
         items: [
-          { name: "依法设立、正常运营的制造业企业", required: true, weight: 3, description: "具有独立法人资格（或视同法人的独立核算单位），从事实际生产（13 号文第七条培育对象条件）", basis: { name: "13 号文第七条（培育对象条件）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_aab179dea60b4b77a05070e796c4c994.html" }, autoMatch: "type", rule: () => true }, // 表单四种企业类型均为依法设立的正常企业，此条件自动通过；未选类型时归为未核验
-          { name: "近三年无较大及以上安全、环保、质量事故", required: true, weight: 3, veto: true, description: "口径按 13 号文第十五条负面清单：近三年发生安全（含网络安全、数据安全）、质量、环境污染等事故，或被列为失信被执行人、列入经营异常名单且未被移出等情形，均不得申请；需提供相应证明", basis: { name: "13 号文第十五条（负面清单）· GB/T 36132 基本要求", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_aab179dea60b4b77a05070e796c4c994.html" }, autoMatch: "accident", rule: v => v === "无" },
-          { name: "污染物排放持续达标", required: true, weight: 3, veto: true, description: "大气/水/噪声排放符合相关标准及区域排放总量控制要求（GB/T 36132 环境排放要求，需提供近一年监测数据）", basis: { name: "GB/T 36132-2025（环境排放要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "emission", rule: v => v === "是" },
-          { name: "依法取得排污许可证", required: true, weight: 2, veto: true, description: "按《排污许可管理条例》（国务院令第 736 号）应领尽领；未取得排污许可证的不得排放污染物（条例第二条）", basis: { name: "《排污许可管理条例》第二条", url: "https://www.gov.cn/zhengce/zhengceku/2021-01/29/content_5583525.htm" } }
+          { name: "依法设立、正常运营的制造业企业", required: true, weight: 3, description: "具有独立法人资格（或视同法人的独立核算单位），从事实际生产（13 号文第七条培育对象条件）", basis: { name: "13 号文第七条（培育对象条件）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_aab179dea60b4b77a05070e796c4c994.html" }, autoMatch: "type", rule: () => true, evidence: "营业执照副本（含统一社会信用代码）" }, // 表单四种企业类型均为依法设立的正常企业，此条件自动通过；未选类型时归为未核验
+          { name: "正常经营生产（未注销、未连续停产 12 个月以上）", required: true, weight: 2, veto: true, description: "13 号文第十五条负面清单（一）：工商注销、连续停产 12 个月以上、被市场监督管理部门列入经营异常名单且未被移出等情形，不得申请、推荐和列入绿色制造名单", basis: { name: "13 号文第十五条（一）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_aab179dea60b4b77a05070e796c4c994.html" }, evidence: "国家企业信用信息公示系统（gsxt.gov.cn）查询结果（登记状态与经营异常名录）" },
+          { name: "近三年无安全、质量、环境污染事故及偷漏税", required: true, weight: 3, veto: true, description: "13 号文第十五条负面清单（二）：近三年发生安全（含网络安全、数据安全）、质量、环境污染等事故以及偷漏税等违法违规行为的不得申报（以「信用中国」和「国家企业信用信息公示系统」为准）", basis: { name: "13 号文第十五条（二）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_aab179dea60b4b77a05070e796c4c994.html" }, autoMatch: "accident", rule: v => v === "无", evidence: "「信用中国」（creditchina.gov.cn）报告 + 国家企业信用信息公示系统（gsxt.gov.cn）查询结果" },
+          { name: "未被列为失信被执行人", required: true, weight: 2, veto: true, description: "13 号文第十五条负面清单（六）：企业被列为失信被执行人的不得申报", basis: { name: "13 号文第十五条（六）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_aab179dea60b4b77a05070e796c4c994.html" }, evidence: "「信用中国」（creditchina.gov.cn）被执行人查询结果" },
+          { name: "未被动态调整出绿色制造名单、督查无严重问题、节能监察整改已完成", required: true, weight: 2, veto: true, description: "13 号文第十五条负面清单（三）（四）（五）：被动态调整出绿色制造名单的、在国务院及有关部委相关督查工作中被发现存在严重问题的、被列入工业节能监察整改名单且未按要求完成整改的，均不得申报", basis: { name: "13 号文第十五条（三）（四）（五）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_aab179dea60b4b77a05070e796c4c994.html" }, evidence: "属地工信部门确认或自检说明（含节能监察整改完成证明，如适用）" },
+          { name: "污染物排放持续达标", required: true, weight: 3, veto: true, description: "大气/水/噪声排放符合相关标准及区域排放总量控制要求（GB/T 36132 环境排放要求，需提供近一年监测数据）", basis: { name: "GB/T 36132-2025（环境排放要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "emission", rule: v => v === "是", evidence: "近一年第三方环境监测报告 + 环评批复及验收文件" },
+          { name: "依法取得排污许可证", required: true, weight: 2, veto: true, description: "按《排污许可管理条例》（国务院令第 736 号）应领尽领；未取得排污许可证的不得排放污染物（条例第二条）", basis: { name: "《排污许可管理条例》第二条", url: "https://www.gov.cn/zhengce/zhengceku/2021-01/29/content_5583525.htm" }, evidence: "排污许可证（正本及副本）" }
         ]
       },
       {
-        category: "管理体系",
+        category: "梯度培育前置（逐级推荐，13 号文第十一、十二条）",
         items: [
-          { name: "已建立质量管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持质量管理体系（GB/T 19001/ISO9001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO9001") },
-          { name: "已建立环境管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持环境管理体系（GB/T 24001/ISO14001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO14001") },
-          { name: "已建立能源管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持能源管理体系（GB/T 23331/ISO50001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO50001") },
-          { name: "已建立职业健康安全管理体系", required: true, weight: 1, description: "GB/T 36132 第 6 章：建立并保持职业健康安全管理体系（ISO45001，OHSAS18001 已于 2021 年停发，有效期内的旧证仍认可）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO45001") || v.includes("OHSAS18001") }
+          { name: "已纳入省级（省层面）绿色工厂名单", required: true, weight: 3, description: "13 号文第十一条、第十二条：国家级绿色工厂由省级工信主管部门从本地区省层面绿色工厂名单中择优推荐（不是企业直接向国家申报）；广东按粤 4 号文第十二、十三条：须先经市级遴选（纳入市级绿色制造名单），由地市每年 6 月 30 日前通过管理平台推荐至省厅", basis: { name: "13 号文第十一、十二条 · 粤工信规字〔2024〕4 号第十二、十三条", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_aab179dea60b4b77a05070e796c4c994.html" }, evidence: "省级绿色工厂名单公告（广东企业另附市级绿色制造名单入选证明）" }
         ]
       },
       {
-        category: "绿色绩效（硬指标）",
+        category: "管理体系（GB/T 36132 第 6 章基本要求）",
         items: [
-          { name: "单位产品综合能耗达到基准值要求", required: true, weight: 3, description: "GB/T 36132-2025 绩效指标（能源低碳化）：实际数据与基准值/引领值对比评分；工业重点领域优先推荐能效达到标杆水平、其他行业优先推荐能源消耗限额标准先进值或 1 级水平（13 号文第十四条）；需提供能源审计报告或节能评估报告", basis: { name: "GB/T 36132-2025（能源低碳化指标）· 13 号文第十四条", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" } },
-          { name: "单位产品取水量达到基准值要求", required: true, weight: 2, description: "GB/T 36132-2025 绩效指标（资源高效化）：以基准值/引领值评分；需提供水平衡测试报告", basis: { name: "GB/T 36132-2025（资源高效化指标）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" } },
-          { name: "主要污染物排放达到基准值要求", required: true, weight: 3, description: "GB/T 36132-2025 绩效指标（生产洁净化）：单位产品主要污染物产生量，以基准值/引领值评分；需提供环评批复 + 验收文件 + 近两年监测报告", basis: { name: "GB/T 36132-2025（生产洁净化指标）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" } },
-          { name: "一般工业固废综合利用率达到行业先进水平", required: true, weight: 2, description: "GB/T 36132-2025 绩效指标（资源高效化）：工业固体废物综合利用率，综合绩效应达到行业先进水平；需提供固废台账和综合利用去向证明", basis: { name: "GB/T 36132-2025（资源高效化指标）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" } }
+          { name: "已建立质量管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持质量管理体系（GB/T 19001/ISO9001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO9001"), evidence: "质量管理体系认证证书（在有效期内）" },
+          { name: "已建立环境管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持环境管理体系（GB/T 24001/ISO14001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO14001"), evidence: "环境管理体系认证证书（在有效期内）" },
+          { name: "已建立能源管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持能源管理体系（GB/T 23331/ISO50001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO50001"), evidence: "能源管理体系认证证书（在有效期内）" },
+          { name: "已建立职业健康安全管理体系", required: true, weight: 1, description: "GB/T 36132 第 6 章：建立并保持职业健康安全管理体系（ISO45001，OHSAS18001 已于 2021 年停发，有效期内的旧证仍认可）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO45001") || v.includes("OHSAS18001"), evidence: "职业健康安全管理体系认证证书（在有效期内，含未到期 OHSAS18001 旧证）" }
         ]
       },
       {
-        category: "绿色设计与采购",
+        category: "绿色绩效（硬指标，基准值/引领值评分）",
         items: [
-          { name: "开展了绿色设计或生态设计", required: false, weight: 2, description: "GB/T 36132 产品要求：宜按 GB/T 24256 开展生态设计（官方为「宜」，属提高性要求）；有绿色设计产品或绿色设计示范企业资质为佳", basis: { name: "GB/T 36132-2025（产品绿色化要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" } },
-          { name: "建立了绿色供应链管理制度", required: false, weight: 1, description: "GB/T 36132 采购要求：绿色采购与供应商管理；对供应商有绿色准入要求", basis: { name: "GB/T 36132-2025（采购与供应链要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" } },
-          { name: "使用清洁能源或可再生能源", required: false, weight: 2, description: "GB/T 36132 基础设施与能源投入要求：可再生能源利用，如分布式光伏、绿电购买合同等", basis: { name: "GB/T 36132-2025（能源低碳化要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" } }
+          { name: "单位产品综合能耗达到基准值要求", required: true, weight: 3, description: "GB/T 36132-2025 绩效指标（能源低碳化）：实际数据与基准值/引领值对比评分；工业重点领域优先推荐能效达到标杆水平、其他行业优先推荐能源消耗限额标准先进值或 1 级水平（13 号文第十四条）；需提供能源审计报告或节能评估报告", basis: { name: "GB/T 36132-2025（能源低碳化指标）· 13 号文第十四条", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "能源审计报告或节能评估报告 + 近一年能耗统计台账（综合能耗与产品产量数据）" },
+          { name: "单位产品取水量达到基准值要求", required: true, weight: 2, description: "GB/T 36132-2025 绩效指标（资源高效化）：以基准值/引领值评分；需提供水平衡测试报告", basis: { name: "GB/T 36132-2025（资源高效化指标）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "水平衡测试报告或近一年用水台账（取水量与产品产量数据）" },
+          { name: "主要污染物排放达到基准值要求", required: true, weight: 3, description: "GB/T 36132-2025 绩效指标（生产洁净化）：单位产品主要污染物产生量，以基准值/引领值评分；需提供环评批复 + 验收文件 + 近两年监测报告", basis: { name: "GB/T 36132-2025（生产洁净化指标）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "环评批复及验收文件 + 近两年第三方监测报告（主要污染物产生量数据）" },
+          { name: "一般工业固废综合利用率达到行业先进水平", required: true, weight: 2, description: "GB/T 36132-2025 绩效指标（资源高效化）：工业固体废物综合利用率，综合绩效应达到行业先进水平；需提供固废台账和综合利用去向证明", basis: { name: "GB/T 36132-2025（资源高效化指标）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "一般工业固废台账 + 综合利用去向证明（处置合同、转移联单等）" }
+        ]
+      },
+      {
+        category: "绿色设计与采购（提高性要求）",
+        items: [
+          { name: "开展了绿色设计或生态设计", required: false, weight: 2, description: "GB/T 36132 产品要求：宜按 GB/T 24256 开展生态设计（官方为「宜」，属提高性要求）；有绿色设计产品或绿色设计示范企业资质为佳", basis: { name: "GB/T 36132-2025（产品绿色化要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "绿色设计产品目录/生态设计相关认证或设计文件" },
+          { name: "建立了绿色供应链管理制度", required: false, weight: 1, description: "GB/T 36132 采购要求：绿色采购与供应商管理；对供应商有绿色准入要求", basis: { name: "GB/T 36132-2025（采购与供应链要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "绿色采购管理制度、供应商绿色准入要求文件" },
+          { name: "使用清洁能源或可再生能源", required: false, weight: 2, description: "GB/T 36132 基础设施与能源投入要求：可再生能源利用，如分布式光伏、绿电购买合同等", basis: { name: "GB/T 36132-2025（能源低碳化要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "分布式光伏并网协议/绿电交易合同/可再生能源证书等" }
         ]
       }
+    ],
+    // zct-diag 2026-08-14：申报材料清单（依据 13 号文第十条 + 工信厅节函〔2025〕390 号；管理平台线上填报，导出纸质版报属地工信部门）
+    materials: [
+      { name: "绿色工厂申报表（管理平台 green.miit.gov.cn 填报，导出上报材料纸质版报送属地工信部门）", required: true, basis: { name: "工信厅节函〔2025〕390 号（东莞转发）", url: "https://im.dg.gov.cn/zwgk/zxgk/content/post_4448066.html" } },
+      { name: "自评价报告（管理平台自主填报完成自评价后生成；2025 年度起不再要求提交第三方评价报告）", required: true, basis: { name: "13 号文第十条 · 工信厅节函〔2025〕390 号（厦门转发）", url: "https://gxj.xm.gov.cn/xwzx/tzgg/202510/t20251011_2959669.htm" } },
+      { name: "企业营业执照副本", required: true },
+      { name: "排污许可证（按《排污许可管理条例》应领尽领）", required: true, basis: { name: "《排污许可管理条例》第二条", url: "https://www.gov.cn/zhengce/zhengceku/2021-01/29/content_5583525.htm" } },
+      { name: "质量/环境/能源/职业健康安全管理体系认证证书（四体系）", required: true, basis: { name: "GB/T 36132-2025（第 6 章管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" } },
+      { name: "能源审计报告或节能评估报告 + 近一年能耗统计台账", required: true },
+      { name: "水平衡测试报告或近一年用水台账", required: true },
+      { name: "环评批复及验收文件 + 近一年第三方环境监测报告", required: true },
+      { name: "一般工业固废台账与综合利用去向证明", required: true },
+      { name: "「信用中国」报告 + 国家企业信用信息公示系统查询结果（负面清单核查）", required: true, basis: { name: "13 号文第十五条（负面清单）", url: "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_aab179dea60b4b77a05070e796c4c994.html" } },
+      { name: "分布式光伏/绿电购买合同等可再生能源佐证", required: false, note: "申报前已建设或购买绿电的提供，属评分加分" },
+      { name: "绿色设计/生态设计、绿色供应链管理佐证", required: false, note: "属提高性要求，有则提供" }
+    ],
+    // 2026-08-14 修复：申报要求从诊断条件拆出（流程信息仅作提示展示）
+    diagNotes: [
+      "申报全程线上：登录工业节能与绿色发展管理平台（green.miit.gov.cn）自主填报申报表并完成自评价，导出上报材料纸质版报送属地工信部门；2025 年度起不再要求提交第三方评价报告（工信厅节函〔2025〕390 号）",
+      "年度节奏：各省 3-6 月组织申报，省级每年 7 月 31 日前将省层面绿色工厂择优推荐至工信部，工信部组织专家评审、公示 15 日（13 号文第十二条）；各地市截止通常早于省级（以属地通知为准）",
+      "53 个重点行业按对应行业评价要求自评价，其他行业按 GB/T 36132-2025 通则自评价（390 号文）",
+      "自愿申报、全程免费；管理平台提供申报政策解读和填报说明视频；不委托任何机构代理申报",
+      "获评后动态管理：每年 4 月 15 日前通过管理平台填报动态管理表（13 号文第十六条），得分连续三年处于后 5% 的从名单移出（390 号文）"
+    ],
+    revisions: [
+      { at: "2026-08-14", note: "zct-diag 细化：负面清单六项拆为可三态判定的独立条件（原合并为一条），新增「已纳入省层面绿色工厂名单」梯度培育前置硬条件，全部条件补 evidence，新增 materials 官方材料清单与 diagNotes；申报方式更新——2025 年度起不再要求第三方评价报告", basis: "13 号文第十条、第十五条 · 工信厅节函〔2025〕390 号" }
     ],
     changesTitle: "2026 新标准变化要点",
     changesNote: "自 2026 年度申报起按新版标准评价，逐条有官方依据",
@@ -173,12 +208,12 @@ window.ZCT_DATA.national.miit.push(
       "指标体系重构：「新五化」一级指标——能源低碳化、资源高效化、生产洁净化、产品绿色化、用地集约化，定量指标权重占比高达 60%",
       "评分方式优化：引入「基准值/引领值」量化评分，企业实际数据与基准值/引领值对比得出分数",
       "梯度培育机制：国家/省/市三级逐级推荐，国家级申报须先纳入省层面名单（13 号文第七条、第十一条）",
-      "评价方式：自评价或委托第三方评价二选一，编写评价报告经管理平台提交（13 号文第十条）",
+      "申报方式调整（2025 年度起）：管理平台自主填报自评价，不再要求提交第三方评价报告（工信厅节函〔2025〕390 号）",
       "时间节奏：省级每年 7 月 31 日前推荐至工信部，国家组织专家评审、公示 15 日（13 号文第十二条）",
-      "动态管理「有进有出」：获评后每年 4 月 15 日前填报动态管理表；2025 年度名单移出 132 家（13 号文第十六条、97 号文）",
+      "动态管理「有进有出」：获评后每年 4 月 15 日前填报动态管理表；得分连续三年后 5% 移出名单；2025 年度名单移出 132 家（13 号文第十六条、97 号文、390 号文）",
       "绿色金融支持：绿色工厂可享绿色信贷、绿色债券等融资支持（2025-11-20 工信部办公厅与央行办公厅通知）"
     ],
-    tips: "2026 年度起按新标准 GB/T 36132-2025 评价：新五化指标体系、定量指标权重占比高达 60%，核心还是一个字——省。对照「基准值/引领值」逐项打分，建议用单位产品指标而非总量指标做申报数据——总量指标会因产能波动被评审老师扣分。评价可自评价（省第三方费用）或委托第三方，经管理平台提交，省级 7 月 31 日前推荐。获评不是终点：每年 4 月 15 日前填报动态管理表，动态调整有进有出（2025 年度名单移出 132 家）。排污许可证是最基础的合规门槛，缺证直接一票否决；质量/环境/能源/职业健康安全四体系管理认证是通则第 6 章基本要求。"
+    tips: "2026 年度起按新标准 GB/T 36132-2025 评价：新五化指标体系、定量指标权重占比高达 60%，核心还是一个字——省。对照「基准值/引领值」逐项打分，建议用单位产品指标而非总量指标做申报数据——总量指标会因产能波动被评审老师扣分。申报前先确认自己是「省层面绿色工厂名单」成员——国家级申报由省级择优推荐，广东企业还要先过市级遴选这一关。申报方式（2025 年度起）：管理平台自主填报自评价即可，不再要求第三方评价报告，评价费用门槛降低。获评不是终点：每年 4 月 15 日前填报动态管理表，得分连续三年后 5% 移出名单（2025 年度名单移出 132 家）。排污许可证是最基础的合规门槛，缺证直接一票否决；质量/环境/能源/职业健康安全四体系管理认证是通则第 6 章基本要求；负面清单六项（未正常经营、事故偷漏税、被动态调整、督查问题、节能监察未整改、失信被执行人）逐项自查，一票否决。"
   },
   {
     id: "battery",
@@ -332,7 +367,7 @@ window.ZCT_DATA.national.miit.push(
     ],
     tips: "这是推荐制专项，不是公开申报：先参加地方预申报摸底，再由地方按名额评审推荐（2026 第三批流程：企业填报 → 市级初审 → 省级评审，省级环节含材料初审、专家评审答辩、实地核查）。奖补绩效挂钩：推进计划投资未达 2000 万元会被收回资金，投资计划务必可兑现——不要为拿奖补虚报投资。申报全程免费，不得委托第三方中介机构代理申报。2024-2026 三年三批次申报已全部结束，入选企业正在三年实施期；下一轮支持以工信部最新通知为准，谨防不良中介借新批次名义行骗。"
   },
-  {
+    {
     id: "kjxqy",
     order: 15,
     column: "zjt",
@@ -349,7 +384,8 @@ window.ZCT_DATA.national.miit.push(
     ],
     updated: "2026-08-03",
     revisions: [
-      { at: "2026-08-14", note: "补全 2026 年度广东 3 批申报批次（6.30 / 7.31 / 8.31，此前仅保留最后一批）", basis: "粤科函产字〔2026〕1055 号" }
+      { at: "2026-08-14", note: "补全 2026 年度广东 3 批申报批次（6.30 / 7.31 / 8.31，此前仅保留最后一批）", basis: "粤科函产字〔2026〕1055 号" },
+      { at: "2026-08-14", note: "zct-diag 细化：原「申报要求」类 4 条流程条件移出 conditions 进 diagNotes（流程信息不计分、不设必选），全部条件补 evidence，新增 materials 与 diagNotes", basis: "160 号文 · 粤科函产字〔2026〕1055 号 · 江科〔2026〕94 号" }
     ],
     source: { name: "《科技型中小企业评价办法》（国科发政〔2017〕115 号，科技部/财政部/税务总局 2017-05-03 印发）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" },
     notice: { name: "《工业和信息化部中小企业局关于开展2026年度科技型中小企业评价工作的通知》（工企业函〔2026〕160 号）", url: "https://zjtx.miit.gov.cn/zxqySy/tzggView?id=0b50ccb0a4584f2b8878a4ec33fd1444", timeline: "2026-06-01 发布；评价系统开放 2026-06-01 至 08-31；广东转发粤科函产字〔2026〕1055 号（2026-06-08）：分 3 批（6-8 月每月一批，批次截止=当月最后一日），10 月 15 日前完成全部批次公示" },
@@ -364,10 +400,10 @@ window.ZCT_DATA.national.miit.push(
       {
         category: "基础合规（115 号文第六条，须同时满足）",
         items: [
-          { name: "境内注册居民企业（不含港澳台）", required: true, weight: 3, description: "第六条（一）：在中国境内（不包括港、澳、台地区）注册的居民企业", basis: { name: "115 号文第六条（一）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
-          { name: "职工 ≤500 人、年销售收入 ≤2 亿、资产总额 ≤2 亿", required: true, weight: 3, autoMatch: "revenue", rule: v => { if (!v) return undefined; if (v === ">4亿") return false; if (v === "1亿-4亿") return undefined; return true; }, description: "第六条（二）：表单营收「>4 亿」明确超 2 亿上限判不满足；「1 亿-4 亿」跨 2 亿分界无法精确判断，需人工核营收与职工数/资产总额（表单无职工数、资产总额字段）", basis: { name: "115 号文第六条（二）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
-          { name: "产品和服务不属于国家禁止、限制、淘汰类", required: true, weight: 2, description: "第六条（三）：企业提供的产品和服务不属于国家规定的禁止、限制和淘汰类", basis: { name: "115 号文第六条（三）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
-          { name: "上一年及当年无重大事故，未列入经营异常/严重违法失信名单", required: true, weight: 3, veto: true, autoMatch: "accident", rule: v => v === "无", description: "第六条（四）：表单口径「近三年无事故」严于办法「上一年及当年」，从严判断；经营异常/严重违法失信名单需人工核验（国家企业信用信息公示系统、信用中国）", basis: { name: "115 号文第六条（四）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } }
+          { name: "境内注册居民企业（不含港澳台）", required: true, weight: 3, description: "第六条（一）：在中国境内（不包括港、澳、台地区）注册的居民企业", basis: { name: "115 号文第六条（一）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" }, evidence: "营业执照副本（统一社会信用代码）" },
+          { name: "职工 ≤500 人、年销售收入 ≤2 亿、资产总额 ≤2 亿", required: true, weight: 3, autoMatch: "revenue", rule: v => { if (!v) return undefined; if (v === ">4亿") return false; if (v === "1亿-4亿") return undefined; return true; }, description: "第六条（二）：表单营收「>4 亿」明确超 2 亿上限判不满足；「1 亿-4 亿」跨 2 亿分界无法精确判断，需人工核营收与职工数/资产总额（表单无职工数、资产总额字段）", basis: { name: "115 号文第六条（二）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" }, evidence: "上年度企业所得税纳税申报表或财务报表（职工人数、销售收入、资产总额数据来源）" },
+          { name: "产品和服务不属于国家禁止、限制、淘汰类", required: true, weight: 2, description: "第六条（三）：企业提供的产品和服务不属于国家规定的禁止、限制和淘汰类", basis: { name: "115 号文第六条（三）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" }, evidence: "主导产品（服务）情况说明（对照国家产业政策目录）" },
+          { name: "上一年及当年无重大事故，未列入经营异常/严重违法失信名单", required: true, weight: 3, veto: true, autoMatch: "accident", rule: v => v === "无", description: "第六条（四）：表单口径「近三年无事故」严于办法「上一年及当年」，从严判断；经营异常/严重违法失信名单需人工核验（国家企业信用信息公示系统、信用中国）", basis: { name: "115 号文第六条（四）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" }, evidence: "「信用中国」（creditchina.gov.cn）报告 + 国家企业信用信息公示系统（gsxt.gov.cn）查询结果" }
         ]
       },
       {
@@ -378,10 +414,10 @@ window.ZCT_DATA.national.miit.push(
             name: "直通确认（第八条，满足下列 4 项任一）",
             anyOf: true,
             items: [
-              { name: "拥有有效期内高新技术企业资格证书", required: true, weight: 5, description: "第八条（一）：企业拥有有效期内高新技术企业资格证书", basis: { name: "115 号文第八条（一）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
-              { name: "近五年内获得国家级科技奖励且排名前三", required: true, weight: 5, description: "第八条（二）：企业近五年内获得过国家级科技奖励，并在获奖单位中排在前三名", basis: { name: "115 号文第八条（二）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
-              { name: "拥有经认定的省部级以上研发机构", required: true, weight: 5, description: "第八条（三）：企业拥有经认定的省部级以上研发机构", basis: { name: "115 号文第八条（三）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
-              { name: "近五年内主导制定国际标准、国家标准或行业标准", required: true, weight: 5, description: "第八条（四）：企业近五年内主导制定过国际标准、国家标准或行业标准", basis: { name: "115 号文第八条（四）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } }
+              { name: "拥有有效期内高新技术企业资格证书", required: true, weight: 5, description: "第八条（一）：企业拥有有效期内高新技术企业资格证书", basis: { name: "115 号文第八条（一）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" }, evidence: "有效期内高新技术企业证书" },
+              { name: "近五年内获得国家级科技奖励且排名前三", required: true, weight: 5, description: "第八条（二）：企业近五年内获得过国家级科技奖励，并在获奖单位中排在前三名", basis: { name: "115 号文第八条（二）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" }, evidence: "国家级科技奖励获奖证书（获奖单位排名前三）" },
+              { name: "拥有经认定的省部级以上研发机构", required: true, weight: 5, description: "第八条（三）：企业拥有经认定的省部级以上研发机构", basis: { name: "115 号文第八条（三）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" }, evidence: "省部级以上研发机构认定文件" },
+              { name: "近五年内主导制定国际标准、国家标准或行业标准", required: true, weight: 5, description: "第八条（四）：企业近五年内主导制定过国际标准、国家标准或行业标准", basis: { name: "115 号文第八条（四）", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" }, evidence: "标准文本（主导制定证明，含起草单位排序）" }
             ]
           },
           {
@@ -393,28 +429,35 @@ window.ZCT_DATA.national.miit.push(
               { name: "① 科技人员占职工总数比例", part: "科技人员", scoreOptions: [
                   { label: "A ≥30%", score: 20 }, { label: "B 25%-30%", score: 16 }, { label: "C 20%-25%", score: 12 },
                   { label: "D 15%-20%", score: 8 }, { label: "E 10%-15%", score: 4 }, { label: "F <10%", score: 0 }],
-                description: "第七条科技人员指标（20 分）：按科技人员数占职工总数比例分档；10% 以下为 0 分（对应第六条（五）「科技人员指标得分不得为 0 分」，即占比须 ≥10%）；科技人员含在职、兼职、临时聘用（兼职/临时聘用全年累计工作 ≥6 个月）", basis: { name: "115 号文第七条科技人员指标", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
+                description: "第七条科技人员指标（20 分）：按科技人员数占职工总数比例分档；10% 以下为 0 分（对应第六条（五）「科技人员指标得分不得为 0 分」，即占比须 ≥10%）；科技人员含在职、兼职、临时聘用（兼职/临时聘用全年累计工作 ≥6 个月）", basis: { name: "115 号文第七条科技人员指标", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" }, evidence: "职工总数与科技人员名单及占比说明（科技人员含在职、兼职、临时聘用，兼职/临时聘用全年累计工作 ≥6 个月）" },
               { name: "② 研发费用占销售收入比例（或占成本费用比例，二选一）", part: "研发投入", scoreOptions: [
                   { label: "A ≥6%", score: 50 }, { label: "B 5%-6%", score: 40 }, { label: "C 4%-5%", score: 30 },
                   { label: "D 3%-4%", score: 20 }, { label: "E 2%-3%", score: 10 }, { label: "F <2%", score: 0 }],
-                description: "第七条研发投入指标（50 分），两项选择其一评分：① 研发费用占销售收入比例（本表档位）；② 研发费用占成本费用支出比例：≥30% 50 分 / 25%-30% 40 / 20%-25% 30 / 15%-20% 20 / 10%-15% 10 / <10% 0，企业可择高分项；研发费用按财税〔2015〕119 号归集", basis: { name: "115 号文第七条研发投入指标", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } },
+                description: "第七条研发投入指标（50 分），两项选择其一评分：① 研发费用占销售收入比例（本表档位）；② 研发费用占成本费用支出比例：≥30% 50 分 / 25%-30% 40 / 20%-25% 30 / 15%-20% 20 / 10%-15% 10 / <10% 0，企业可择高分项；研发费用按财税〔2015〕119 号归集", basis: { name: "115 号文第七条研发投入指标", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" }, evidence: "上年度财务报表或审计报告 + 研发费用辅助核算账目（按财税〔2015〕119 号归集口径）" },
               { name: "③ 与主要产品（服务）相关的有效知识产权", part: "科技成果", scoreOptions: [
                   { label: "A Ⅰ类 ≥1 项", score: 30 }, { label: "B Ⅱ类 ≥4 项", score: 24 }, { label: "C Ⅱ类 3 项", score: 18 },
                   { label: "D Ⅱ类 2 项", score: 12 }, { label: "E Ⅱ类 1 项", score: 6 }, { label: "F 无", score: 0 }],
-                description: "第七条科技成果指标（30 分）：与主要产品（服务）相关、在有效期内、无争议或纠纷的知识产权；Ⅰ类=发明专利、植物新品种、国家级农作物品种、国家新药、国家一级中药保护品种、集成电路布图设计专有权；Ⅱ类=实用新型、外观设计、软件著作权", basis: { name: "115 号文第七条科技成果指标", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" } }
+                description: "第七条科技成果指标（30 分）：与主要产品（服务）相关、在有效期内、无争议或纠纷的知识产权；Ⅰ类=发明专利、植物新品种、国家级农作物品种、国家新药、国家一级中药保护品种、集成电路布图设计专有权；Ⅱ类=实用新型、外观设计、软件著作权", basis: { name: "115 号文第七条科技成果指标", url: "https://most.cn/xxgk/xinxifenlei/fdzdgknr/fgzc/gfxwj/gfxwj2017/201705/t20170510_132709.html" }, evidence: "知识产权证书（与主要产品相关、有效期内、无争议或纠纷）" }
             ]
           }
         ]
-      },
-      {
-        category: "申报要求（160 号文 + 粤科函产字〔2026〕1055 号）",
-        items: [
-          { name: "登录优质中小企业梯度培育平台线上填报", required: true, weight: 2, description: "160 号文：登录 zjtx.miit.gov.cn「科技型中小企业」评价系统注册并填报，上传加盖公章的佐证材料，全流程网上办理、无需书面材料", basis: { name: "160 号文申报要求", url: "https://zjtx.miit.gov.cn/zxqySy/tzggView?id=0b50ccb0a4584f2b8878a4ec33fd1444" } },
-          { name: "不得通过第三方中介机构申报", required: true, weight: 2, description: "160 号文：企业须保证填报内容真实合法有效，不得通过第三方中介机构申报；弄虚作假取消本年度评价资格，三年内不得参与评价", basis: { name: "160 号文有关要求", url: "https://zjtx.miit.gov.cn/zxqySy/tzggView?id=0b50ccb0a4584f2b8878a4ec33fd1444" } },
-          { name: "广东分 3 批填报（批次截止=当月最后一日）", required: true, weight: 1, description: "1055 号转发：广东 6-8 月每月一批，批次截止为当月最后一日（6.30 / 7.31 / 8.31），8 月 31 日全面停止填报；各地市在批次截止后 5 个工作日内完成审核推荐（部分地市提前，如东莞每批当月 25 日）", basis: { name: "粤科函产字〔2026〕1055 号批次安排", url: "https://www.zhuhai.gov.cn/zhskjcxj/content/post_3916026.html" } },
-          { name: "实地核查与集中抽查（省级工作程序）", required: false, weight: 1, description: "160 号文：职工 ≤5 人、知识产权 0、年度研发费用 <10 万、近三年严重违法失信或撤销入库编号、首次参评的企业须在公示前实地核查；每批次入库后按 ≥5% 比例集中随机抽查（抽查原则上不含有效期内创新型/专精特新及持有效高企证书直接确认的企业）", basis: { name: "160 号文核查与抽查", url: "https://zjtx.miit.gov.cn/zxqySy/tzggView?id=0b50ccb0a4584f2b8878a4ec33fd1444" } }
-        ]
       }
+    ],
+    // zct-diag 2026-08-14：申报材料清单（全流程线上办理、无书面材料；按 160 号文/江门 94 号文系统上传要求）
+    materials: [
+      { name: "企业信息与自主评价数据（系统填报：查账征收、研发辅助账、企业研发项目、主要产品及知识产权等）", required: true, basis: { name: "江科〔2026〕94 号（江门转发）", url: "https://www.jiangmen.gov.cn/jmkjj/gkmlpt/content/3/3505/post_3505805.html" } },
+      { name: "加盖企业公章的相关佐证材料（按评价系统指标要求上传 PDF）", required: true, basis: { name: "粤科函产字〔2026〕1055 号（珠海转发）", url: "https://www.zhuhai.gov.cn/zhskjcxj/content/post_3916026.html" } },
+      { name: "盖章封面（自评得分 ≥60 分后上传并上报）", required: true },
+      { name: "直通条件佐证（高企证书 / 国家级科技奖励 / 省部级以上研发机构认定 / 主导制定标准证明）", required: false, note: "走直通确认路径时提供（满足 4 项任一）" },
+      { name: "知识产权资料（系统「获取知识产权信息」或人工新增上传）", required: true, note: "系统无法自动获取时须人工上传证书" }
+    ],
+    // 2026-08-14 修复：申报要求从诊断条件拆出（流程信息仅作提示展示，不进 conditions、不计分）
+    diagNotes: [
+      "2026 年度系统开放 2026-06-01 至 08-31；广东分 3 批（6-8 月每月一批，批次截止=当月最后一日），8 月 31 日全面停止填报（1055 号文）",
+      "登录优质中小企业梯度培育平台（zjtx.miit.gov.cn）「科技型中小企业」评价系统注册并填报，上传加盖公章的相关佐证材料，全流程网上办理、无需书面材料（160 号文）",
+      "不得通过第三方中介机构申报；弄虚作假取消本年度评价资格、三年内不得参与评价（160 号文）",
+      "实地核查 5 种情形（公示前须核查）：职工 ≤5 人、知识产权 0、年度研发费用 <10 万、近三年严重违法失信或撤销入库编号、首次参评；每批次按 ≥5% 比例集中随机抽查（160 号文）",
+      "入库编号有效期一年：每年 3 月底前在系统更新信息并重新自主评价（115 号办法第十一条）"
     ],
     changesTitle: "2026 年度评价要点",
     changesNote: "依据工企业函〔2026〕160 号 + 广东转发粤科函产字〔2026〕1055 号；评价条件仍按 2017 年 115 号办法执行，无门槛变化",
