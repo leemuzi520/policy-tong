@@ -1203,11 +1203,36 @@ body {
         <option value="deadline">按截止日升序</option>
       </select>
     </div>
+    <!-- Phase 3.4 多政策对比（2026-08-14）：2-3 条政策条件差异并排 -->
+    <div class="card no-print" id="compareBar" style="margin-bottom:10px;padding:8px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;" hidden>
+      <span id="compareCount" style="font-size:13px;font-weight:600;">已选 0 条政策</span>
+      <button class="btn btn-primary" onclick="showCompare()" style="padding:3px 14px;font-size:13px;">开始对比</button>
+      <button class="btn" onclick="clearCompare()" style="padding:3px 14px;font-size:13px;">清空</button>
+      <span style="font-size:12px;color:var(--text-secondary);">勾选 2-3 条政策，并排查看条件差异（必选/权重/可否自动判断）</span>
+    </div>
     <div id="policyList"></div>
   </section>
 
   <!-- ========== 标签2：智能匹配 ========== -->
   <section class="tab-panel" id="tab-match">
+    <!-- Phase 3.1 多企业档案（2026-08-14）：多画像保存/切换；底层仍走 matchForm2 同步，档案为上层容器 -->
+    <div class="card no-print" style="margin-bottom:14px;">
+      <div class="card-header">企业档案 — 保存多个企业画像，切换即载入</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;">
+        <select id="companySelect" style="flex:1;min-width:160px;" aria-label="切换企业档案"></select>
+        <button class="btn" onclick="newCompany()" style="padding:4px 12px;font-size:13px;">＋ 新建</button>
+        <button class="btn" onclick="renameCompany()" style="padding:4px 12px;font-size:13px;">重命名</button>
+        <button class="btn" onclick="deleteCompany()" style="padding:4px 12px;font-size:13px;">删除</button>
+        <button class="btn" onclick="exportCompany()" style="padding:4px 12px;font-size:13px;">导出</button>
+        <button class="btn" onclick="importCompany()" style="padding:4px 12px;font-size:13px;">导入</button>
+        <input type="file" id="companyImportInput" accept=".json,application/json" style="display:none;" onchange="importCompanyFile(this.files[0])">
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;">档案随企业画像自动保存（本浏览器本地存储）。切换档案会保存当前填写内容并载入目标企业；「默认企业」为首次使用时的档案，不可删除。</div>
+      <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px;">
+        <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">📋 诊断历史（当前企业）</div>
+        <div id="companyHistory"></div>
+      </div>
+    </div>
     <div class="card no-print" style="margin-bottom:14px;">
       <div class="card-header">✨ 渐进式问卷 — 只答关键问题，快速找到可申报政策</div>
       <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">先回答几个核心问题（行业/规模/成立年限），系统会先淘汰一批政策，再追问「剩余政策最需要的字段」——通常 5-8 个问题即可收敛（设计参考 FörderFunke 自适应问卷）。想一次填完，可直接用下方完整表单。</div>

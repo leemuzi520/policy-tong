@@ -84,9 +84,110 @@ function timingTagHTML(p) {
   return `<span class="tag" style="background:${bg};color:${color};border:1px solid ${color};" title="距最近未截止批次 ${t.date} 剩 ${t.days} 天">距截止 ${t.days} 天</span>`;
 }
 
+// ============================================================
+// Phase 3.4 多政策对比（2026-08-14）：2-3 条政策条件差异并排
+// 场景：高企 vs 小巨人研发费用比例不同 → 一眼判断优先申报哪个
+// 聚合口径：条件项名对齐（paths 子项带路径前缀区分），同名同行、不同名各自成行
+// ============================================================
+let compareSel = new Set();
+
+function toggleCompare(id, on) {
+  if (on) {
+    if (compareSel.size >= 3) {
+      alert('最多同时对比 3 条政策');
+      const cb = document.querySelector(`.compare-pick[data-policy="${id}"]`);
+      if (cb) cb.checked = false;
+      return;
+    }
+    compareSel.add(id);
+  } else {
+    compareSel.delete(id);
+  }
+  renderCompareBar();
+}
+
+function clearCompare() {
+  compareSel.clear();
+  document.querySelectorAll('.compare-pick').forEach(cb => { cb.checked = false; });
+  renderCompareBar();
+}
+
+function renderCompareBar() {
+  const bar = $('#compareBar');
+  if (!bar) return;
+  bar.hidden = compareSel.size === 0;
+  const cnt = $('#compareCount');
+  if (cnt) cnt.textContent = `已选 ${compareSel.size} 条政策`;
+}
+
+function showCompare() {
+  if (compareSel.size < 2) { alert('请至少选择 2 条政策进行对比'); return; }
+  const policies = [...compareSel].map(id => POLICIES.find(p => p.id === id)).filter(Boolean);
+  // 行构建：条件项名聚合（同路径前缀 + 同名同行）
+  const rows = [];
+  const seen = new Map();
+  policies.forEach((p, pi) => {
+    const items = [];
+    p.conditions.forEach(cat => {
+      if (cat.paths) cat.paths.forEach(path => path.items.forEach(it => items.push({ ...it, pathName: path.name })));
+      else cat.items.forEach(it => items.push({ ...it, pathName: '' }));
+    });
+    items.forEach(it => {
+      const key = it.pathName ? `${it.pathName} · ${it.name}` : it.name;
+      if (!seen.has(key)) {
+        seen.set(key, rows.length);
+        rows.push({ key, name: it.name, pathName: it.pathName, cells: new Array(policies.length).fill(null) });
+      }
+      rows[seen.get(key)].cells[pi] = it;
+    });
+  });
+  const cellHTML = c => {
+    const tag = c.required ? '<span style="color:var(--danger);font-size:11px;font-weight:600;">[必选]</span>' : '<span style="color:var(--warning);font-size:11px;">[可选]</span>';
+    const w = c.weight ? ` · 权重 ${c.weight}` : '';
+    const auto = c.autoMatch ? '可自动判断' : '需人工核验';
+    const desc = c.description || '';
+    return `<td style="font-size:12px;line-height:1.7;vertical-align:top;">${tag}${w}<div style="font-size:11px;color:var(--text-secondary);">${auto}</div><div style="color:var(--text-secondary);font-size:11.5px;margin-top:2px;">${desc.slice(0, 60)}${desc.length > 60 ? '…' : ''}</div></td>`;
+  };
+  const container = $('#policyList');
+  container.innerHTML = `
+    <div class="compare-view">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+        <div style="font-weight:600;">政策条件对比：${policies.map(p => p.name).join('  vs  ')}</div>
+        <button class="btn no-print" onclick="backToBrowse()">← 返回政策库</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);">
+          <thead><tr>
+            <th style="padding:8px 10px;text-align:left;border:1px solid var(--border);background:var(--bg);font-size:12.5px;min-width:150px;">条件</th>
+            ${policies.map(p => `<th style="padding:8px 10px;text-align:left;border:1px solid var(--border);background:var(--bg);font-size:12.5px;min-width:180px;">${p.name}</th>`).join('')}
+          </tr></thead>
+          <tbody>
+            ${rows.map(r => `<tr>
+              <td style="padding:6px 10px;border:1px solid var(--border);font-size:12.5px;vertical-align:top;">${r.pathName ? `<div style="font-size:11px;color:var(--text-secondary);">${r.pathName}</div>` : ''}${r.name}</td>
+              ${r.cells.map(c => c ? cellHTML(c) : '<td style="padding:6px 10px;border:1px solid var(--border);color:var(--text-secondary);font-size:12px;vertical-align:top;">—</td>').join('')}
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="no-print" style="margin-top:12px;">
+        <button class="btn btn-primary" onclick="window.print()">打印 / 导出 PDF 对比</button>
+        <span style="font-size:12px;color:var(--text-secondary);margin-left:8px;">必选 = 不满足即无申报资格；权重反映条件重要程度；「可自动判断」= 系统可用企业画像直接核验。</span>
+      </div>
+    </div>`;
+}
+
+function backToBrowse() {
+  renderPolicyList();
+}
+
 function policyCardHtml(p) {
   return `
     <div class="policy-card" id="card-${p.id}">
+      <div style="display:flex;justify-content:flex-end;padding:4px 10px 0;">
+        <label style="font-size:12px;cursor:pointer;color:var(--text-secondary);" onclick="event.stopPropagation()">
+          <input type="checkbox" class="compare-pick" data-policy="${p.id}" ${compareSel.has(p.id) ? 'checked' : ''} onchange="toggleCompare('${p.id}', this.checked)"> 加入对比
+        </label>
+      </div>
       <div class="policy-card-header" onclick="togglePolicy('${p.id}')">
         <div>
           <div class="policy-name">${p.name}</div>
@@ -321,6 +422,12 @@ document.addEventListener('DOMContentLoaded', () => {
   restoreMatchState();
   restoreDiagState();
   restorePlanState();
+  // Phase 3.1 企业档案：首启初始化（默认企业 profile = matchForm2 现值）；上次会话在企业 B 则载入其画像
+  initCompanies();
+  renderCompanyBar();
+  renderCompanyHistory();
+  const cc = currentCompany();
+  if (cc.id !== DEFAULT_COMPANY_ID) applyProfileToMatchForm(cc.profile);
   // 字段联动：加载后补一次，规划表单空字段自动带入匹配表单已填值（跨刷新也生效）
   syncMatchToPlan();
   // Phase 3.2：匹配表单已填值带入路线图像画表单（空字段，不覆盖用户已填）
@@ -936,6 +1043,8 @@ function generateReport(policyId) {
   `;
 
   $('#diagnosisReport').scrollIntoView({ behavior: 'smooth' });
+  // Phase 3.1 诊断历史：报告生成自动入档当前企业（同政策同日覆盖）
+  recordDiagnosisHistory(policy, { tier, score, metRequired, totalRequired });
 }
 
 // ============================================================
@@ -1077,7 +1186,237 @@ function storageSet(key, val) { try { localStorage.setItem(key, val); } catch (e
 function storageRemove(key) { try { localStorage.removeItem(key); } catch (e) { /* 同上 */ } }
 
 function saveMatchState() {
-  storageSet(LS_MATCH, JSON.stringify(getMatchProfile()));
+  const p = getMatchProfile();
+  storageSet(LS_MATCH, JSON.stringify(p));
+  // Phase 3.1 企业档案：表单变更同步回当前企业画像（档案为上层容器，底层仍走 matchForm2）
+  const st = getCompaniesState();
+  if (st) {
+    const c = st.companies.find(x => x.id === st.currentId);
+    if (c) { c.profile = p; saveCompanies(st); }
+  }
+}
+
+// ============================================================
+// Phase 3.1 多企业档案（2026-08-14）：多画像保存/切换
+// 设计：档案 = 上层容器（localStorage zct_v1_companies），表单持久化仍走 matchForm2；
+//       切换档案 = 保存当前表单 → 载入目标画像 → 同步规划/路线图表单
+// ============================================================
+const LS_COMPANIES = 'zct_v1_companies'; // { companies: [{id,name,profile,history}], currentId }
+const DEFAULT_COMPANY_ID = 'default';
+
+function getCompaniesState() {
+  try {
+    const s = JSON.parse(storageGet(LS_COMPANIES) || 'null');
+    if (s && Array.isArray(s.companies) && s.companies.length) return s;
+  } catch (e) { /* 损坏数据 → 重新初始化 */ }
+  return null;
+}
+
+// 首启初始化：默认企业 = 历史单企业模式迁移（profile 取 matchForm2 现值）
+function initCompanies() {
+  if (getCompaniesState()) return getCompaniesState();
+  let profile = {};
+  try { profile = JSON.parse(storageGet(LS_MATCH) || 'null') || {}; } catch (e) { /* 忽略损坏值 */ }
+  const st = { companies: [{ id: DEFAULT_COMPANY_ID, name: '默认企业', profile, history: [] }], currentId: DEFAULT_COMPANY_ID };
+  storageSet(LS_COMPANIES, JSON.stringify(st));
+  return st;
+}
+
+function companiesState() { return getCompaniesState() || initCompanies(); }
+
+function currentCompany() {
+  const st = companiesState();
+  return st.companies.find(c => c.id === st.currentId) || st.companies[0];
+}
+
+function saveCompanies(st) { storageSet(LS_COMPANIES, JSON.stringify(st)); }
+
+// 把画像写入匹配表单（切换企业/恢复用；level 数字还原为字符串，certs 复选）
+function applyProfileToMatchForm(profile) {
+  const p = profile || {};
+  Object.keys(MATCH_FIELD_IDS).forEach(key => {
+    const el = document.getElementById(MATCH_FIELD_IDS[key]);
+    if (el) el.value = p[key] !== undefined ? String(p[key]) : '';
+  });
+  document.querySelectorAll('#tab-match .mCert').forEach(cb => { cb.checked = false; });
+  (p.certs || []).forEach(c => {
+    const cb = document.querySelector(`#tab-match .mCert[value="${c}"]`);
+    if (cb) cb.checked = true;
+  });
+}
+
+// 匹配表单值全量同步到路线图表单（路线图不单独保存，与匹配同键联动；切换企业时整体替换）
+function syncRoadmapForm() {
+  (window.ZCT_FIELDS.FIELDS).filter(f => f.match && f.type !== 'checkbox').forEach(f => {
+    const mEl = document.getElementById(f.id);
+    const rEl = document.getElementById('rm' + f.id);
+    if (mEl && rEl) rEl.value = mEl.value;
+  });
+  document.querySelectorAll('#tab-roadmap .mCert').forEach(cb => { cb.checked = false; });
+  document.querySelectorAll('#tab-match .mCert:checked').forEach(cb => {
+    const rcb = document.querySelector(`#tab-roadmap .mCert[value="${cb.value}"]`);
+    if (rcb) rcb.checked = true;
+  });
+}
+
+function renderCompanyBar() {
+  const sel = $('#companySelect');
+  if (!sel) return;
+  const st = companiesState();
+  sel.innerHTML = st.companies.map(c =>
+    `<option value="${c.id}" ${c.id === st.currentId ? 'selected' : ''}>${c.name}${c.id === DEFAULT_COMPANY_ID ? '（默认）' : ''}</option>`).join('');
+}
+
+function switchCompany(id) {
+  const st = companiesState();
+  if (!st.companies.some(c => c.id === id) || id === st.currentId) return;
+  const old = st.companies.find(c => c.id === st.currentId);
+  if (old) old.profile = getMatchProfile(); // 保存当前表单到旧企业
+  st.currentId = id;
+  saveCompanies(st);
+  applyProfileToMatchForm(currentCompany().profile);
+  saveMatchState(); // 同步 matchForm2（切换后双存储一致，刷新恢复不串企业）
+  syncMatchToPlan();
+  syncRoadmapForm();
+  renderCompanyBar();
+  renderCompanyHistory();
+}
+
+// 新建 = 以当前表单为起点（复制式，可重置）；默认企业不可删除
+function newCompany() {
+  const st = companiesState();
+  const id = 'c' + Date.now().toString(36);
+  st.companies.push({ id, name: `企业 ${st.companies.length + 1}`, profile: getMatchProfile(), history: [] });
+  st.currentId = id;
+  saveCompanies(st);
+  renderCompanyBar();
+  renderCompanyHistory();
+}
+
+function renameCompany() {
+  const st = companiesState();
+  const c = st.companies.find(x => x.id === st.currentId);
+  if (!c) return;
+  const name = prompt('企业档案名称：', c.name);
+  if (name === null || !name.trim()) return;
+  c.name = name.trim();
+  saveCompanies(st);
+  renderCompanyBar();
+  renderCompanyHistory();
+}
+
+function deleteCompany() {
+  const st = companiesState();
+  const c = st.companies.find(x => x.id === st.currentId);
+  if (!c) return;
+  if (c.id === DEFAULT_COMPANY_ID) { alert('「默认企业」为首次使用档案，不可删除'); return; }
+  if (!confirm(`删除档案「${c.name}」？该企业画像与诊断历史将一并删除。`)) return;
+  st.companies = st.companies.filter(x => x.id !== c.id);
+  st.currentId = DEFAULT_COMPANY_ID;
+  saveCompanies(st);
+  applyProfileToMatchForm(currentCompany().profile);
+  saveMatchState(); // 同步 matchForm2（删除后回到默认企业，双存储一致）
+  syncMatchToPlan();
+  syncRoadmapForm();
+  renderCompanyBar();
+  renderCompanyHistory();
+}
+
+// ============================================================
+// Phase 3.1 档案导入导出（2026-08-14）：JSON 备份/迁移
+// 无后端约束：导出 = Blob 下载（file:// 可用）；导入 = FileReader（无需 fetch）
+// ============================================================
+function getExportPayload() {
+  return {
+    app: '政策通',
+    type: 'zct-companies',
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    companies: companiesState().companies
+  };
+}
+
+function exportCompany() {
+  const payload = getExportPayload();
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `政策通企业档案-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => { try { URL.revokeObjectURL(a.href); } catch (e) { /* 忽略 */ } }, 1000);
+}
+
+function importCompany() {
+  const input = document.getElementById('companyImportInput');
+  if (input) input.click();
+}
+
+// 导入合并策略：跳过本机「默认企业」；id 冲突的导入项重新生成 id（保留名称与画像）
+function importCompanyFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    let data;
+    try { data = JSON.parse(reader.result); } catch (e) { alert('导入失败：JSON 解析错误，请选择政策通导出的企业档案文件'); return; }
+    if (!data || data.type !== 'zct-companies' || !Array.isArray(data.companies)) {
+      alert('导入失败：文件格式不正确（应为政策通「导出」生成的企业档案 JSON）');
+      return;
+    }
+    const st = companiesState();
+    const existIds = new Set(st.companies.map(c => c.id));
+    let added = 0, skipped = 0, invalid = 0;
+    data.companies.forEach(c => {
+      if (!c || typeof c !== 'object' || !c.name || typeof c.profile !== 'object' || c.profile === null) { invalid++; return; }
+      if (c.id === DEFAULT_COMPANY_ID) { skipped++; return; } // 不覆盖本机默认企业
+      const id = existIds.has(c.id) ? 'c' + Date.now().toString(36) + added : c.id;
+      existIds.add(id);
+      st.companies.push({ id, name: c.name, profile: c.profile, history: Array.isArray(c.history) ? c.history : [] });
+      added++;
+    });
+    if (added > 0) {
+      saveCompanies(st);
+      renderCompanyBar();
+      renderCompanyHistory();
+    }
+    alert(`导入完成：新增 ${added} 家企业${skipped ? `，跳过默认企业 ${skipped} 条` : ''}${invalid ? `，忽略格式无效 ${invalid} 条` : ''}。导入的档案已合并到当前列表，可在下拉中切换。`);
+  };
+  reader.readAsText(file);
+}
+
+// ============================================================
+// Phase 3.1 诊断历史关联（2026-08-14）：诊断报告生成自动入档 + 企业历史回看
+// 快照存当前企业 history（同政策同日覆盖，上限 50 条）；「回看」跳转自诊断（勾选状态由 diag4 恢复）
+// ============================================================
+function recordDiagnosisHistory(policy, snapshot) {
+  const st = companiesState();
+  const c = st.companies.find(x => x.id === st.currentId);
+  if (!c) return;
+  if (!Array.isArray(c.history)) c.history = [];
+  const today = new Date().toISOString().slice(0, 10);
+  const entry = { policyId: policy.id, policyName: policy.name, at: today, ...snapshot };
+  const idx = c.history.findIndex(h => h.policyId === policy.id && h.at === today);
+  if (idx >= 0) c.history[idx] = entry; else c.history.push(entry);
+  if (c.history.length > 50) c.history = c.history.slice(-50);
+  saveCompanies(st);
+  renderCompanyHistory();
+}
+
+function renderCompanyHistory() {
+  const box = $('#companyHistory');
+  if (!box) return;
+  const c = currentCompany();
+  const hs = (c.history || []).slice().reverse();
+  if (!hs.length) {
+    box.innerHTML = '<div style="font-size:12px;color:var(--text-secondary);">暂无诊断记录——生成诊断报告后自动保存到当前企业。</div>';
+    return;
+  }
+  box.innerHTML = hs.map(h => `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--border);font-size:12.5px;flex-wrap:wrap;">
+      <span><button class="btn" style="padding:1px 8px;font-size:11px;" onclick="goDiag('${h.policyId}')">回看</button> ${h.policyName}</span>
+      <span style="color:var(--text-secondary);">${h.at} · 达标度 <strong>${h.score}%</strong> · ${h.tier}</span>
+    </div>`).join('');
 }
 
 function restoreMatchState() {
