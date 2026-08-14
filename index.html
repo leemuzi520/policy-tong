@@ -1205,7 +1205,7 @@ body {
         <button class="btn" onclick="importCompany()" style="padding:4px 12px;font-size:13px;">导入</button>
         <input type="file" id="companyImportInput" accept=".json,application/json" style="display:none;" onchange="importCompanyFile(this.files[0])">
       </div>
-      <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;">档案随企业画像自动保存（本浏览器本地存储）。切换档案会保存当前填写内容并载入目标企业；「默认企业」为首次使用时的档案，不可删除。</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:6px;">档案随企业画像自动保存（本浏览器本地存储）。切换档案会保存当前填写内容并载入目标企业；「默认企业」为首次使用时的档案，不可删除。<span id="profileCount" style="font-weight:600;color:var(--text-primary);"></span></div>
       <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px;">
         <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;">📋 诊断历史（当前企业）</div>
         <div id="companyHistory"></div>
@@ -1213,7 +1213,7 @@ body {
     </div>
     <div class="card no-print" style="margin-bottom:14px;">
       <div class="card-header">✨ 渐进式问卷 — 只答关键问题，快速找到可申报政策</div>
-      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">先回答几个核心问题（行业/规模/成立年限），系统会先淘汰一批政策，再追问「剩余政策最需要的字段」——通常 5-8 个问题即可收敛（设计参考 FörderFunke 自适应问卷）。想一次填完，可直接用下方完整表单。</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">先回答几个核心问题（行业/规模/成立年限），系统会先淘汰一批政策，再追问「剩余政策最需要的字段」——通常 8-12 个问题即可收敛（答不出的专业指标可选「不清楚」，按未核实处理）。想一次填完，可直接用下方完整表单。</div>
       <button class="btn btn-primary" onclick="renderProgressive()" style="margin-right:8px;">开始渐进式问卷</button>
       <button class="btn" onclick="progReset()">重置问卷</button>
       <div id="progressiveBox"></div>

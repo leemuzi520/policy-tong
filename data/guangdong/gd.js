@@ -186,14 +186,14 @@ window.ZCT_DATA.guangdong.push(
       {
         category: "认定条件（须同时满足，工信部企业〔2026〕2 号）",
         items: [
-          { name: "已获科技和创新型中小企业称号（3 年有效期内）", required: true, weight: 3, autoMatch: "level", rule: v => v >= 1, description: "2 号文第一层「科技和创新型中小企业」；合并新标准未发布前，已按原标准认定的创新型中小企业在有效期内继续有效" },
-          { name: "截至上年末从事特定细分市场 ≥3 年", required: true, weight: 3, autoMatch: "segYears", rule: v => v === "3-5年" || v === "5-10年" || v === ">10年", description: "2 号文由原「2 年以上」提高至 3 年；以从事细分市场的实际年限计，非成立年限" },
+          { name: "已获科技和创新型中小企业称号（3 年有效期内）", required: true, weight: 3, autoMatch: "level", rule: v => v >= 1, description: "2 号文第一层「科技和创新型中小企业」；合并新标准未发布前，已按原标准认定的创新型中小企业在有效期内继续有效" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }},
+          { name: "截至上年末从事特定细分市场 ≥3 年", required: true, weight: 3, autoMatch: "segYears", rule: v => v === "3-5年" || v === "5-10年" || v === ">10年", description: "2 号文由原「2 年以上」提高至 3 年；以从事细分市场的实际年限计，非成立年限" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }},
           { name: "上年度营业收入 ≥1500 万元，或近两年新增股权投资 ≥2000 万元", required: true, weight: 3, autoMatch: "revenue", rule: (v, profile) => { if (v === "2000万-5000万" || v === "5000万-1亿" || v === "1亿-4亿" || v === ">4亿") return true; if (profile.equity === "≥2000万") return true; if (v === "<500万" || profile.equity === "<2000万") return false; return undefined; }, description: "不足 1500 万但近两年新增股权投资（合格机构投资者实缴额）总额 ≥2000 万元的除外；「500万-2000万」档跨 1500 万线，选该档且无股权融资豁免时从严按未达标计" },
-          { name: "主营业务收入占比 ≥80%", required: true, weight: 2, autoMatch: "mainRatio", rule: v => v === "≥90%" ? true : v === "80%-90%" ? true : v === "<80%" ? false : undefined, description: "上年度主营业务收入总额占营业收入总额比重，2 号文新增硬条件" },
-          { name: "上年末资产负债率 ≤80%", required: true, weight: 2, autoMatch: "debt", rule: v => v === "≤55%" || v === "55%-75%" || v === "75%-80%", description: "2 号文新增硬条件" },
+          { name: "主营业务收入占比 ≥80%", required: true, weight: 2, autoMatch: "mainRatio", rule: v => v === "≥90%" ? true : v === "80%-90%" ? true : v === "<80%" ? false : undefined, description: "上年度主营业务收入总额占营业收入总额比重，2 号文新增硬条件" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }},
+          { name: "上年末资产负债率 ≤80%", required: true, weight: 2, autoMatch: "debt", rule: v => v === "≤55%" || v === "55%-75%" || v === "75%-80%", description: "2 号文新增硬条件" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }},
           { name: "近两年研发费用均 ≥100 万元且每年占营收比重 ≥3%", required: true, weight: 3, autoMatch: "rd", rule: (v, profile) => v === "<3%" ? false : (profile.rdTotal === "≥1200万" || profile.rdTotal === "100万-1200万") ? true : profile.rdTotal === "<100万" ? false : undefined, description: "两年每年均须达标（原标准仅查上年度）；金额与占比双重要求，以审计报告为准" },
           { name: "主导产品市场占有率较为靠前", required: true, weight: 2, autoMatch: "marketShare", rule: v => v === "全球前3" || v === "国内前三或≥10%" || v === "较为靠前", description: "在国内或国际细分市场占有率较为靠前，享有一定知名度、影响力；无统一量化标准，以评审认定为准，需如实说明并提供佐证" },
-          { name: "专精特新发展评价得分 ≥50 分", required: true, weight: 3, autoMatch: "eval", rule: v => v === "未查询" ? undefined : v === "≥60分" || v === "50-60分", description: "由培育平台按《中小企业专精特新发展评价指标体系》（工信厅企业〔2024〕75 号）自动计算，登录 zjtx.miit.gov.cn 查询本年度得分，无需自行测算；未查询前此项无法核验" }
+          { name: "专精特新发展评价得分 ≥50 分", required: true, weight: 3, autoMatch: "eval", rule: v => v === "未查询" ? undefined : v === "≥60分" || v === "50-60分", description: "由培育平台按《中小企业专精特新发展评价指标体系》（工信厅企业〔2024〕75 号）自动计算，登录 zjtx.miit.gov.cn 查询本年度得分，无需自行测算；未查询前此项无法核验" , basis: { name: "《中小企业专精特新发展评价指标体系》（工信厅企业〔2024〕75 号）", url: "http://gxj.xinxiang.gov.cn/zwgk/public/6638681/9530434.html" }}
         ]
       },
       {
@@ -224,7 +224,7 @@ window.ZCT_DATA.guangdong.push(
         category: "申报要求",
         items: [
           { name: "线上填报 + 上传佐证 PDF", required: true, weight: 1, description: "登录优质中小企业梯度培育平台（zjtx.miit.gov.cn）填报；审计报告须在财政部注册会计师行业统一监管平台报备赋码" },
-          { name: "申报批次以省厅年度通知为准", required: true, weight: 1, description: "2026 年度广东省专精特新认定通知尚未发布；2026 年小巨人认定已按 2 号文新标准执行（粤工信融资函〔2026〕9 号）" }
+          { name: "申报批次以省厅年度通知为准", required: true, weight: 1, description: "2026 年度广东省专精特新认定通知尚未发布；2026 年小巨人认定已按 2 号文新标准执行（粤工信融资函〔2026〕9 号）" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }}
         ]
       }
     ],

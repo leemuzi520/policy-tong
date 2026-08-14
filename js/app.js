@@ -427,6 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCompanies();
   renderCompanyBar();
   renderCompanyHistory();
+  updateProfileCount(); // 2026-08-14 遗留 #23：画像完整性初始显示
   const cc = currentCompany();
   if (cc.id !== DEFAULT_COMPANY_ID) applyProfileToMatchForm(cc.profile);
   // 字段联动：加载后补一次，规划表单空字段自动带入匹配表单已填值（跨刷新也生效）
@@ -601,8 +602,8 @@ function runMatch() {
     };
   });
 
-  // 按匹配度排序
-  results.sort((a, b) => b.score - a.score);
+  // 按匹配度排序（2026-08-14 修复，遗留 #19）：信息不足政策沉底（无结论不可排前误导），其余按三维总分
+  results.sort((a, b) => (a.insufficient ? 1 : 0) - (b.insufficient ? 1 : 0) || b.score - a.score);
 
   // 2b.3 近失配恢复（2026-08-05）：除「信息不足」档（insufficient=medium，需补数据而非放松）外
   // 全部结果落到 low/veto 档时触发，按约束影响面从小到大逐级放松必选条件重算，返回最接近匹配并标注差异
@@ -637,6 +638,8 @@ function runMatch() {
           ${!r.regionMatch ? `<div style="color:var(--danger);margin-bottom:4px;">注意：该政策适用范围为【${r.policy.regions.join(' / ')}】，与企业所在地不匹配（若项目/子公司在该市实施仍可参考条件差距）</div>` : ''}
           ${r.failedVeto.length > 0 ? `<div style="color:var(--danger);font-weight:600;margin-bottom:6px;padding:8px 12px;background:var(--bg-danger);border-radius:4px;">一票否决条件未通过（独立否决项，任一不满足即不具备申报资格）：${r.failedVeto.join('、')}</div>` : ''}
           ${r.unverifiedVeto.length > 0 ? `<div style="color:var(--warning);margin-bottom:6px;padding:8px 12px;background:var(--bg-warning);border-radius:4px;">一票否决条件无法自动判断，须人工核实（任一不满足即不具备申报资格）：${r.unverifiedVeto.join('、')} <button class="btn btn-primary" style="margin-left:8px;padding:2px 10px;font-size:12px;" onclick="goDiag('${r.policy.id}')">去自诊断核实</button></div>` : ''}
+          ${r.policy.honorOnly ? '<div style="color:var(--text-secondary);margin-bottom:4px;font-size:12.5px;">案例/荣誉类政策：无资金奖补，申报价值为行业示范背书与后续项目基础</div>' : ''}
+          ${(() => { const ci = GRADIENT_CHAIN.findIndex(n => n.policyId === r.policy.id); const ul = profile.level; return (ci >= 0 && typeof ul === 'number' && ul >= 2 && ci < ul - 1) ? '<div style="color:var(--text-secondary);margin-bottom:4px;font-size:12.5px;">你已获更高层级资质（当前为专精特新梯度第 ' + ul + ' 层）——该政策为前置申报层，重点可关注升级与复核方向</div>' : ''; })()}
           ${r.matchedItems.length > 0 ? `<div style="margin-bottom:4px;">已匹配条件（${r.matchedItems.length} 项）：${r.matchedItems.join('、')}</div>` : ''}
           ${r.failedRequired.length > 0 ? `<div style="color:var(--danger);margin-bottom:4px;">未通过的必选条件：${r.failedRequired.join('、')}</div>` : ''}
           ${r.unverifiedRequired.length > 0 ? `<div style="color:var(--warning);margin-bottom:6px;padding:8px 12px;background:var(--bg-warning);border-radius:4px;">已核验必选条件 <strong>${r.verifiedRequired}/${r.requiredTotal}</strong> 项 · 还有 <strong>${r.unverifiedRequired.length}</strong> 项必选未核实（无法自动判断或尚未填写），建议在自诊断中逐条核实：${r.unverifiedRequired.join('、')} <button class="btn btn-primary" style="margin-left:8px;padding:2px 10px;font-size:12px;" onclick="goDiag('${r.policy.id}')">去自诊断核实</button></div>` : ''}
@@ -1241,12 +1244,23 @@ function storageRemove(key) { try { localStorage.removeItem(key); } catch (e) { 
 function saveMatchState() {
   const p = getMatchProfile();
   storageSet(LS_MATCH, JSON.stringify(p));
+  updateProfileCount(); // 2026-08-14 遗留 #23：画像完整性实时提示
   // Phase 3.1 企业档案：表单变更同步回当前企业画像（档案为上层容器，底层仍走 matchForm2）
   const st = getCompaniesState();
   if (st) {
     const c = st.companies.find(x => x.id === st.currentId);
     if (c) { c.profile = p; saveCompanies(st); }
   }
+}
+
+// 画像完整性提示（2026-08-14 遗留 #23）：实时显示已填字段数，避免旧画像值残留无感知
+function updateProfileCount() {
+  const el = $('#profileCount');
+  if (!el) return;
+  const p = getMatchProfile();
+  const n = Object.values(p).filter(v => v !== '' && v !== undefined && !(Array.isArray(v) && !v.length)).length;
+  const total = Object.keys(MATCH_FIELD_IDS).length + 1; // select 字段 + certs 多选
+  el.textContent = `当前画像已填 ${n}/${total} 个字段`;
 }
 
 // ============================================================
