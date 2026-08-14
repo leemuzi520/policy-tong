@@ -3,7 +3,7 @@
 window.ZCT_DATA = window.ZCT_DATA || {};
 window.ZCT_DATA.guangdong = window.ZCT_DATA.guangdong || [];
 window.ZCT_DATA.guangdong.push(
-  {
+    {
     id: "gdgreenfactory",
     order: 4,
     column: "green",
@@ -24,28 +24,64 @@ window.ZCT_DATA.guangdong.push(
     applicableIndustries: ["制造业（通用）","化工","汽车","电子信息","消费品","新能源与节能","资源与环境","新材料"],
     conditions: [
       {
-        category: "基础合规（4 号文第十八条负面清单）",
+        category: "基础合规（4 号文第七条 + 第十八条负面清单 + GB/T 36132 基本要求）",
         items: [
-          { name: "注册地和实际生产场所在广东省、独立法人制造企业", required: true, weight: 3, description: "4 号文第七条（一）：注册地和实际生产场所在广东省行政区域范围内，依法设立并具有独立法人资格或者视同法人的独立核算单位，且从事实际生产的制造型企业；2026 通知申报要求同口径", basis: { name: "4 号文第七条（一）· 2026 通知申报要求", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/13/content/post_4442996.html" }, autoMatch: "type", rule: () => true }, // 表单四种企业类型均为依法设立的企业，此条件自动通过；未选类型时归为未核验
-          { name: "近三年无安全、质量、环境污染事故及偷漏税", required: true, weight: 3, veto: true, description: "4 号文第十八条（二）：发生安全（含网络安全、数据安全）、质量、环境污染等事故以及偷漏税等违法违规行为的不得申报（参照「信用中国」「国家企业信用信息公示系统」）", basis: { name: "4 号文第十八条（二）· 2026 通知不得申报情形 2", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/13/content/post_4442996.html" }, autoMatch: "accident", rule: v => v === "无" },
-          { name: "正常经营生产（未注销、未连续停产 12 个月以上）", required: true, weight: 2, veto: true, description: "4 号文第十八条（一）：未正常经营生产的（工商注销、连续停产 12 个月以上、被列入经营异常名单且未被移出等）不得申报", basis: { name: "4 号文第十八条（一）· 2026 通知不得申报情形 1", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/13/content/post_4442996.html" } },
-          { name: "未列入经营异常、非失信被执行人、未被移出名单", required: true, weight: 2, veto: true, description: "4 号文第十八条（三）-（六）：被动态调整出绿色制造名单、国务院及有关部委督查中发现严重问题、被列入工业节能监察整改名单且未按要求完成整改、企业被列为失信被执行人的均不得申报", basis: { name: "4 号文第十八条（三）-（六）· 2026 通知不得申报情形 3-6", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/13/content/post_4442996.html" } },
-          { name: "污染物排放持续达标", required: true, weight: 3, veto: true, description: "2026 通知申报流程（一）：其他行业企业依据《绿色工厂通用建设指南》及《绿色工厂评价通则》（GB/T 36132-2025）自评价；通则环境排放要求——大气/水/噪声排放符合相关标准，需提供近一年监测数据", basis: { name: "2026 通知申报流程（一）· GB/T 36132-2025", url: "https://gdii.gd.gov.cn/zwgk/tzgg1011/content/post_4908393.html" }, autoMatch: "emission", rule: v => v === "是" }
+          { name: "注册地和实际生产场所在广东省、独立法人制造企业", required: true, weight: 3, description: "4 号文第七条（一）：注册地和实际生产场所在广东省行政区域范围内，依法设立并具有独立法人资格或者视同法人的独立核算单位，且从事实际生产的制造型企业；2026 通知申报要求同口径", basis: { name: "4 号文第七条（一）· 2026 通知申报要求", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/13/content/post_4442996.html" }, autoMatch: "type", rule: () => true, evidence: "企业营业执照副本（含统一社会信用代码）" }, // 表单四种企业类型均为依法设立的企业，此条件自动通过；未选类型时归为未核验
+          { name: "正常经营生产（未注销、未连续停产 12 个月以上）", required: true, weight: 2, veto: true, description: "4 号文第十八条（一）+ 2026 通知不得申报情形 1：工商注销、连续停产 12 个月以上、被列入经营异常名单且未被移出等不得申报", basis: { name: "4 号文第十八条（一）· 2026 通知不得申报情形 1", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/13/content/post_4442996.html" }, evidence: "国家企业信用信息公示系统（gsxt.gov.cn）查询结果（登记状态与经营异常名录）" },
+          { name: "近三年无安全、质量、环境污染事故及偷漏税", required: true, weight: 3, veto: true, description: "4 号文第十八条（二）+ 2026 通知不得申报情形 2：发生安全（含网络安全、数据安全）、质量、环境污染等事故以及偷漏税等违法违规行为的不得申报（参照「信用中国」「国家企业信用信息公示系统」）", basis: { name: "4 号文第十八条（二）· 2026 通知不得申报情形 2", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/13/content/post_4442996.html" }, autoMatch: "accident", rule: v => v === "无", evidence: "「信用中国」（creditchina.gov.cn）报告 + 国家企业信用信息公示系统（gsxt.gov.cn）查询结果" },
+          { name: "未被动态调整出绿色制造名单、督查无严重问题、节能监察整改已完成", required: true, weight: 2, veto: true, description: "4 号文第十八条（三）-（五）+ 2026 通知不得申报情形 3-5：被动态调整出绿色制造名单、在国务院及有关部委督查工作中被发现存在严重问题、被列入工业节能监察整改名单且未按要求完成整改的均不得申报", basis: { name: "4 号文第十八条（三）-（五）· 2026 通知不得申报情形 3-5", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/13/content/post_4442996.html" }, evidence: "属地工信部门确认或自检说明（含节能监察整改完成证明，如适用）" },
+          { name: "未被列为失信被执行人", required: true, weight: 2, veto: true, description: "4 号文第十八条（六）+ 2026 通知不得申报情形 6：企业被列为失信被执行人的不得申报", basis: { name: "4 号文第十八条（六）· 2026 通知不得申报情形 6", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/13/content/post_4442996.html" }, evidence: "「信用中国」（creditchina.gov.cn）被执行人查询结果" },
+          { name: "污染物排放持续达标", required: true, weight: 3, veto: true, description: "2026 通知申报流程（一）：其他行业企业依据《绿色工厂通用建设指南》及《绿色工厂评价通则》（GB/T 36132-2025）自评价；通则环境排放要求——大气/水/噪声排放符合相关标准，需提供近一年监测数据", basis: { name: "2026 通知申报流程（一）· GB/T 36132-2025", url: "https://gdii.gd.gov.cn/zwgk/tzgg1011/content/post_4908393.html" }, autoMatch: "emission", rule: v => v === "是", evidence: "近一年第三方环境监测报告 + 环评批复及验收文件" },
+          { name: "依法取得排污许可证", required: true, weight: 2, veto: true, description: "GB/T 36132 基本要求（与国家级同源）：按《排污许可管理条例》（国务院令第 736 号）应领尽领；未取得排污许可证的不得排放污染物（条例第二条）", basis: { name: "GB/T 36132-2025 · 《排污许可管理条例》第二条", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, evidence: "排污许可证（正本及副本）" }
+        ]
+      },
+      {
+        category: "管理体系（GB/T 36132 第 6 章基本要求，与国家级同源）",
+        items: [
+          { name: "已建立质量管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持质量管理体系（GB/T 19001/ISO9001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO9001"), evidence: "质量管理体系认证证书（在有效期内）" },
+          { name: "已建立环境管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持环境管理体系（GB/T 24001/ISO14001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO14001"), evidence: "环境管理体系认证证书（在有效期内）" },
+          { name: "已建立能源管理体系", required: true, weight: 2, description: "GB/T 36132 第 6 章：建立并保持能源管理体系（GB/T 23331/ISO50001）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO50001"), evidence: "能源管理体系认证证书（在有效期内）" },
+          { name: "已建立职业健康安全管理体系", required: true, weight: 1, description: "GB/T 36132 第 6 章：建立并保持职业健康安全管理体系（ISO45001，OHSAS18001 已于 2021 年停发，有效期内的旧证仍认可）", basis: { name: "GB/T 36132-2025（管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" }, autoMatch: "certs", rule: v => v.includes("ISO45001") || v.includes("OHSAS18001"), evidence: "职业健康安全管理体系认证证书（在有效期内，含未到期 OHSAS18001 旧证）" }
         ]
       },
       {
         category: "梯度培育前置",
         items: [
-          { name: "已纳入市级绿色工厂名单（市级遴选后推荐省级）", required: true, weight: 3, description: "4 号文第十二条：地市工信主管部门按管理平台申报材料遴选发布市级绿色制造名单；第十三条：各市于每年 6 月 30 日前将市级名单通过管理平台推荐至省厅——申报省级须先入选市级名单", basis: { name: "4 号文第十二条、第十三条", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/13/content/post_4442996.html" } }
+          { name: "已纳入市级绿色工厂名单（市级遴选后推荐省级）", required: true, weight: 3, description: "4 号文第十二条：地市工信主管部门按管理平台申报材料遴选发布市级绿色制造名单；第十三条：各市于每年 6 月 30 日前将市级名单通过管理平台推荐至省厅——申报省级须先入选市级名单", basis: { name: "4 号文第十二条、第十三条", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/13/content/post_4442996.html" }, evidence: "市级绿色制造名单公告或入选证明" }
         ]
       },
       {
         category: "绿色绩效自评价",
         items: [
-          { name: "按对应评价标准完成自评价并达标", required: true, weight: 3, description: "2026 通知申报流程（一）：53 个重点行业（钢铁、石化化工、有色、建材、机械、轻工、纺织、电子）按对应行业绿色工厂评价要求自评价；其他行业依据《绿色工厂通用建设指南》及 GB/T 36132-2025 自评价；管理平台（green.miit.gov.cn）如实填报申报表并上传佐证材料", basis: { name: "2026 通知申报流程（一）", url: "https://gdii.gd.gov.cn/zwgk/tzgg1011/content/post_4908393.html" } },
-          { name: "能源、资源利用绩效达到基准值要求", required: true, weight: 2, description: "GB/T 36132-2025 绩效指标（与国家级绿色工厂同源：4 号文第七条（二）指向《绿色工厂梯度培育及管理暂行办法》第十四条第一款标准要求）：能耗、水耗、污染物产生量等以基准值/引领值评分；需提供能源审计报告、水平衡测试报告、环评及验收文件", basis: { name: "4 号文第七条（二）· GB/T 36132-2025", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/13/content/post_4442996.html" } }
+          { name: "按对应评价标准完成自评价并达标", required: true, weight: 3, description: "2026 通知申报流程（一）：53 个重点行业（钢铁、石化化工、有色、建材、机械、轻工、纺织、电子）按对应行业绿色工厂评价要求自评价；其他行业依据《绿色工厂通用建设指南》及 GB/T 36132-2025 自评价；管理平台（green.miit.gov.cn）如实填报申报表并上传佐证材料", basis: { name: "2026 通知申报流程（一）", url: "https://gdii.gd.gov.cn/zwgk/tzgg1011/content/post_4908393.html" }, evidence: "管理平台自评价填报数据与佐证材料（按评价指标逐项）" },
+          { name: "能源、资源利用绩效达到基准值要求", required: true, weight: 2, description: "GB/T 36132-2025 绩效指标（与国家级绿色工厂同源：4 号文第七条（二）指向《绿色工厂梯度培育及管理暂行办法》第十四条第一款标准要求）：能耗、水耗、污染物产生量等以基准值/引领值评分；需提供能源审计报告、水平衡测试报告、环评及验收文件", basis: { name: "4 号文第七条（二）· GB/T 36132-2025", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/13/content/post_4442996.html" }, evidence: "能源审计报告或能耗统计台账 + 水平衡测试报告或用水台账 + 环评批复及验收文件" }
         ]
       }
+    ],
+    // zct-diag 2026-08-14：申报材料清单（依据 2026 通知申报流程 + 4 号文梯度培育要求；管理平台线上填报上传）
+    materials: [
+      { name: "绿色工厂申报表（管理平台 green.miit.gov.cn「绿色工厂（梯度培育）」栏目填报）", required: true, basis: { name: "粤工信节能函〔2026〕21 号申报流程（一）", url: "https://gdii.gd.gov.cn/zwgk/tzgg1011/content/post_4908393.html" } },
+      { name: "自评价佐证材料（按评价指标要求上传，53 行业按行业要求、其他行业按通则）", required: true },
+      { name: "企业营业执照副本", required: true },
+      { name: "排污许可证（按《排污许可管理条例》应领尽领）", required: true },
+      { name: "质量/环境/能源/职业健康安全管理体系认证证书（四体系）", required: true, basis: { name: "GB/T 36132-2025（第 6 章管理体系要求）", url: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=535D5F459D0F02217D3216CF849E3822" } },
+      { name: "能源审计报告或节能评估报告 + 近一年能耗统计台账", required: true },
+      { name: "水平衡测试报告或近一年用水台账", required: true },
+      { name: "环评批复及验收文件 + 近一年第三方环境监测报告", required: true },
+      { name: "一般工业固废台账与综合利用去向证明", required: true },
+      { name: "「信用中国」报告 + 国家企业信用信息公示系统查询结果（负面清单核查）", required: true },
+      { name: "市级绿色工厂名单入选证明", required: true, note: "须先经市级遴选、由地市推荐至省厅（4 号文第十二、十三条）" }
+    ],
+    // 2026-08-14 修复：申报要求从诊断条件拆出（流程信息仅作提示展示）
+    diagNotes: [
+      "申报全程线上：登录工业节能与绿色发展管理平台（green.miit.gov.cn）注册后，在「绿色工厂（梯度培育）」栏目查询评价要求，如实填报申报表完成自评价并上传佐证材料，通过管理平台逐级提交",
+      "年度节奏：各地市 6 月 30 日前通过管理平台推荐至省厅，各地市截止通常更早（以属地通知为准）；2026 年度已截止，下一批预计 2027 年 5-6 月启动",
+      "53 个重点行业按对应行业绿色工厂评价要求自评价，其他行业按《绿色工厂通用建设指南》及 GB/T 36132-2025 自评价",
+      "获评后动态管理：每年 4 月 15 日前通过管理平台填报年度动态管理表（4 号文第十九条）；省级培育对象有效期三年（第十四条）",
+      "已获国家级绿色工厂的企业自动列入省级名单，无需重复申报（4 号文第十七条）"
+    ],
+    revisions: [
+      { at: "2026-08-14", note: "zct-diag 细化：负面清单六项拆为可三态判定的独立条件，新增管理体系（四体系）与排污许可证条件（GB/T 36132 基本要求，与国家级同源），全部条件补 evidence，新增 materials 与 diagNotes", basis: "粤工信节能函〔2026〕21 号 · 4 号文第十八条 · GB/T 36132-2025" }
     ],
     changesTitle: "2026 年度申报要点",
     changesNote: "2026 年度申报通知已发布（粤工信节能函〔2026〕21 号），逐条有官方依据",
@@ -57,7 +93,7 @@ window.ZCT_DATA.guangdong.push(
       "动态管理：获评后每年 4 月 15 日前通过管理平台填报年度动态管理表（4 号文第十九条）",
       "省级培育对象有效期三年，有效期内持续对照标准开展绿色化改造提升（4 号文第十四条）"
     ],
-    tips: "广东梯度培育（市→省→国家）的中间层：申报省级前先进入市级绿色工厂名单，由市里 6.30 前统一推荐到省厅。评价标准与国家级同源——53 个重点行业按行业标准、其他行业按 GB/T 36132-2025 通则自评价，核心还是能耗、水耗、污染物这些硬指标。已获国家级绿色工厂的企业不用重复申报省级（自动列入）。省级无统一现金补贴，但地市奖励、专项资金申请资格都有；想冲国家级绿色工厂的，省级是必经台阶。"
+    tips: "广东梯度培育（市→省→国家）的中间层：申报省级前先进入市级绿色工厂名单，由市里 6.30 前统一推荐到省厅。评价标准与国家级同源——53 个重点行业按行业标准、其他行业按 GB/T 36132-2025 通则自评价，核心还是能耗、水耗、污染物这些硬指标；四体系认证（质量/环境/能源/职业健康）与排污许可证是通则基本要求，缺证一票否决。已获国家级绿色工厂的企业不用重复申报省级（自动列入）。省级无统一现金补贴，但地市奖励、专项资金申请资格都有；想冲国家级绿色工厂的，省级是必经台阶。"
   },
     {
     id: "innovative",
@@ -601,7 +637,7 @@ window.ZCT_DATA.guangdong.push(
     ],
     tips: "广东省工程技术研究中心（省工程中心）是省科技厅认定的省级科研平台资质：不直接奖钱，价值在创新平台背书——鼓励地市出台资金、人才、税收、土地配套支持（12 号文第十七条），动态评估优秀等级纳入人才激励、融资贷款等政策扶持范围（第二十条），也是企业研发实力证明和后续申报国家级平台的衔接基础。每年 1 批，先对照硬指标自查六件套（第九条 + 1523 号通知）：①营收 ≥5000 万；②研发经费 ≥主营收入 3%（超 3000 万豁免比例）；③知产 ≥5 项（近三年新增 ≥3 项）；④研发设备原值 ≥300 万（不算生产设备）；⑤专职科研人员珠三角 ≥20 人、粤东西北 ≥10 人；⑥原则上已建有市（区）级科研平台。注意四点：①企业只能申报 1 个，已建有工程中心的单位原则上不再受理——别重复报；②全程阳光政务平台（pro.gdstc.gd.gov.cn）在线申报、无纸化，不接收纸质材料；③工程中心主任要全职、入职满 3 年；④粤东西北（含惠州博罗/惠东/龙门、江门台山/鹤山/开平/恩平、肇庆四会/广宁/怀集/封开/德庆）鼓励与高校院所联合共建，共建设备和人员可合并算。2025 年度申报 9 月初截止、2026-01 公布认定 478 家；2026 年度通知截至 2026-08-03 尚未发布（按节奏约 8-9 月启动），建议现在备齐审计报告、知产证书、人员花名册与平台认定文件。获评后每年 6 月 30 日前提交年度报告、5 年一次定期评估，评估不合格或逾期未报会被取消资格。申报全程免费，省科技厅未委托任何中介代理，谨防「包认定」「内部渠道」收费。"
   },
-  {
+    {
     id: "gdchampion",
     order: 24,
     column: "zjt",
@@ -620,34 +656,58 @@ window.ZCT_DATA.guangdong.push(
       {
         category: "基础合规",
         items: [
-          { name: "广东省注册、独立法人（制造业企业或生产性服务业企业）", required: true, weight: 3, description: "1 号文第五条：在广东省注册、具有独立法人资格，具备工业产品研发、设计和生产制造能力的制造业企业或从事生产性服务业的企业；表单无注册地维度，需人工核验注册地", basis: { name: "1 号文第五条 · 2026 通知申报基本条件 1", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" } },
-          { name: "产品不属于国家禁止、限制或淘汰类", required: true, weight: 2, description: "主导产品合规（1 号文第六条（六））", basis: { name: "1 号文第六条（六）· 2026 通知申报基本条件 7", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" } },
-          { name: "近 3 年无重大安全/质量/环境事故及偷漏税等违法违规", required: true, weight: 3, veto: true, autoMatch: "accident", rule: v => v === "无", description: "1 号文第六条（六）：近 3 年无不良信用记录，未发生重大安全、质量、环境污染等事故及重大税收违法失信、数据造假等违法违规行为（以信用广东平台信用报告等为准）", basis: { name: "1 号文第六条（六）· 2026 通知申报基本条件 7", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" } }
+          { name: "广东省注册、独立法人（制造业企业或生产性服务业企业）", required: true, weight: 3, description: "1 号文第五条：在广东省注册、具有独立法人资格，具备工业产品研发、设计和生产制造能力的制造业企业或从事生产性服务业的企业；表单无注册地维度，需人工核验注册地", basis: { name: "1 号文第五条 · 2026 通知申报基本条件 1", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" }, evidence: "企业营业执照副本（注册地与法人信息）" },
+          { name: "产品不属于国家禁止、限制或淘汰类", required: true, weight: 2, description: "主导产品合规（1 号文第六条（六））", basis: { name: "1 号文第六条（六）· 2026 通知申报基本条件 7", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" }, evidence: "主导产品情况说明（对照国家产业政策目录）" },
+          { name: "近 3 年无重大安全/质量/环境事故及偷漏税等违法违规", required: true, weight: 3, veto: true, autoMatch: "accident", rule: v => v === "无", description: "1 号文第六条（六）：近 3 年无不良信用记录，未发生重大安全、质量、环境污染等事故及重大税收违法失信、数据造假等违法违规行为（以信用广东平台信用报告等为准）", basis: { name: "1 号文第六条（六）· 2026 通知申报基本条件 7", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" }, evidence: "信用广东平台（credit.gd.gov.cn）信用报告 + 国家企业信用信息公示系统（gsxt.gov.cn）查询结果" }
         ]
       },
       {
         category: "认定标准（1 号文第六条）",
         items: [
-          { name: "从事细分领域 ≥5 年（新产品 ≥3 年）", required: true, weight: 3, autoMatch: "segYears", rule: v => v === ">10年" || v === "5-10年" ? true : v === "3-5年" ? undefined : false, description: "1 号文第六条（一）：从事相关细分产品制造领域时间达 5 年及以上；新产品（近 3 年研发上市且无法归入《统计用产品分类目录》）应达 3 年及以上——选「3-5 年」档时若为新产品场景可能满足，需人工核实", basis: { name: "1 号文第六条（一）· 2026 通知申报基本条件 2", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" } },
-          { name: "产品市场占有率全国前 3 位或全球前 5 位", required: true, weight: 3, autoMatch: "marketShare", rule: v => v === "全球前3" ? true : v === "国内前三或≥10%" ? undefined : v === "较为靠前" || v === "一般" ? false : undefined, description: "1 号文第六条（二）：按《统计用产品分类目录》界定，需权威佐证（行业协会/海关数据等）；选「国内前三或≥10%」档时无法区分「国内前三」（满足）与「仅≥10%」（不满足），需人工核实", basis: { name: "1 号文第六条（二）· 2026 通知申报基本条件 3", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" } },
-          { name: "近三年平均主营收入 ≥4 亿元（小巨人 ≥1 亿）", required: true, weight: 3, autoMatch: "revenue", rule: v => v === ">4亿" ? true : v === "1亿-4亿" ? undefined : false, description: "1 号文第六条（五）：近三年平均主营业务收入 4 亿元以上；专精特新「小巨人」企业最低要求 1 亿元以上——选「1 亿-4 亿」档时若为小巨人可能满足，需人工核实", basis: { name: "1 号文第六条（五）· 2026 通知申报基本条件 6", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" } },
-          { name: "年度研发经费占主营收入 ≥3% 或行业领先", required: true, weight: 3, autoMatch: "rd", rule: v => v === "<3%" ? undefined : true, description: "1 号文第六条（三）：年度研发经费支出占主营业务收入原则上达 3% 以上或处于行业领先水平；选「<3%」档时若处于行业领先水平可能满足，需人工核实", basis: { name: "1 号文第六条（三）· 2026 通知申报基本条件 4", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" } },
-          { name: "拥有两项以上有效发明专利", required: true, weight: 3, autoMatch: "ipr", rule: v => v === "0" ? false : v === "1-5" ? undefined : true, description: "1 号文第六条（三）：拥有两项以上有效发明专利；选「1-5」档无法区分是否 ≥2 项，需人工核实", basis: { name: "1 号文第六条（三）· 2026 通知申报基本条件 4", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" } },
-          { name: "设立研发机构、主导或参与制定国际/国家/行业标准", required: true, weight: 2, description: "1 号文第六条（三）：设立研发机构；主导或参与制定相关标准（申报材料需研发机构佐证 + 标准制定材料）", basis: { name: "1 号文第六条（三）· 2026 通知申报基本条件 4", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" } },
-          { name: "产品质量精良、关键技术参数国际先进国内领先", required: true, weight: 2, description: "1 号文第六条（四）：产品质量精良，关键技术参数处于国际先进国内领先水平（申报材料需详细说明）", basis: { name: "1 号文第六条（四）· 2026 通知申报基本条件 5", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" } }
+          { name: "从事细分领域 ≥5 年（新产品 ≥3 年）", required: true, weight: 3, autoMatch: "segYears", rule: v => v === ">10年" || v === "5-10年" ? true : v === "3-5年" ? undefined : false, description: "1 号文第六条（一）：从事相关细分产品制造领域时间达 5 年及以上；新产品（近 3 年研发上市且无法归入《统计用产品分类目录》）应达 3 年及以上——选「3-5 年」档时若为新产品场景可能满足，需人工核实", basis: { name: "1 号文第六条（一）· 2026 通知申报基本条件 2", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" }, evidence: "从事申请产品相关领域时间说明（起始年份与累计年限，注册时间不一致时附说明，申请书三、专业化发展情况）" },
+          { name: "产品市场占有率全国前 3 位或全球前 5 位", required: true, weight: 3, autoMatch: "marketShare", rule: v => v === "全球前3" ? true : v === "国内前三或≥10%" ? undefined : v === "较为靠前" || v === "一般" ? false : undefined, description: "1 号文第六条（二）：按《统计用产品分类目录》界定，需权威佐证（行业协会/海关数据等）；选「国内前三或≥10%」档时无法区分「国内前三」（满足）与「仅≥10%」（不满足），需人工核实", basis: { name: "1 号文第六条（二）· 2026 通知申报基本条件 3", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" }, evidence: "申请产品全球及国内市场占有率说明（1500 字内：细分市场范围界定、占有率与排名数据及出处）" },
+          { name: "近三年平均主营收入 ≥4 亿元（小巨人 ≥1 亿）", required: true, weight: 3, autoMatch: "revenue", rule: v => v === ">4亿" ? true : v === "1亿-4亿" ? undefined : false, description: "1 号文第六条（五）：近三年平均主营业务收入 4 亿元以上；专精特新「小巨人」企业最低要求 1 亿元以上——选「1 亿-4 亿」档时若为小巨人可能满足，需人工核实", basis: { name: "1 号文第六条（五）· 2026 通知申报基本条件 6", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" }, evidence: "近三年年度审计报告（主营业务收入数据）" },
+          { name: "年度研发经费占主营收入 ≥3% 或行业领先", required: true, weight: 3, autoMatch: "rd", rule: v => v === "<3%" ? undefined : true, description: "1 号文第六条（三）：年度研发经费支出占主营业务收入原则上达 3% 以上或处于行业领先水平；选「<3%」档时若处于行业领先水平可能满足，需人工核实", basis: { name: "1 号文第六条（三）· 2026 通知申报基本条件 4", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" }, evidence: "审计报告或研发专项数据（研发经费支出与主营收入口径）" },
+          { name: "拥有两项以上有效发明专利", required: true, weight: 3, autoMatch: "ipr", rule: v => v === "0" ? false : v === "1-5" ? undefined : true, description: "1 号文第六条（三）：拥有两项以上有效发明专利；选「1-5」档无法区分是否 ≥2 项，需人工核实", basis: { name: "1 号文第六条（三）· 2026 通知申报基本条件 4", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" }, evidence: "有效发明专利清单及证书" },
+          { name: "设立研发机构、主导或参与制定国际/国家/行业标准", required: true, weight: 2, description: "1 号文第六条（三）：设立研发机构；主导或参与制定相关标准（申报材料需研发机构佐证 + 标准制定材料）", basis: { name: "1 号文第六条（三）· 2026 通知申报基本条件 4", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" }, evidence: "研发机构设立文件 + 参与制定国际/国家/行业标准佐证（标准文本或参与证明）" },
+          { name: "产品质量精良、关键技术参数国际先进国内领先", required: true, weight: 2, description: "1 号文第六条（四）：产品质量精良，关键技术参数处于国际先进国内领先水平（申报材料需详细说明）", basis: { name: "1 号文第六条（四）· 2026 通知申报基本条件 5", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" }, evidence: "产品质量与关键技术参数说明（国际先进/国内领先对照）" }
         ]
       },
       {
         category: "动态管理（1 号文第六章）",
         items: [
-          { name: "有效期内每年 5 月 31 日前在数字工信平台更新企业信息", required: false, weight: 1, description: "1 号文第二十三条：获评企业每年 5 月 31 日前通过数字工信平台更新信息并提交上年度发展报告；一年未更新纳入观察名单、连续两年未提交取消复核资格", basis: { name: "1 号文第二十三条", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" } },
-          { name: "每 3 年参加复核（2023 年认定企业 2026 年须复核）", required: false, weight: 1, description: "1 号文第二十五条：每三年组织一次复核，未通过复核的企业取消称号并移出企业库；2023 年认定的省级单项冠军企业（含示范企业和冠军产品）须参加 2026 年复核（12 号文）", basis: { name: "1 号文第二十五条 · 2026 通知复核评价工作", url: "http://gdii.gd.gov.cn/gkmlpt/content/4/4881/post_4881441.html" } }
+          { name: "有效期内每年 5 月 31 日前在数字工信平台更新企业信息", required: false, weight: 1, description: "1 号文第二十三条：获评企业每年 5 月 31 日前通过数字工信平台更新信息并提交上年度发展报告；一年未更新纳入观察名单、连续两年未提交取消复核资格", basis: { name: "1 号文第二十三条", url: "http://www.gd.gov.cn/zwgk/gongbao/2024/6/content/post_4388189.html" }, evidence: "数字工信平台信息更新记录" },
+          { name: "每 3 年参加复核（2023 年认定企业 2026 年须复核）", required: false, weight: 1, description: "1 号文第二十五条：每三年组织一次复核，未通过复核的企业取消称号并移出企业库；2023 年认定的省级单项冠军企业（含示范企业和冠军产品）须参加 2026 年复核（12 号文）", basis: { name: "1 号文第二十五条 · 2026 通知复核评价工作", url: "http://gdii.gd.gov.cn/gkmlpt/content/4/4881/post_4881441.html" }, evidence: "复核申请书（未提交复核材料撤销认定）" }
         ]
       }
     ],
-    tips: "广东省制造业单项冠军是梯度链条在广东的省级顶层荣誉——国家级单项冠军 2025 年起暂无遴选通知，省级是目前可申报的最高层级，且有效期内的省级单冠优先推荐申报国家级。核心自查：①细分领域 ≥5 年；②市占率全国前 3 或全球前 5（需要权威佐证，行业协会/海关数据，不要凭感觉）；③研发占比 ≥3%、≥2 项有效发明专利、设研发机构；④近三年平均营收 ≥4 亿（小巨人 ≥1 亿）；⑤合规。重点提示：①每年 1 批、约 3-4 月发布通知、5 月中下旬截止（2026 年度已截止、2027 年度预计 2027 年 3-4 月启动）；②已认定企业每年 5 月 31 日前在数字工信平台更新信息，连续两年未提交取消复核资格；③每 3 年复核一次，2023 年认定企业 2026 年已须复核、未提交撤销认定；④申报免费，省厅未委托任何中介，谨防「包认定」「内部渠道」收费。"
+    // zct-diag 2026-08-14：申报材料清单（依据 2025 年 22 号文珠海转发：附件 3 顺序排版 PDF + 光盘；申请书附件 2）
+    materials: [
+      { name: "《广东省制造业单项冠军企业申请书（2025/2026 年）》（数字工信平台填报下载打印，加盖企业公章与骑缝章）", required: true, basis: { name: "粤工信规划政策函〔2025〕22 号（珠海转发）", url: "https://www.zhuhai.gov.cn/gxj/gkmlpt/content/3/3815/post_3815824.html" } },
+      { name: "企业营业执照", required: true },
+      { name: "近三年年度审计报告", required: true, note: "申请书财务指标栏：销售收入、净利润、资产负债率、研发经费等逐年对应" },
+      { name: "市场占有率说明与佐证（全国前 3 或全球前 5）", required: true, note: "1500 字内说明 + 权威数据出处（行业协会/海关等）" },
+      { name: "有效发明专利清单及证书", required: true, note: "两项以上有效发明专利" },
+      { name: "研发机构设立文件与研发经费佐证", required: true },
+      { name: "产品质量与关键技术参数说明", required: true },
+      { name: "参与制修订国际/国家/行业标准佐证", required: false },
+      { name: "品牌与荣誉证书（高企、绿色工厂、技术创新示范企业等）", required: false },
+      { name: "申请汇总表（属地工信部门填写，加盖公章正式上报）", required: true, note: "各地市 8 月 8 日前报市工信局（2025 年度节奏）" }
+    ],
+    // 2026-08-14 修复：申报要求从诊断条件拆出（流程信息仅作提示展示）
+    diagNotes: [
+      "申报采取线上填报和线下报送相结合：数字工信平台（gdii.gd.gov.cn/szgx/）在线填写申请书，下载打印后确保线上线下材料一致；其他申报材料及佐证材料按通知附件 3 的顺序制成一个 PDF 文件，光盘需包含可编辑版申请书及含附件完整版 PDF；纸质材料一式两份（含公章与骑缝章申请书及附件）+ 光盘一式一份报属地工信部门",
+      "2026 年度申报已截止（省级 5.28、各地市 5 月中下旬提前截止：广州 5.22、珠海 5.13、深圳线上 5.6）；下一批 2027 年度预计 2027 年 3-4 月启动，以省厅官网通知为准",
+      "2023 年认定的省级单项冠军企业（含示范企业和冠军产品）须参加 2026 年复核，未提交复核申请材料的依据管理办法撤销认定",
+      "有效期内省级单项冠军优先推荐申报国家级单项冠军（1 号文第五章）；已认定企业每年 5 月 31 日前在数字工信平台更新企业信息",
+      "申报免费：相关政府部门、协会不得以任何形式向企业收取费用；数字工信平台向申报单位提供 1 年免费电子签章服务（22 号文）"
+    ],
+    revisions: [
+      { at: "2026-08-14", note: "zct-diag 细化：全部条件补 evidence（申请书栏目口径），新增 materials（22 号文申报材料要求：附件 3 顺序 PDF + 光盘 + 纸质一式两份）与 diagNotes（平台流程、复核、信息更新、免费申报）", basis: "粤工信规划政策函〔2025〕22 号 · 2026 通知（12 号文）" }
+    ],
+    tips: "广东省制造业单项冠军是梯度链条在广东的省级顶层荣誉——国家级单项冠军 2025 年起暂无遴选通知，省级是目前可申报的最高层级，且有效期内的省级单冠优先推荐申报国家级。核心自查：①细分领域 ≥5 年；②市占率全国前 3 或全球前 5（需要权威佐证，行业协会/海关数据，不要凭感觉）；③研发占比 ≥3%、≥2 项有效发明专利、设研发机构；④近三年平均营收 ≥4 亿（小巨人 ≥1 亿）；⑤合规。重点提示：①每年 1 批、约 3-4 月发布通知、5 月中下旬截止（2026 年度已截止、2027 年度预计 2027 年 3-4 月启动）；②申报材料按附件 3 顺序制成一个 PDF + 光盘（可编辑版申请书+完整 PDF）+ 纸质一式两份（公章+骑缝章）；③已认定企业每年 5 月 31 日前在数字工信平台更新信息，连续两年未提交取消复核资格；④每 3 年复核一次，2023 年认定企业 2026 年已须复核、未提交撤销认定；⑤申报免费，省厅未委托任何中介，谨防「包认定」「内部渠道」收费。"
   },
-  {
+    {
     id: "gdinterest",
     order: 25,
     column: "zjzj",
@@ -659,7 +719,8 @@ window.ZCT_DATA.guangdong.push(
     effort: "Medium",
     updated: "2026-08-05",
     revisions: [
-      { at: "2026-08-13", note: "移除推算截止日期 2026-08-31（官方 2027 年度通知发布前窗口未定，往年节奏保留在 deadline 文本）", basis: "P1-2 数据口径修复" }
+      { at: "2026-08-13", note: "移除推算截止日期 2026-08-31（官方 2027 年度通知发布前窗口未定，往年节奏保留在 deadline 文本）", basis: "P1-2 数据口径修复" },
+      { at: "2026-08-14", note: "zct-diag 细化：原「申报材料」类条件移出 conditions（材料清单进 materials、流程进 diagNotes），全部条件补 evidence", basis: "粤工信融资函〔2025〕26 号附件 1" }
     ],
     source: { name: "《广东省工业和信息化厅关于做好 2026 年专精特新中小企业贷款贴息项目入库工作的通知》（粤工信融资函〔2025〕26 号）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" },
     notice: { name: "2026 年度入库通知（粤工信融资函〔2025〕26 号）+ 各地市执行（东莞 2025-08-08 转发，截止 8.11）", url: "https://im.dg.gov.cn/gkmlpt/content/4/4416/mpost_4416036.html", timeline: "每年 1 批、约 7-8 月发布入库通知：2025-07-17 省厅发布 26 号文 → 各地市 7-8 月组织申报（东莞 8.11、惠州 8.11、中山 8.3 线上等，以属地通知为准）→ 各地市 8.30 前通过数字工信平台报省厅 → 全面实行项目库管理，未纳入项目库原则上不安排预算 → 9 月起各地公示入库名单 → 贴息资金次年下达（2026 年度资金 2026 年下达）。2027 年度入库预计 2026 年 8 月前后启动" },
@@ -670,28 +731,38 @@ window.ZCT_DATA.guangdong.push(
       {
         category: "申报资格（26 号文奖补对象）",
         items: [
-          { name: "广东省注册登记、有效期内的省级专精特新中小企业", required: true, weight: 3, autoMatch: "level", rule: v => v === 2, description: "26 号文奖补对象：广东省注册登记（不含深圳市，深圳参照执行）、有效期内的省级专精特新中小企业；不含国家专精特新「小巨人」企业及已获得专精特新企业贷款贴息的企业——表单「已获资质」选「省级专精特新」档即满足，小巨人及以上不满足（level 字段为数值档位）", basis: { name: "26 号文奖补对象 · 附件 1 入库工作指引", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" } },
-          { name: "贷款利息总额 ≥30 万元（利息发生期）", required: true, weight: 3, description: "26 号文扶持范围：企业获得商业银行人民币贷款，在利息发生期内实际发生的利息总额达到 30 万元及以上的支出给予补助；2026 年度口径为 2024-05-01 至 2025-04-30 期间（2027 年度预计为 2025-05-01 至 2026-04-30），以利息单实际发生额为准，需人工核验", basis: { name: "26 号文扶持范围及额度", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" } },
-          { name: "未获得过专精特新企业贷款贴息", required: true, weight: 2, description: "26 号文奖补对象明确不含已获得专精特新企业贷款贴息的企业（广州市进一步明确不含 2019-2024 年已获贴息及 2025 年已入库成功的企业），需人工核验", basis: { name: "26 号文奖补对象", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" } }
+          { name: "广东省注册登记、有效期内的省级专精特新中小企业", required: true, weight: 3, autoMatch: "level", rule: v => v === 2, description: "26 号文奖补对象：广东省注册登记（不含深圳市，深圳参照执行）、有效期内的省级专精特新中小企业；不含国家专精特新「小巨人」企业及已获得专精特新企业贷款贴息的企业——表单「已获资质」选「省级专精特新」档即满足，小巨人及以上不满足（level 字段为数值档位）", basis: { name: "26 号文奖补对象 · 附件 1 入库工作指引", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" }, evidence: "省级专精特新中小企业证书或认定文件（有效期内）" },
+          { name: "贷款利息总额 ≥30 万元（利息发生期）", required: true, weight: 3, description: "26 号文扶持范围：企业获得商业银行人民币贷款，在利息发生期内实际发生的利息总额达到 30 万元及以上的支出给予补助；2026 年度口径为 2024-05-01 至 2025-04-30 期间（2027 年度预计为 2025-05-01 至 2026-04-30），以利息单实际发生额为准，需人工核验", basis: { name: "26 号文扶持范围及额度", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" }, evidence: "银行利息单复印件（字迹清晰且无涂改，否则视为无效）+ 贷款合同" },
+          { name: "未获得过专精特新企业贷款贴息", required: true, weight: 2, description: "26 号文奖补对象明确不含已获得专精特新企业贷款贴息的企业（广州市进一步明确不含 2019-2024 年已获贴息及 2025 年已入库成功的企业），需人工核验", basis: { name: "26 号文奖补对象", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" }, evidence: "历史贴息获得情况自检说明" }
         ]
       },
       {
         category: "评审标准（26 号文附件 1 入库指引，择优排序）",
         items: [
-          { name: "主导产品领域符合要求", required: true, weight: 2, description: "26 号文附件 1 入库评审标准：主导产品属于制造业核心基础零部件、元器件、关键软件、先进基础工艺、关键基础材料和产业技术基础；或符合制造强国战略十大重点产业领域；或属于网络强国建设的信息基础设施、关键核心技术、网络安全、数据安全领域，需人工核验", basis: { name: "26 号文附件 1 入库评审标准", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" } },
-          { name: "近 2 年主营业务收入平均增长率为正", required: true, weight: 2, autoMatch: "growth", rule: v => v === "≥5%" ? true : undefined, description: "26 号文附件 1 专业化指标：近 2 年（2023 年和 2024 年）主营业务收入平均增长率为正增长——选「<5%」或「不清楚」档无法区分正负增长，需人工核实", basis: { name: "26 号文附件 1 入库评审标准", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" } },
-          { name: "上年度研发经费占营业收入 ≥4%（珠三角；粤东西北 ≥3%）", required: true, weight: 2, autoMatch: "rd", rule: v => v === "<3%" ? false : v === "3%-5%" ? undefined : true, description: "26 号文附件 1 创新能力指标：上年度研发经费占营业收入比重珠三角 4% 以上、粤东西北 3% 以上——选「3%-5%」档无法区分是否达珠三角 4% 线，需人工核实", basis: { name: "26 号文附件 1 入库评审标准", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" } },
-          { name: "优先支持十大战略性支柱/新兴产业集群、人工智能与机器人领域企业", required: false, weight: 1, description: "26 号文附件 1：重点支持属于十大战略性支柱产业集群和十大战略性新兴产业集群的企业；同等条件下优先安排拥有国家级产业人才的企业、人工智能与机器人产业领域的企业", basis: { name: "26 号文附件 1 入库评审标准", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" } }
-        ]
-      },
-      {
-        category: "申报材料（26 号文，数字工信平台线上申报）",
-        items: [
-          { name: "申报材料齐全（贷款合同、利息单、审计报告、税务申报表等）", required: true, weight: 2, description: "26 号文申报材料：项目真实性承诺函、二级项目绩效目标表、营业执照、贷款合同、税务申报表（含企业所得税、增值税）、银行利息单复印件、近两年审计报告等能证明企业及贷款（利息）真实性的材料，需人工核验", basis: { name: "26 号文申报材料要求", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" } }
+          { name: "主导产品领域符合要求", required: true, weight: 2, description: "26 号文附件 1 入库评审标准：主导产品属于制造业核心基础零部件、元器件、关键软件、先进基础工艺、关键基础材料和产业技术基础；或符合制造强国战略十大重点产业领域；或属于网络强国建设的信息基础设施、关键核心技术、网络安全、数据安全领域，需人工核验", basis: { name: "26 号文附件 1 入库评审标准", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" }, evidence: "主导产品领域对应说明（对照重点领域清单）" },
+          { name: "近 2 年主营业务收入平均增长率为正", required: true, weight: 2, autoMatch: "growth", rule: v => v === "≥5%" ? true : undefined, description: "26 号文附件 1 专业化指标：近 2 年（2023 年和 2024 年）主营业务收入平均增长率为正增长——选「<5%」或「不清楚」档无法区分正负增长，需人工核实", basis: { name: "26 号文附件 1 入库评审标准", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" }, evidence: "近两年审计报告（主营业务收入逐年数据）" },
+          { name: "上年度研发经费占营业收入 ≥4%（珠三角；粤东西北 ≥3%）", required: true, weight: 2, autoMatch: "rd", rule: v => v === "<3%" ? false : v === "3%-5%" ? undefined : true, description: "26 号文附件 1 创新能力指标：上年度研发经费占营业收入比重珠三角 4% 以上、粤东西北 3% 以上——选「3%-5%」档无法区分是否达珠三角 4% 线，需人工核实", basis: { name: "26 号文附件 1 入库评审标准", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" }, evidence: "上年度审计报告（研发经费与营业收入数据）" },
+          { name: "优先支持十大战略性支柱/新兴产业集群、人工智能与机器人领域企业", required: false, weight: 1, description: "26 号文附件 1：重点支持属于十大战略性支柱产业集群和十大战略性新兴产业集群的企业；同等条件下优先安排拥有国家级产业人才的企业、人工智能与机器人产业领域的企业", basis: { name: "26 号文附件 1 入库评审标准", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" }, evidence: "所属产业集群与领域说明（对照十大战略性支柱/新兴产业集群清单）" }
         ]
       }
     ],
-    tips: "省级专精特新的直接「钱」政策：利息 ≥30 万可补最高 50%、最高 100 万。关键认知：①入库制——先入库后支持，入库不等于最终获资，全省 ≤2000 家择优排序；②每年 1 批、约 7-8 月发通知、各地 8 月中下旬截止，2026 年度入库已截止、2027 年度预计 2026 年 8 月前后启动；③利息发生期口径要盯紧（按年度通知的实际发生期），平时保存好贷款合同和银行利息单；④前提是有效期内的省级专精特新（不含小巨人、不含深圳）；⑤申报免费，通过数字工信平台线上申报，严禁中介代理、严禁收费。"
+    // zct-diag 2026-08-14：申报材料清单（依据 26 号文附件 1「四、申报材料」官方 6 项 + 各地市可增补）
+    materials: [
+      { name: "项目真实性承诺函", required: true, basis: { name: "26 号文附件 1 四、申报材料", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4746/post_4746140.html" } },
+      { name: "二级项目绩效目标表", required: true },
+      { name: "申报单位的法人证书或营业执照", required: true },
+      { name: "贷款合同", required: true },
+      { name: "税务申报表", required: true },
+      { name: "银行利息单复印件", required: true, note: "字迹需清晰且无涂改，否则视为无效（26 号文附件 1 原文明示）" }
+    ],
+    // 2026-08-14 修复：申报要求从诊断条件拆出（流程信息仅作提示展示，不进 conditions、不计分）
+    diagNotes: [
+      "项目库入库制：先入库后支持，入库不等于最终获资；全省入库名额原则上不超过 2000 家，各地市推荐入库超总名额时由省工信厅统筹安排（26 号文附件 1）",
+      "数字工信平台（gdii.gd.gov.cn/szgx/）线上填报，申报截止日期由各地市根据实际情况设定、不得晚于正式报送省工信厅时间（26 号文四（二））",
+      "不得以同一项目重复申报或多头申报专项资金（26 号文附件 1 五）；贴息资金主要用于支付企业融资成本",
+      "2026 年度入库已截止（2025-08-30 报省厅）；2027 年度入库通知预计 2026 年 8 月前后发布（利息发生期约 2025-05-01 至 2026-04-30），建议提前备齐贷款合同与利息单"
+    ],
+    tips: "省级专精特新的直接「钱」政策：利息 ≥30 万可补最高 50%、最高 100 万。关键认知：①入库制——先入库后支持，入库不等于最终获资，全省 ≤2000 家择优排序；②每年 1 批、约 7-8 月发通知、各地 8 月中下旬截止，2026 年度入库已截止、2027 年度预计 2026 年 8 月前后启动；③利息发生期口径要盯紧（按年度通知的实际发生期），平时保存好贷款合同和银行利息单（字迹清晰无涂改，否则视为无效）；④前提是有效期内的省级专精特新（不含小巨人、不含深圳）；⑤申报免费，通过数字工信平台线上申报，严禁中介代理、严禁收费。"
   },
   {
     id: "gdnewmat",
