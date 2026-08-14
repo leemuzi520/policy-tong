@@ -19,7 +19,7 @@ window.ZCT_DATA.national.most.push(
       { label: "第二批", date: "2026-08-05" },
       { label: "第三批", date: "2026-09-04" }
     ],
-    updated: "2026-08-02",
+    updated: "2026-08-14",
     source: { name: "《高新技术企业认定管理办法》（国科发火〔2016〕32 号，国务院公报）", url: "https://www.gov.cn/gongbao/content/2016/content_5076985.htm" },
     notice: { name: "《关于组织开展广东省2026年高新技术企业认定工作的通知》（粤科函产字〔2026〕903 号）", url: "http://gdstc.gd.gov.cn/pro/tzgg_if/content/post_4904066.html", timeline: "2026 广东（不含深圳）全年 3 批次、每家企业只能申报 1 次：第一批 6.26 材料截止；第二批 7.27 延至 8.5 17:00、第三批 8.27 延至 9.4 17:00（1359 号文延长）；地市审核推荐分别延至 9.4 / 10.8" },
     basis: [
