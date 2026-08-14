@@ -65,14 +65,6 @@ window.ZCT_DATA.national.most.push(
           { name: "企业成长性（净资产/销售收入增长率）", required: false, weight: 2, description: "195 号指引三（七）企业成长性 ≤20 分：净资产增长率、销售收入增长率各 ≤10 分，按近三个会计年度计算；增长率为负按 0 分计，第一年末净资产为 0 按后两年计算", basis: { name: "195 号指引三（七）企业成长性", url: "https://hainan.chinatax.gov.cn/xxgk_6_1/22162477.html" } }
         ]
       },
-      {
-        category: "申报要求（粤科函产字〔2026〕903 号 + 195 号指引）",
-        items: [
-          { name: "出具研发费用与高新收入专项审计/鉴证报告", required: true, weight: 2, description: "195 号指引二（三）：中介机构出具近三个会计年度研发费用、近一个会计年度高新技术产品（服务）收入专项审计或鉴证报告，并附近三年财务会计报告与所得税年度纳税申报表；中介机构须成立三年以上、近三年无不良记录，注册会计师/税务师占职工月平均人数比例 ≥30%", basis: { name: "195 号指引二（三）中介机构要求", url: "https://hainan.chinatax.gov.cn/xxgk_6_1/22162477.html" } },
-          { name: "税务数据授权书 + 与汇算清缴数据一致", required: true, weight: 2, description: "903 号通知：须上传加盖公章的《税务数据使用授权书》，申报财务数据与税务汇算清缴数据比对，比对不一致将影响审核", basis: { name: "903 号通知申报要求", url: "http://gdstc.gd.gov.cn/pro/tzgg_if/content/post_4904066.html" } },
-          { name: "全年仅可申报 1 次（按批次）", required: true, weight: 1, description: "903 号通知：广东全年分 3 批次受理，每家企业只能申报 1 次；2023 年认定、2026 年资格期满的企业须提出重新认定申报，2024/2025 年认定的有效期未满不得提前申报", basis: { name: "903 号通知批次安排", url: "http://gdstc.gd.gov.cn/pro/tzgg_if/content/post_4904066.html" } }
-        ]
-      }
     ],
     // zct-diag 2026-08-14：申报材料清单（依据 195 号指引二 + 粤科函产字〔2026〕903 号通知；广东全程网办，附件在省阳光政务平台上传）
     materials: [
@@ -89,6 +81,12 @@ window.ZCT_DATA.national.most.push(
       { name: "属于国家重点支持的高新技术领域说明", required: true },
       { name: "《税务数据使用授权书》（广东）", required: true, note: "加盖公章；申报财务数据与税务汇算清缴数据比对，不一致将影响审核", basis: { name: "粤科函产字〔2026〕903 号通知", url: "http://gdstc.gd.gov.cn/pro/tzgg_if/content/post_4904066.html" } },
       { name: "无重大安全、质量、环保事故承诺/证明", required: true }
+    ],
+    // 2026-08-14 修复：申报要求从诊断条件拆出（流程信息仅作提示展示）
+    diagNotes: [
+      "专项审计/鉴证报告须由成立三年以上、注册会计师/税务师占比 ≥30% 的中介机构出具，并附近三年财务会计报告与所得税年度纳税申报表",
+      "须上传加盖公章的《税务数据使用授权书》，申报财务数据与税务汇算清缴数据比对，不一致将影响审核",
+      "广东全年分 3 批次受理，每家企业只能申报 1 次；2023 年认定、2026 年资格期满的企业须提出重新认定申报"
     ],
     changesTitle: "2026 年度申报变化要点",
     changesNote: "依据广东省 2026 年认定通知（粤科函产字〔2026〕903 号）与延长通知（粤科函产字〔2026〕1359 号）；认定条件仍按 2016 年 32 号文执行，无门槛变化",

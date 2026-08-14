@@ -740,22 +740,28 @@ function renderPathCategory(cat, policy, nextInput, nextItem) {
             </div>`;
         }).join('');
     }
-    // 多选一路径：n 项中任意 1 项勾选即满足（hint 可自定义，如创新型「直通」、专精特新「豁免」）
-    const pathHint = path.hint || (path.items.length > 1 ? `满足以下 ${path.items.length} 项中任意 1 项即可直通` : '');
+    // 多选一路径：n 项中任意 1 项「符合」即满足（hint 可自定义，如创新型「直通」、专精特新「豁免」）
+    // 2026-08-14 修复：checkbox → 三态 radio（符合/不符合/不清楚）——未核验不再被误判为不满足；子项不再标「必选」，「满足其一」语义由路径级说明承担
+    const pathHint = path.hint || (path.items.length > 1 ? `满足以下 ${path.items.length} 项中任意 1 项即可` : '');
     return head +
       (pathHint ? `<div style="font-size:12px;color:var(--text-secondary);padding:0 14px 6px;">${pathHint}</div>` : '') +
       path.items.map(item => {
         const iIdx = nextItem();
         return `
-          <label class="checklist-item">
-            <input type="checkbox" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}">
-            <span class="cond-label">
+          <div class="checklist-item">
+            <div class="cond-label">
               ${item.name}
-              <span class="cond-tag required-tag">必选</span>
+              <span class="cond-tag" style="background:var(--bg-warning);color:var(--warning);border:1px solid var(--warning);">满足其一</span>
               <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${item.description}</div>
+              ${item.evidence ? `<div style="font-size:12px;color:var(--text-primary);margin-top:2px;">📎 佐证：${item.evidence}</div>` : ''}
               ${item.basis ? `<div style="font-size:12px;margin-top:2px;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">${item.basis.name}</a></div>` : ''}
-            </span>
-          </label>`;
+            </div>
+            <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="yes"> 符合</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="no"> 不符合</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;"><input type="radio" name="diag3-${policy.id}-${iIdx}" class="diag-check" data-idx="${nextInput()}" data-item="${iIdx}" data-policy="${policy.id}" value="unknown"> 不清楚</label>
+            </div>
+          </div>`;
       }).join('');
   }).join('');
 }
@@ -784,6 +790,11 @@ function loadDiagnosis() {
         ${policy.notice ? `<div>申报通知：<a href="${policy.notice.url}" target="_blank" rel="noopener" style="color:var(--primary);">${policy.notice.name}</a>${policy.notice.timeline ? `<div style="font-size:12px;color:var(--text-secondary);">${policy.notice.timeline}</div>` : ''}</div>` : ''}
       </div>
       ${policy.alert ? `<div class="policy-alert ${policy.alert.level}"><strong>⚠️ 政策重要变更</strong>：${policy.alert.text} <a href="${policy.alert.link}" target="_blank" rel="noopener">${policy.alert.linkLabel}</a></div>` : ''}
+      ${policy.diagNotes && policy.diagNotes.length ? `
+      <div style="font-size:12.5px;color:var(--text-secondary);margin-top:10px;padding:8px 12px;background:var(--bg-info);border-radius:6px;line-height:1.8;">
+        <strong style="color:var(--primary);">📌 申报要求（信息提示，非诊断条件）</strong>
+        <ul style="margin:4px 0 0;padding-left:18px;">${policy.diagNotes.map(n => `<li>${n}</li>`).join('')}</ul>
+      </div>` : ''}
     </div>
     <div class="diagnosis-checklist">
       ${policy.conditions.map(cat => cat.paths ? renderPathCategory(cat, policy, nextInput, nextItem) : `
@@ -896,6 +907,7 @@ function generateReport(policyId) {
       ? p.items.reduce((t, i) => t + Math.max(...i.scoreOptions.map(o => o.score)), 0)
       : p.items.reduce((t, i) => t + i.weight, 0)), 0);
     const subMet = [];
+    const subUnk = []; // 2026-08-14：路径级待核实标记（scoreBased 路径恒 false，未选档=0 分按不满足计）
     cat.paths.forEach(path => {
       const pathIdx = [];
       flatItems.forEach((it, i) => { if (it.pathName === path.name) pathIdx.push(i); });
@@ -918,15 +930,26 @@ function generateReport(policyId) {
         const partFails = Object.entries(path.minParts || {}).filter(([k, v]) => (parts[k] || 0) < v);
         const ok = sum >= path.minScore && partFails.length === 0;
         subMet.push(ok);
+        subUnk.push(false); // 评分路径：未选档=0 分，按不满足计（无待核实态）
         if (!ok) pathReasons.push(`评分路径：预估 ${sum}/${pathMax} 分${partFails.length ? `（${partFails.map(([k, v]) => `${k} ${parts[k] || 0} 分 < 底线 ${v} 分`).join('、')}）` : `（未达 ${path.minScore} 分）`}`);
       } else {
-        const anyMet = pathIdx.some(i => (selState[i] || {}).checked);
-        subMet.push(anyMet);
-        if (!anyMet) pathReasons.push(`${path.name}：${path.items.length} 项均未勾选`);
+        // 2026-08-14 三态适配：任一子项「符合」→ 满足；全部「不符合」→ 不满足；有「不清楚」且无「符合」→ 待核实（未核验不再误判不满足）
+        const states = pathIdx.map(i => (selState[i] || {}).state || 'unknown');
+        const anyYes = states.some(s => s === 'yes');
+        const anyNo = states.some(s => s === 'no');
+        const anyUnk = states.some(s => s === 'unknown');
+        subMet.push(anyYes);
+        subUnk.push(!anyYes && anyUnk);
+        if (!anyYes) {
+          pathReasons.push(anyUnk && !anyNo
+            ? `${path.name}：存在未核验项（${states.filter(s => s === 'unknown').length} 项「不清楚」）——暂不能判为不满足，请逐项核实`
+            : `${path.name}：${path.items.length} 项均不符合`);
+        }
       }
     });
     const catMet = subMet.some(Boolean);
-    pathCatResults.push({ cat, subMet, met: catMet });
+    const catUnk = !catMet && subUnk.some(Boolean); // 2026-08-14：路径类待核实（有未核验项且无符合项）
+    pathCatResults.push({ cat, subMet, subUnk, met: catMet, unk: catUnk });
     if (catMet) {
       metRequired++;
       pathMetCount++;
@@ -934,8 +957,12 @@ function generateReport(policyId) {
       cat.paths.forEach((p, pIdx) => {
         if (subMet[pIdx]) metWeight += p.scoreBased ? (pathScoreInfo ? pathScoreInfo.sum : 0) : p.items.reduce((s, i) => s + i.weight, 0);
       });
+    } else if (catUnk) {
+      // 路径类待核实：不进 gaps（避免误判关键缺口），进待核实区——报告/手册口径统一
+      unverifiedItems.push({ name: cat.category, required: true, weight: 0, category: cat.category, description: pathReasons.join('；') });
     } else {
-      gaps.push({ name: cat.category, required: true, weight: 0, category: cat.category, description: pathReasons.join('；') });
+      // pathCatGap 标记：路径类确认未达标由「暂不具备申报资格（...未达标）」档独立呈现，不进 criticalGaps 截胡精确档位
+      gaps.push({ name: cat.category, required: true, weight: 0, category: cat.category, pathCatGap: true, description: pathReasons.join('；') });
     }
   });
 
@@ -952,6 +979,11 @@ function generateReport(policyId) {
   const unverifiedRequired = unverifiedItems.filter(g => g.required && !g.veto);
   const hasUnverifiedVeto = unverifiedVeto.length > 0;
   const hasUnverifiedRequired = unverifiedRequired.length > 0;
+  // 2026-08-14 修复：确认不满足的关键缺口（供 tier 判定与报告展示；unknown 不计入，避免「未核验」被误判「不具备」；
+  // pathCatGap 由「暂不具备申报资格（未达标）」档独立呈现，不在此截胡精确档位）
+  const criticalGaps = gaps.filter(g => g.required && !g.veto && !g.pathCatGap);
+  const pathCatUnmet = pathCatResults.filter(r => !r.met && !r.unk);
+  const pathCatUnk = pathCatResults.filter(r => !r.met && r.unk);
 
   let tier, tierColor, suggestion;
   if (hasVetoGap) {
@@ -962,20 +994,27 @@ function generateReport(policyId) {
     tier = '一票否决条件待核实';
     tierColor = 'var(--warning)';
     suggestion = '以下一票否决条件尚未确认「符合」或「不符合」。一票否决为独立硬性资格线，请先逐项核实后再做申报判断（未核验不等于不满足，也不等于满足）。';
-  } else if (baseReqScore < 100) {
+  } else if (criticalGaps.length > 0) {
+    // 2026-08-14 修复：仅「确认不满足」触发本档（原 baseReqScore<100 把未核验计入分母，误判「暂不具备」）
     tier = '暂不具备申报条件';
     tierColor = 'var(--danger)';
-    suggestion = '存在必选条件未满足，建议优先补齐以下标注为"关键缺口"的条件后再申报。';
+    suggestion = '存在必选条件确认不满足，建议优先补齐以下标注为"关键缺口"的条件后再申报。';
+  } else if (pathCatUnmet.length > 0) {
+    // 路径类确认未达标（创新型：直通/评分均未满足；专精特新：知识产权/豁免均未满足）
+    const unmetNames = pathCatUnmet.map(r => r.cat.category.replace(/（.*/, '')).join('、');
+    tier = `暂不具备申报资格（${unmetNames}未达标）`;
+    tierColor = 'var(--danger)';
+    suggestion = `基础合规已满足，但 ${unmetNames} 未达标。建议：该类为「满足任意 1 条路径即可」结构——${pathCatResults.flatMap(r => r.cat.paths.map(p => p.name)).join('；')}，请对照逐一核实，优先补齐最容易达成的一条。`;
   } else if (hasUnverifiedRequired) {
     tier = '关键条件待核实';
     tierColor = 'var(--warning)';
     suggestion = '以下必选条件尚未确认「符合」或「不符合」。为获得可靠结论，请在清单中逐项确认后再生成报告（未核验不等于不满足）。';
-  } else if (pathCatResults.some(r => !r.met)) {
-    // 路径类未达标（创新型：直通/评分均未满足；专精特新：知识产权/豁免均未满足）
-    const unmetNames = pathCatResults.filter(r => !r.met).map(r => r.cat.category.replace(/（.*/, '')).join('、');
-    tier = `暂不具备申报资格（${unmetNames}未达标）`;
-    tierColor = 'var(--danger)';
-    suggestion = `基础合规已满足，但 ${unmetNames} 未达标。建议：该类为「满足任意 1 条路径即可」结构——${pathCatResults.flatMap(r => r.cat.paths.map(p => p.name)).join('；')}，请对照逐一核实，优先补齐最容易达成的一条。`;
+  } else if (pathCatUnk.length > 0) {
+    // 2026-08-14：路径类待核实（存在「不清楚」且无「符合」）——不判不满足，提示核实
+    const unkNames = pathCatUnk.map(r => r.cat.category.replace(/（.*/, '')).join('、');
+    tier = `${unkNames}待核实`;
+    tierColor = 'var(--warning)';
+    suggestion = `路径类条件 ${unkNames} 存在未核验项，暂不能判为满足或不满足——请逐项确认「符合/不符合/不清楚」后重新生成报告。`;
   } else if (pathCatResults.length > 0) {
     // 路径已满足：综合匹配度受未选评分档位影响而偏低，结论直接按路径达标给成熟档
     tier = '申报条件成熟';
@@ -995,14 +1034,14 @@ function generateReport(policyId) {
     suggestion = '建议先制定分阶段补齐计划，不宜仓促申报。可优先攻克必选条件中的关键缺口。';
   }
 
-  const criticalGaps = gaps.filter(g => g.required && !g.veto);
   const optionalGaps = gaps.filter(g => !g.required);
   const unverifiedOthers = unverifiedItems.filter(g => !g.veto); // 报告「待核实条件」区块（不含一票否决，其单独区块）
 
   const today = new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric' });
 
   // Phase 3.3：挂载作战手册数据（渲染按钮在报告尾部）
-  manualData = { policy, vetoGaps, criticalGaps, optionalGaps };
+  // 2026-08-14 修复：挂载待核实数据——手册与报告口径统一（unknown 不计「全部满足」）
+  manualData = { policy, vetoGaps, criticalGaps, optionalGaps, unverifiedVeto, unverifiedRequired, unverifiedOthers, pathCatResults };
 
   $('#diagnosisReport').innerHTML = `
     <div class="diagnosis-report">
@@ -1016,12 +1055,12 @@ function generateReport(policyId) {
       <div class="report-score" style="color:${tierColor};">${tier}</div>
       <div style="text-align:center;margin-bottom:8px;">
         综合匹配度 <strong style="font-size:28px;color:${tierColor};">${score}%</strong>
-        &nbsp;|&nbsp; 必选条件通过率 <strong>${metRequired}/${totalRequired}</strong>
-        &nbsp;|&nbsp; 可选条件完成率 <strong>${metOptional}/${totalOptional}</strong>
+        &nbsp;|&nbsp; 必选条件 <strong>满足 ${metRequired} · 不满足 ${gaps.filter(g => g.required).length} · 待核实 ${unverifiedItems.filter(g => g.required).length}</strong>（共 ${totalRequired} 项）
+        &nbsp;|&nbsp; 可选条件 ${totalOptional > 0 ? `<strong>完成 ${metOptional}/${totalOptional}</strong>` : '<strong>—</strong>'}
       </div>
       <div style="text-align:center;color:var(--text-secondary);font-size:14px;margin-bottom:16px;">${suggestion}</div>
 
-      ${pathCatResults.length > 0 ? `<div style="text-align:center;color:var(--text-secondary);font-size:14px;margin-bottom:16px;">${pathCatResults.map(r => `${r.cat.category}：${r.met ? '✅ 已满足' : '❌ 未满足'}`).join(' · ')}</div>` : ''}
+      ${pathCatResults.length > 0 ? `<div style="text-align:center;color:var(--text-secondary);font-size:14px;margin-bottom:16px;">${pathCatResults.map(r => `${r.cat.category}：${r.met ? '✅ 已满足' : r.unk ? '🟡 待核实' : '❌ 未满足'}`).join(' · ')}</div>` : ''}
 
       ${policy.alert ? `<div class="policy-alert ${policy.alert.level}" style="margin-bottom:16px;"><strong>⚠️ 政策重要变更</strong>：${policy.alert.text} <a href="${policy.alert.link}" target="_blank" rel="noopener">${policy.alert.linkLabel}</a></div>` : ''}
 
@@ -1051,8 +1090,9 @@ function generateReport(policyId) {
         <div style="font-size:13px;margin-bottom:6px;line-height:1.8;">
           ${r.cat.paths.map((p, i) => {
             const met = r.subMet[i];
-            let s = `${p.name}：${met ? '✅ 已满足' : '❌ 未满足'}`;
-            if (p.items.length > 1) s += met ? `（${p.items.length} 项中勾选至少 1 项）` : `（${p.items.length} 项均未勾选）`;
+            const unk = r.subUnk && r.subUnk[i];
+            let s = `${p.name}：${met ? '✅ 已满足' : unk ? '🟡 待核实（存在未核验项，暂不能判为不满足）' : '❌ 未满足'}`;
+            if (p.items.length > 1) s += met ? `（${p.items.length} 项中至少 1 项符合）` : unk ? `（存在「不清楚」项，请逐项核实）` : `（${p.items.length} 项均不符合）`;
             if (p.scoreBased && pathScoreInfo && pathScoreInfo.name === p.name) {
               s += met ? `，✅ 预估 ${pathScoreInfo.sum}/${pathScoreInfo.pathMax} 分，达标` : `，❌ 预估 ${pathScoreInfo.sum}/${pathScoreInfo.pathMax} 分，未达标`;
               if (pathScoreInfo.minParts) s += `（${Object.entries(pathScoreInfo.minParts).map(([k, v]) => `${k} ${pathScoreInfo.parts[k] || 0}/${pathScoreInfo.partMax[k] || 0} 底线 ${v} ${(pathScoreInfo.parts[k] || 0) >= v ? '✓' : '✗'}`).join(' · ')}）`;
@@ -1124,11 +1164,11 @@ function generateReport(policyId) {
         报告由「政策通」自动生成 · ${today} · 条件数据最后更新：${DATA_VERSION}
       </div>
 
-      <!-- 导出按钮（打印时隐藏） -->
+      <!-- 导出按钮（打印时隐藏）；2026-08-14 修复：唯一打印入口——含诊断报告 + 申报作战手册（已生成时） -->
       <div class="no-print" style="margin-top:16px;padding:12px 14px;background:var(--bg-info);border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-        <button class="btn btn-primary" onclick="window.print()">打印 / 导出 PDF 报告</button>
+        <button class="btn btn-primary" onclick="window.print()">打印 / 导出 PDF（含诊断报告与申报作战手册）</button>
         <button class="btn btn-primary" onclick="renderManual()" style="margin-left:6px;">📋 生成申报作战手册</button>
-        <span style="font-size:12px;color:var(--text-secondary);">含诊断结果、缺口清单、申报作战手册、日期戳和否决条件标记。打印时请选择「另存为 PDF」即可导出。</span>
+        <span style="font-size:12px;color:var(--text-secondary);">生成手册后，打印输出将同时包含诊断报告与五模块作战手册。打印时请选择「另存为 PDF」即可导出。</span>
       </div>
     </div>
   `;
@@ -1820,7 +1860,9 @@ const MANUAL_RISKS = [
 function renderManual() {
   const box = $('#manualBox');
   if (!box || !manualData) return;
-  const { policy, vetoGaps, criticalGaps, optionalGaps } = manualData;
+  // 2026-08-14 修复：解构待核实数据——手册与报告口径统一（unknown 不计「全部满足」）
+  const { policy, vetoGaps, criticalGaps, optionalGaps, unverifiedVeto, unverifiedRequired, unverifiedOthers } = manualData;
+  const unverifiedAll = [...(unverifiedVeto || []), ...(unverifiedRequired || []), ...(unverifiedOthers || [])];
   const docs = extractSupportDocs(policy);
   const tl = manualTimeline(policy);
   const gapUl = (list, cls) => list.map(g =>
@@ -1839,7 +1881,12 @@ function renderManual() {
       ${vetoGaps.length ? `<div style="color:var(--danger);font-weight:600;margin-bottom:6px;">一票否决（${vetoGaps.length} 项）——先解决，否则一切白做</div><ul>${gapUl(vetoGaps, 'gap-critical')}</ul>` : ''}
       ${criticalGaps.length ? `<div style="color:var(--danger);font-weight:600;margin-bottom:6px;">关键必选缺口（${criticalGaps.length} 项）</div><ul>${gapUl(criticalGaps, 'gap-critical')}</ul>` : ''}
       ${optionalGaps.length ? `<div style="color:var(--warning);font-weight:600;margin-bottom:6px;">可选条件（${optionalGaps.length} 项，影响评审竞争力）</div><ul>${gapUl(optionalGaps, 'gap-important')}</ul>` : ''}
-      ${!vetoGaps.length && !criticalGaps.length && !optionalGaps.length ? '<div style="color:var(--success);font-weight:600;">全部条件已满足——按下方时间表启动申报。</div>' : ''}
+      ${unverifiedAll.length ? `<div style="color:var(--warning);font-weight:600;margin-bottom:6px;">待核实条件（${unverifiedAll.length} 项——未核验不等于不满足，建议逐项确认后再申报）</div><ul>${gapUl(unverifiedAll, 'gap-important')}</ul>` : ''}
+      ${!vetoGaps.length && !criticalGaps.length && !optionalGaps.length && !unverifiedAll.length
+        ? '<div style="color:var(--success);font-weight:600;">全部条件已满足——按下方时间表启动申报。</div>'
+        : (!vetoGaps.length && !criticalGaps.length && !optionalGaps.length
+          ? `<div style="color:var(--warning);font-weight:600;">已核验条件全部满足——仍有 ${unverifiedAll.length} 项待核实，建议逐项确认后启动申报。</div>`
+          : '')}
     </div>
 
     <div class="report-section">
@@ -1874,10 +1921,8 @@ function renderManual() {
       </div>
     </div>
 
-    <div class="no-print" style="margin-top:16px;padding:12px 14px;background:var(--bg-info);border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-      <button class="btn btn-primary" onclick="window.print()">打印 / 导出 PDF 手册</button>
-      <span style="font-size:12px;color:var(--text-secondary);">含五模块完整手册，可直接作为内部筹备会底稿。</span>
-    </div>
+    <!-- 2026-08-14 修复：打印按钮合并——统一走报告尾部「打印 / 导出 PDF（含诊断报告与申报作战手册）」，
+         本手册尾部不再放独立打印按钮（window.print 本就输出整页，两个按钮内容相同且冗余） -->
   </div>`;
   box.scrollIntoView({ behavior: 'smooth' });
 }
