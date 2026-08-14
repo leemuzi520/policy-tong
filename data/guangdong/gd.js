@@ -236,9 +236,9 @@ window.ZCT_DATA.guangdong.push(
       {
         category: "基础合规",
         items: [
-          { name: "广东省注册、独立法人、符合中小企业划型", required: true, weight: 3, description: "符合《中小企业划型标准规定》（工信部联企业〔2011〕300 号）" },
-          { name: "合规经营", required: true, weight: 3, description: "未被列入经营异常名录或严重失信主体名单；产品（服务）不属于国家禁止、限制或淘汰类", evidence: "国家企业信用信息公示系统（gsxt.gov.cn）查询结果 + 信用中国（creditchina.gov.cn）报告" },
-          { name: "近三年无重大事故及偷漏税", required: true, weight: 2, veto: true, autoMatch: "accident", rule: v => v === "无", description: "重大及以上安全（含网络安全、数据安全）、质量、环境污染事故（偷漏税需人工核验）", evidence: "国家企业信用信息公示系统（gsxt.gov.cn）查询结果 + 信用中国（creditchina.gov.cn）报告" }
+          { name: "广东省注册、独立法人、符合中小企业划型", required: true, weight: 3, description: "符合《中小企业划型标准规定》（工信部联企业〔2011〕300 号）" , basis: { name: "《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4459/mpost_4459794.html" }},
+          { name: "合规经营", required: true, weight: 3, description: "未被列入经营异常名录或严重失信主体名单；产品（服务）不属于国家禁止、限制或淘汰类", evidence: "国家企业信用信息公示系统（gsxt.gov.cn）查询结果 + 信用中国（creditchina.gov.cn）报告" , basis: { name: "《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4459/mpost_4459794.html" }},
+          { name: "近三年无重大事故及偷漏税", required: true, weight: 2, veto: true, autoMatch: "accident", rule: v => v === "无", description: "重大及以上安全（含网络安全、数据安全）、质量、环境污染事故（偷漏税需人工核验）", evidence: "国家企业信用信息公示系统（gsxt.gov.cn）查询结果 + 信用中国（creditchina.gov.cn）报告" , basis: { name: "《广东省优质中小企业梯度培育管理实施细则》（粤工信规字〔2024〕5 号）", url: "https://gdii.gd.gov.cn/gkmlpt/content/4/4459/mpost_4459794.html" }}
         ]
       },
       {
@@ -246,11 +246,11 @@ window.ZCT_DATA.guangdong.push(
         items: [
           { name: "已获科技和创新型中小企业称号（3 年有效期内）", required: true, weight: 3, autoMatch: "level", rule: v => v >= 1, description: "2 号文第一层「科技和创新型中小企业」——含有效期内科技型中小企业和创新型中小企业（2 号文第三十条口径）；合并新标准未发布前，已按原标准认定的创新型中小企业在有效期内继续有效" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }},
           { name: "截至上年末从事特定细分市场 ≥3 年", required: true, weight: 3, autoMatch: "segYears", rule: v => v === "3-5年" || v === "5-10年" || v === ">10年", description: "2 号文由原「2 年以上」提高至 3 年；以从事细分市场的实际年限计，非成立年限" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }},
-          { name: "上年度营业收入 ≥1500 万元，或近两年新增股权投资 ≥2000 万元", required: true, weight: 3, autoMatch: "revenue", rule: (v, profile) => { if (v === "2000万-5000万" || v === "5000万-1亿" || v === "1亿-4亿" || v === ">4亿") return true; if (profile.equity === "≥2000万") return true; if (v === "<500万" || profile.equity === "<2000万") return false; return undefined; }, description: "不足 1500 万但近两年新增股权投资（合格机构投资者实缴额）总额 ≥2000 万元的除外；「500万-2000万」档跨 1500 万线，选该档且无股权融资豁免时从严按未达标计", evidence: "近两年审计报告（财政部监管平台报备赋码）；股权融资达标的附银行到账凭证与合格机构投资者证明材料" },
+          { name: "上年度营业收入 ≥1500 万元，或近两年新增股权投资 ≥2000 万元", required: true, weight: 3, autoMatch: "revenue", rule: (v, profile) => { if (v === "2000万-5000万" || v === "5000万-1亿" || v === "1亿-4亿" || v === ">4亿") return true; if (profile.equity === "≥2000万") return true; if (v === "<500万" || profile.equity === "<2000万") return false; return undefined; }, description: "不足 1500 万但近两年新增股权投资（合格机构投资者实缴额）总额 ≥2000 万元的除外；「500万-2000万」档跨 1500 万线，选该档且无股权融资豁免时从严按未达标计", evidence: "近两年审计报告（财政部监管平台报备赋码）；股权融资达标的附银行到账凭证与合格机构投资者证明材料" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }},
           { name: "主营业务收入占比 ≥80%", required: true, weight: 2, autoMatch: "mainRatio", rule: v => v === "≥90%" ? true : v === "80%-90%" ? true : v === "<80%" ? false : undefined, description: "上年度主营业务收入总额占营业收入总额比重，2 号文新增硬条件", evidence: "审计报告须体现主营业务收入指标" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }},
           { name: "上年末资产负债率 ≤80%", required: true, weight: 2, autoMatch: "debt", rule: v => v === "≤55%" || v === "55%-75%" || v === "75%-80%", description: "2 号文新增硬条件", evidence: "上年末审计报告" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }},
-          { name: "近两年研发费用均 ≥100 万元且每年占营收比重 ≥3%", required: true, weight: 3, autoMatch: "rd", rule: (v, profile) => v === "<3%" ? false : (profile.rdTotal === "≥1200万" || profile.rdTotal === "100万-1200万") ? true : profile.rdTotal === "<100万" ? false : undefined, description: "两年每年均须达标（原标准仅查上年度）；金额与占比双重要求，以审计报告为准", evidence: "近两年审计报告（未体现研发费用的需另附研发专项审计报告）" },
-          { name: "主导产品市场占有率较为靠前", required: true, weight: 2, autoMatch: "marketShare", rule: v => v === "全球前3" || v === "国内前三或≥10%" || v === "较为靠前", description: "在国内或国际细分市场占有率较为靠前，享有一定知名度、影响力；无统一量化标准，以评审认定为准，需如实说明并提供佐证", evidence: "细分市场占有率说明（界定细分市场范围、规模、本企业占有率，数据注明出处）" },
+          { name: "近两年研发费用均 ≥100 万元且每年占营收比重 ≥3%", required: true, weight: 3, autoMatch: "rd", rule: (v, profile) => v === "<3%" ? false : (profile.rdTotal === "≥1200万" || profile.rdTotal === "100万-1200万") ? true : profile.rdTotal === "<100万" ? false : undefined, description: "两年每年均须达标（原标准仅查上年度）；金额与占比双重要求，以审计报告为准", evidence: "近两年审计报告（未体现研发费用的需另附研发专项审计报告）" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }},
+          { name: "主导产品市场占有率较为靠前", required: true, weight: 2, autoMatch: "marketShare", rule: v => v === "全球前3" || v === "国内前三或≥10%" || v === "较为靠前", description: "在国内或国际细分市场占有率较为靠前，享有一定知名度、影响力；无统一量化标准，以评审认定为准，需如实说明并提供佐证", evidence: "细分市场占有率说明（界定细分市场范围、规模、本企业占有率，数据注明出处）" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }},
           { name: "专精特新发展评价得分 ≥50 分", required: true, weight: 3, autoMatch: "eval", rule: v => v === "未查询" ? undefined : v === "≥60分" || v === "50-60分", description: "由培育平台按《中小企业专精特新发展评价指标体系》（工信厅企业〔2024〕75 号）自动计算，登录 zjtx.miit.gov.cn 查询本年度得分，无需自行测算；未查询前此项无法核验", evidence: "培育平台系统自动计算得分（仅一次填报机会），登录 zjtx.miit.gov.cn 查询结果" , basis: { name: "《中小企业专精特新发展评价指标体系》（工信厅企业〔2024〕75 号）", url: "http://gxj.xinxiang.gov.cn/zwgk/public/6638681/9530434.html" }}
         ]
       },
@@ -264,7 +264,7 @@ window.ZCT_DATA.guangdong.push(
             autoMatch: "ipr",
             rule: v => v === "1-5" || v === "6-15" || v === ">15",
             items: [
-              { name: "拥有 ≥1 项与主导产品相关的Ⅰ类知识产权且实际应用产生经济效益", required: true, weight: 3, description: "Ⅰ类=发明专利（含国防专利）、植物新品种、国家级农作物品种、国家新药、国家一级中药保护品种、集成电路布图设计专有权", evidence: "知识产权证书复印件（不含转让未满 1 年）" }
+              { name: "拥有 ≥1 项与主导产品相关的Ⅰ类知识产权且实际应用产生经济效益", required: true, weight: 3, description: "Ⅰ类=发明专利（含国防专利）、植物新品种、国家级农作物品种、国家新药、国家一级中药保护品种、集成电路布图设计专有权", evidence: "知识产权证书复印件（不含转让未满 1 年）" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }}
             ]
           },
           {
@@ -272,8 +272,8 @@ window.ZCT_DATA.guangdong.push(
             anyOf: true,
             hint: "满足以下 2 项中任意 1 项即可豁免知识产权条件",
             items: [
-              { name: "近三年获得省部级以上科学技术奖励（获奖单位排名前三）", required: true, weight: 2, description: "以获奖证书落款时间为准（近三年内）", evidence: "获奖证书复印件" },
-              { name: "拥有经认定的省部级以上研发机构", required: true, weight: 2, description: "如重点实验室、工程技术研究中心、企业技术中心等，以认定文件为准", evidence: "研发机构认定文件" }
+              { name: "近三年获得省部级以上科学技术奖励（获奖单位排名前三）", required: true, weight: 2, description: "以获奖证书落款时间为准（近三年内）", evidence: "获奖证书复印件" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }},
+              { name: "拥有经认定的省部级以上研发机构", required: true, weight: 2, description: "如重点实验室、工程技术研究中心、企业技术中心等，以认定文件为准", evidence: "研发机构认定文件" , basis: { name: "《优质中小企业梯度培育管理办法》（工信部企业〔2026〕2 号，2026-04-01 起实施）", url: "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zcfw/zhzc/content/post_10654994.html" }}
             ]
           }
         ]

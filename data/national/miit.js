@@ -395,7 +395,7 @@ window.ZCT_DATA.national.miit.push(
           { name: "工信部认定的有效期内专精特新「小巨人」企业", required: true, weight: 3, autoMatch: "level", rule: v => v >= 3, description: "已获「小巨人」认定且证书在有效期内（广州第三批通知申报对象）", basis: { name: "财建〔2024〕148 号 · 广州第三批通知", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html" }, evidence: "「小巨人」证书或培育平台认定信息截图" },
           { name: "未在境内外公开发行股票", required: true, weight: 2, autoMatch: "listed", rule: v => v === "未上市" ? true : v === "已上市" ? false : undefined, description: "未在上交所、深交所、北交所，以及境外公开发行股票（广州第三批通知申报对象）", basis: { name: "广州第三批通知申报对象", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html" }, evidence: "上市状态自检说明（证券代码/股权结构核查）" },
           { name: "未获过前轮支持", required: true, weight: 2, description: "财建〔2021〕2 号文（上一轮）及新一轮第一、二批已获支持的「小巨人」不再重复支持（2026 第三批口径）", basis: { name: "广州第三批通知申报对象", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html" }, evidence: "历史获支持情况自检说明（前轮支持名单核对）" },
-          { name: "未列入经营异常名录、严重失信主体名单，近三年无重大违法违规行为", required: true, weight: 2, autoMatch: "accident", rule: v => v === "无", description: "2026 年第三批遴选明确要求；以信用中国、国家企业信用信息公示系统查询结果为准", evidence: "「信用中国」（creditchina.gov.cn）报告 + 国家企业信用信息公示系统（gsxt.gov.cn）查询结果" }
+          { name: "未列入经营异常名录、严重失信主体名单，近三年无重大违法违规行为", required: true, weight: 2, autoMatch: "accident", rule: v => v === "无", description: "2026 年第三批遴选明确要求；以信用中国、国家企业信用信息公示系统查询结果为准", evidence: "「信用中国」（creditchina.gov.cn）报告 + 国家企业信用信息公示系统（gsxt.gov.cn）查询结果" , basis: { name: "广州第三批通知（申报对象/三、申报材料）", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html" }}
         ]
       },
       {
@@ -410,10 +410,10 @@ window.ZCT_DATA.national.miit.push(
       {
         category: "加分项（非硬性门槛，省级评审佐证材料）",
         items: [
-          { name: "主持（参与）制修订标准", required: false, weight: 1, description: "国家标准、行业标准、团体标准等，佐证行业话语权", evidence: "标准文本（起草单位排序）" },
-          { name: "通过管理体系认证", required: false, weight: 1, description: "如 ISO9001 质量管理体系、ISO14001 环境管理体系等", evidence: "体系认证证书" },
-          { name: "产品通过国际认证", required: false, weight: 1, description: "如 CE、UL、FCC 等国际权威认证", evidence: "产品认证证书" },
-          { name: "已实际应用的有效发明专利（含「补短板」「填空白」成果）", required: false, weight: 1, description: "专利须实际应用并产生效益；主导产品「补短板」「填空白」情况是省级评审重要佐证", evidence: "已实际应用的有效发明专利清单和证书" }
+          { name: "主持（参与）制修订标准", required: false, weight: 1, description: "国家标准、行业标准、团体标准等，佐证行业话语权", evidence: "标准文本（起草单位排序）" , basis: { name: "广州第三批通知（申报对象/三、申报材料）", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html" }},
+          { name: "通过管理体系认证", required: false, weight: 1, description: "如 ISO9001 质量管理体系、ISO14001 环境管理体系等", evidence: "体系认证证书" , basis: { name: "广州第三批通知（申报对象/三、申报材料）", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html" }},
+          { name: "产品通过国际认证", required: false, weight: 1, description: "如 CE、UL、FCC 等国际权威认证", evidence: "产品认证证书" , basis: { name: "广州第三批通知（申报对象/三、申报材料）", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html" }},
+          { name: "已实际应用的有效发明专利（含「补短板」「填空白」成果）", required: false, weight: 1, description: "专利须实际应用并产生效益；主导产品「补短板」「填空白」情况是省级评审重要佐证", evidence: "已实际应用的有效发明专利清单和证书" , basis: { name: "广州第三批通知（申报对象/三、申报材料）", url: "https://gxj.gz.gov.cn/zzzq/xmzj/content/post_10690028.html" }}
         ]
       }
     ],
