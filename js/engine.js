@@ -180,7 +180,8 @@ function evaluatePolicyConditions(policy, profile) {
         if (!item.required) unmatchedOptional.push(item.name);
       }
 
-      items.push({ name: item.name, category: cat.category, required: item.required, veto: item.veto, matched, auto: canAutoCheck, unverified: !canAutoCheck || verdict === undefined, weight: item.weight, autoMatch: item.autoMatch });
+      // 2026-08-14 数据消费层：items 挂 description/evidence/basis，供智能匹配差距清单与培育规划差距条目消费（无字段零渲染）
+      items.push({ name: item.name, category: cat.category, required: item.required, veto: item.veto, matched, auto: canAutoCheck, unverified: !canAutoCheck || verdict === undefined, weight: item.weight, autoMatch: item.autoMatch, description: item.description, evidence: item.evidence, basis: item.basis });
     });
   });
 
@@ -259,17 +260,19 @@ function normText(s) {
 }
 
 // 全文检索：政策名 + 发文机关 + 条件描述（category + items 的 name/description）
+// + 申报材料（materials.name/note）+ 条件佐证（evidence）（2026-08-14 数据消费层：细化字段接入政策库搜索）
 // paths 二选一路径结构须展平（xjr/kjxqy/greenfactory/gysjzx/gdgczx 均含）；summary/tips 不在检索范围（需求口径）
 function policyMatchesSearch(policy, term) {
   const t = normText(term);
   if (!t) return true;
   if (normText(policy.name).includes(t) || normText(policy.issuingBody).includes(t)) return true;
+  if ((policy.materials || []).some(m => normText(m.name).includes(t) || normText(m.note).includes(t))) return true;
   return policy.conditions.some(cat => {
     if (normText(cat.category).includes(t)) return true;
     const items = cat.paths
       ? cat.paths.flatMap(path => (path.name ? [path.name] : []).concat(path.items || []))
       : (cat.items || []);
-    return items.some(it => normText(it.name).includes(t) || normText(it.description).includes(t));
+    return items.some(it => normText(it.name).includes(t) || normText(it.description).includes(t) || normText(it.evidence).includes(t));
   });
 }
 

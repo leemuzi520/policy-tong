@@ -209,6 +209,11 @@ function policyCardHtml(p) {
         <div style="margin-bottom:10px;font-size:13px;color:var(--text-secondary);">
           适用行业：${p.applicableIndustries.join(' / ')} &nbsp;|&nbsp; 奖补：${p.subsidy} &nbsp;|&nbsp; 数据更新：${p.updated}
         </div>
+        ${p.diagNotes && p.diagNotes.length ? `
+        <div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:10px;padding:8px 12px;background:var(--bg-info);border-radius:6px;line-height:1.8;">
+          <strong style="color:var(--primary);">📌 申报要求（信息提示，非诊断条件）</strong>
+          <ul style="margin:4px 0 0;padding-left:18px;">${p.diagNotes.map(n => `<li>${n}</li>`).join('')}</ul>
+        </div>` : ''}
         ${p.conditions.map(cat => `
           <div class="condition-category">
             <div class="condition-cat-title">${cat.category}</div>
@@ -222,6 +227,8 @@ function policyCardHtml(p) {
                         <span style="font-weight:500;">${item.name}</span>
                         ${item.required ? '<span style="font-size:11px;color:var(--danger);margin-left:4px;">[必选]</span>' : '<span style="font-size:11px;color:var(--warning);margin-left:4px;">[可选]</span>'}
                         <div class="desc">${item.description}</div>
+                        ${item.evidence ? `<div style="font-size:12px;color:var(--text-primary);margin-top:2px;line-height:1.6;">📎 佐证：${item.evidence}</div>` : ''}
+                        ${item.basis ? `<div style="font-size:12px;margin-top:2px;line-height:1.6;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">${item.basis.name}</a></div>` : ''}
                       </div>
                     </div>`).join('')}
                 `).join('')
@@ -232,12 +239,21 @@ function policyCardHtml(p) {
                       <span style="font-weight:500;">${item.name}</span>
                       ${item.required ? '<span style="font-size:11px;color:var(--danger);margin-left:4px;">[必选]</span>' : '<span style="font-size:11px;color:var(--warning);margin-left:4px;">[可选]</span>'}
                       <div class="desc">${item.description}</div>
+                      ${item.evidence ? `<div style="font-size:12px;color:var(--text-primary);margin-top:2px;line-height:1.6;">📎 佐证：${item.evidence}</div>` : ''}
+                      ${item.basis ? `<div style="font-size:12px;margin-top:2px;line-height:1.6;">政策依据：<a href="${item.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);">${item.basis.name}</a></div>` : ''}
                     </div>
                   </div>
                 `).join('')}
           </div>
         `).join('')}
         ${p.tips ? `<div class="policy-tips"><strong>实操提醒</strong>：${p.tips}</div>` : ''}
+        ${p.materials && p.materials.length ? `
+        <details style="margin-bottom:10px;">
+          <summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--primary);">📋 本政策申报材料（${p.materials.filter(m => m.required).length} 必需 / ${p.materials.filter(m => !m.required).length} 建议）</summary>
+          <ul style="margin:6px 0 0;padding-left:18px;font-size:12.5px;line-height:1.8;">
+            ${p.materials.map(m => `<li>${m.name}${m.required ? ' <span style="color:var(--danger);font-size:11px;">[必需]</span>' : ' <span style="color:var(--warning);font-size:11px;">[建议]</span>'}</li>`).join('')}
+          </ul>
+        </details>` : ''}
         <div class="policy-source">
           <span class="src-tag">政策原文</span>
           <div class="src-docs">
@@ -436,6 +452,23 @@ function goDiag(id) {
   $('#diagPolicySelect').value = id;
   loadDiagnosis();
   $('#diagnosisChecklist').scrollIntoView({ behavior: 'smooth' });
+}
+
+// 数据消费层 3.2/3.4（2026-08-14）：材料清单直达——自诊断 → 生成报告 → 作战手册（材料区块在手册②）
+function goManual(id) {
+  goDiag(id);
+  generateReport(id);
+  renderManual();
+  $('#manualBox').scrollIntoView({ behavior: 'smooth' });
+}
+
+// 数据消费层 3.2（2026-08-14）：差距条目带「📎 佐证」与「政策依据」链接（条件有字段才渲染，无则零影响）
+function gapItemHTML(r, name) {
+  const it = (r.items || []).find(x => x.name === name);
+  if (!it) return name;
+  const ev = it.evidence ? ` <span style="font-size:12px;color:var(--text-primary);">📎 佐证：${it.evidence}</span>` : '';
+  const bs = it.basis ? ` <a href="${it.basis.url}" target="_blank" rel="noopener" style="color:var(--primary);font-size:12px;">政策依据：${it.basis.name}</a>` : '';
+  return `${name}${ev}${bs}`;
 }
 
 // 绑定搜索与筛选
@@ -675,10 +708,11 @@ function runMatch() {
           ${r.policy.honorOnly ? '<div style="color:var(--text-secondary);margin-bottom:4px;font-size:12.5px;">案例/荣誉类政策：无资金奖补，申报价值为行业示范背书与后续项目基础</div>' : ''}
           ${(() => { const ci = GRADIENT_CHAIN.findIndex(n => n.policyId === r.policy.id); const ul = profile.level; return (ci >= 0 && typeof ul === 'number' && ul >= 2 && ci < ul - 1) ? '<div style="color:var(--text-secondary);margin-bottom:4px;font-size:12.5px;">你已获更高层级资质（当前为专精特新梯度第 ' + ul + ' 层）——该政策为前置申报层，重点可关注升级与复核方向</div>' : ''; })()}
           ${r.matchedItems.length > 0 ? `<div style="margin-bottom:4px;">已匹配条件（${r.matchedItems.length} 项）：${r.matchedItems.join('、')}</div>` : ''}
-          ${r.failedRequired.length > 0 ? `<div style="color:var(--danger);margin-bottom:4px;">未通过的必选条件：${r.failedRequired.join('、')}</div>` : ''}
-          ${r.unverifiedRequired.length > 0 ? `<div style="color:var(--warning);margin-bottom:6px;padding:8px 12px;background:var(--bg-warning);border-radius:4px;">已核验必选条件 <strong>${r.verifiedRequired}/${r.requiredTotal}</strong> 项 · 还有 <strong>${r.unverifiedRequired.length}</strong> 项必选未核实（无法自动判断或尚未填写），建议在自诊断中逐条核实：${r.unverifiedRequired.join('、')} <button class="btn btn-primary" style="margin-left:8px;padding:2px 10px;font-size:12px;" onclick="goDiag('${r.policy.id}')">去自诊断核实</button></div>` : ''}
+          ${r.failedRequired.length > 0 ? `<div style="color:var(--danger);margin-bottom:4px;">未通过的必选条件：${r.failedRequired.map(n => gapItemHTML(r, n)).join('、')}</div>` : ''}
+          ${r.unverifiedRequired.length > 0 ? `<div style="color:var(--warning);margin-bottom:6px;padding:8px 12px;background:var(--bg-warning);border-radius:4px;">已核验必选条件 <strong>${r.verifiedRequired}/${r.requiredTotal}</strong> 项 · 还有 <strong>${r.unverifiedRequired.length}</strong> 项必选未核实（无法自动判断或尚未填写），建议在自诊断中逐条核实：${r.unverifiedRequired.map(n => gapItemHTML(r, n)).join('、')} <button class="btn btn-primary" style="margin-left:8px;padding:2px 10px;font-size:12px;" onclick="goDiag('${r.policy.id}')">去自诊断核实</button></div>` : ''}
           ${r.unmatchedOptional.length > 0 ? `<div style="margin-bottom:4px;">未匹配的可选条件（${r.unmatchedOptional.length} 项）：${r.unmatchedOptional.join('、')}</div>` : ''}
           <div style="font-size:12px;color:var(--text-secondary);">提示：自动匹配仅覆盖部分可量化条件，建议在"自诊断"标签中逐条手动核实以获得精确结果。</div>
+          ${r.policy.materials && r.policy.materials.length ? `<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;"><button class="btn" style="padding:2px 10px;font-size:12px;" onclick="goManual('${r.policy.id}')">📋 材料清单（${r.policy.materials.filter(m => m.required).length} 必需 / ${r.policy.materials.filter(m => !m.required).length} 建议）</button></div>` : ''}
         </div>
       </div>
     `).join('') + `
@@ -1263,7 +1297,7 @@ function runPlan() {
         const maybeCount = ev.items.filter(i => i.unverified).length;
         gapsHtml = ev.items.map(it => {
           const [cls, mark] = planGapMark(it);
-          return `<div class="plan-gap ${cls}"><span class="plan-mark">${mark}</span><div><span class="plan-gap-name">${it.name}</span>${it.required ? '<span style="font-size:11px;color:var(--danger);margin-left:4px;">[必选]</span>' : ''}<div class="plan-gap-desc">${itemDesc(target, it.name)}</div></div></div>`;
+          return `<div class="plan-gap ${cls}"><span class="plan-mark">${mark}</span><div><span class="plan-gap-name">${it.name}</span>${it.required ? '<span style="font-size:11px;color:var(--danger);margin-left:4px;">[必选]</span>' : ''}<div class="plan-gap-desc">${itemDesc(target, it.name)}</div>${it.evidence ? `<div style="font-size:12px;color:var(--text-primary);margin-top:2px;line-height:1.6;">📎 佐证：${it.evidence}</div>` : ''}</div></div>`;
         }).join('') + `<div style="margin-top:8px;font-size:12px;color:var(--text-secondary);">小结：❌ 未达标 ${noCount} 项、❓ 需人工核实 ${maybeCount} 项（未填或选「不清楚」的必选项，建议到「自诊断」逐条核实）。</div>`;
       } else {
         gapsHtml = `<div style="font-size:13px;color:#92400e;padding:8px 12px;background:#fef9c3;border-left:3px solid #eab308;border-radius:4px;line-height:1.7;">该层级暂未收录独立条件条目，请以官方通知为准。</div>`;
@@ -1799,6 +1833,8 @@ function rmTimingText(r) {
 }
 
 function rmItemHTML(r, summary) {
+  const req = (r.policy.materials || []).filter(m => m.required).length;
+  const rec = (r.policy.materials || []).length - req;
   return `
     <div class="roadmap-item">
       <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
@@ -1806,6 +1842,7 @@ function rmItemHTML(r, summary) {
         <span style="font-size:12px;color:var(--text-secondary);">三维 <strong>${r.total}%</strong>｜匹配 ${r.fit}｜时效 ${r.timing.has ? r.timing.score : '—'}（${rmTimingText(r)}）｜成本 ${r.effort.label}</span>
       </div>
       <div style="font-size:12.5px;color:var(--text-secondary);margin-top:4px;line-height:1.7;">${summary}</div>
+      ${r.policy.materials && r.policy.materials.length ? `<div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">📋 材料就绪：本政策需准备 <strong>${req}</strong> 项必需材料${rec ? `（另有建议 ${rec} 项）` : ''}——<button class="btn" style="padding:1px 8px;font-size:11px;" onclick="goManual('${r.policy.id}')">查看材料清单</button></div>` : ''}
       <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn" style="padding:2px 8px;font-size:11px;" onclick="goPolicy('${r.policy.id}')">政策详情</button>
         <button class="btn" style="padding:2px 8px;font-size:11px;" onclick="goDiag('${r.policy.id}')">去自诊断核实</button>
