@@ -609,6 +609,7 @@ function runMatch() {
     const score = sp.total;
     const coverage = sp.coverage;
     const insufficient = sp.insufficient;
+    const reqUnverifiedBlocked = sp.reqUnverifiedBlocked; // P1（2026-09-30）：仅用于挡「推荐档」
     // 2b.4 核验进度（2026-08-13 方案 B）：已核验权重 / 可自动判断权重
     // 供 high 档门槛与「已核验 X/Y 项必选」展示（对标 Atom Grants 2.0「证据不足不参与定档」）
     const autoCheckable = autoCheckableWeight(policy);
@@ -640,6 +641,10 @@ function runMatch() {
       // 2b.4 区域不匹配：与行业不匹配同口径（soft 降档 + 提示，不硬否决——项目或子公司可能落在政策适用市）
       tier = 'medium';
       adjustedScore = Math.min(score, 69);
+    } else if (reqUnverifiedBlocked && score >= 75) {
+      // P1（2026-09-30）：必选条件里"表单能答却没答"达 30% → 不给推荐档（与 08-13 progress 门槛同款思路）
+      tier = 'medium';
+      adjustedScore = score;
     } else if (score >= 75 && progress >= 0.7) {
       // 2b.4 核验进度门槛（2026-08-13 方案 B）：可自动判断权重已核验 <70% → 不达推荐申报档
       // 只填少量字段时「已核验内全对」也能算出高分，进度门槛避免虚高误导（progress 不足则落入下方 medium/low）
@@ -1072,7 +1077,7 @@ function generateReport(policyId) {
   } else if (score >= 85) {
     tier = '申报条件成熟';
     tierColor = 'var(--success)';
-    suggestion = '条件基本具备，建议启动申报材料准备工作，重点关注申报时间节点和材料清单。';
+    suggestion = '已核验范围内条件基本具备，建议启动申报材料准备工作；卡片上标注「待核实」的条件需先确认，再启动材料准备。';
   } else if (score >= 65) {
     tier = '基本具备，建议补齐加分项';
     tierColor = 'var(--warning)';
@@ -1834,7 +1839,7 @@ function mergeProfiles(a, b) {
 function resultTierInfo(r) {
   if (r.failedVeto.length) return ['veto', '存在一票否决条件不满足', 'var(--danger)'];
   if (r.failedRequired.length) return ['low', '暂不建议申报', 'var(--danger)'];
-  if (r.insufficient) return ['medium', '信息不足，暂无法评估', 'var(--warning)'];
+  if (r.insufficient || (r.reqUnverifiedBlocked && r.score >= 75)) return ['medium', '信息不足，暂无法评估', 'var(--warning)'];
   if (r.score >= 75) return ['high', '推荐申报', 'var(--success)'];
   if (r.score >= 50) return ['medium', '部分匹配，需补齐', 'var(--warning)'];
   return ['low', '暂不建议申报', 'var(--danger)'];
@@ -1889,11 +1894,11 @@ function runRoadmap() {
         <div class="rm-seg rm-mid"><span class="rm-seg-title">中期 · 6-12 月</span><span class="rm-seg-desc">缺 1-2 个关键条件</span></div>
         <div class="rm-seg rm-long"><span class="rm-seg-title">长期 · 1-3 年</span><span class="rm-seg-desc">系统性培育 / 资质递进</span></div>
       </div>
-      ${section('近期可申报（0-6 月）', '条件满足度 ≥70% 且无必选缺口——建议启动申报材料准备', layers.near, r => `已满足条件 <strong>${r.matchedItems.length}</strong> 项，无必选缺口；申报窗口：${rmTimingText(r)}。`, 'rm-near-sec', '当前画像暂无「近期可申报」政策')}
+      ${section('近期可申报（0-6 月）', '条件满足度 ≥70% 且无必选不符合项——另标注「待核实」的条件需先在自诊断确认', layers.near, r => `已满足条件 <strong>${r.matchedItems.length}</strong> 项，无必选缺口；申报窗口：${rmTimingText(r)}。`, 'rm-near-sec', '当前画像暂无「近期可申报」政策')}
       ${section('中期可冲刺（6-12 月）', '缺 1-2 个关键必选条件——按缺口制定补齐计划（时间来得及）', layers.mid, r => `缺口 <strong>${r.failedRequired.length}</strong> 项：${r.failedRequired.join('、')}。建议 1-2 个月内补齐后按近期档申报。`, 'rm-mid-sec', '当前画像暂无「中期可冲刺」政策')}
       ${section('长期培育（1-3 年）', '缺口 ≥3 项或需前置资质/系统性建设——纳入年度培育计划', layers.long, r => `缺口 <strong>${r.failedRequired.length}</strong> 项${r.unverifiedRequired.length ? `＋待核实 ${r.unverifiedRequired.length} 项` : ''}，需分阶段补齐；结合专精特新梯度递进规划（见「培育规划」标签）。`, 'rm-long-sec', '当前画像暂无「长期培育」政策')}
       ${section('暂不具备资格（一票否决）', '任一否决项未满足即不可申报——先攻克硬性资格线再谈规划', layers.vetoed, r => `否决项：<strong>${r.failedVeto.join('、')}</strong>。`, 'rm-veto-sec', '')}
-      ${section('信息不足（先补数据）', '已核验覆盖 <15%——先到「智能匹配/自诊断」补充企业数据再规划', layers.insufficient, r => `已核验覆盖 <strong>${Math.round(r.coverage * 100)}%</strong>，暂无法评估条件满足度。`, 'rm-ins-sec', '')}
+      ${section('信息不足（先补数据）', '填写不全或必选条件待核实——先补充企业数据，或在自诊断逐条核实后再规划', layers.insufficient, r => `已核验覆盖 <strong>${Math.round(r.coverage * 100)}%</strong>，暂无法评估条件满足度。`, 'rm-ins-sec', '')}
     </div>`;
   $('#roadmapResult').scrollIntoView({ behavior: 'smooth' });
 }

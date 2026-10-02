@@ -5,7 +5,7 @@
 
 // 数据版本：任何政策数据变更后更新此值（同步更新自诊断报告页脚日期戳）
 // ============================================================
-const DATA_VERSION = '2026-09-26'; // 环境时钟口径：2026-09 月度巡检时效回填日（P0+P1 共 15 条：prov/gdtech/gdadvanced/gdjszx/gdchampion/gdinterest/gdgreenfactory + dgtech/zhtech/jmtech/hzse/jmst/zhtiexi + keygiant/wlwsf——deadline/notice/batches/diagNotes 按核源结论更新 + updated 统一 bump）
+const DATA_VERSION = '2026-10-02'; // 环境时钟口径：2026-09 月度巡检时效回填日（P0+P1 共 15 条：prov/gdtech/gdadvanced/gdjszx/gdchampion/gdinterest/gdgreenfactory + dgtech/zhtech/jmtech/hzse/jmst/zhtiexi + keygiant/wlwsf——deadline/notice/batches/diagNotes 按核源结论更新 + updated 统一 bump）
 
 // 政策库：由 data/ 目录按部门汇总（2a.1 数据分离，2026-08-02）
 // 汇总后按 order 字段恢复原数组顺序；新增政策按部门写入 data/ 对应文件，order 取当前最大值+1
@@ -85,12 +85,19 @@ function autoCheckableWeight(policy) {
   return w;
 }
 
+// P1 阈值（2026-09-30 用户拍板 X=30%）：必选条件中「表单可自动判断」的部分，
+// 未核验权重占比 ≥ 此值 → 归「信息不足」。调阈值只改这一行。
+const REQ_AUTO_UNVERIFIED_MAX = 0.30;
+
 function evaluatePolicyConditions(policy, profile) {
   let totalWeight = 0;
   let verifiedWeight = 0; // 已核验条件权重（可自动判断且表单已填）
   let matchedWeight = 0;
   let requiredTotal = 0; // 必选条件总数（含二选一路径），供展示「已核验 X/Y 项必选」
   let verifiedRequired = 0; // 已核验且三态已定的必选数
+  let reqAutoW = 0; // P1：必选条件中「表单可自动判断」的权重合计（分母）
+  let unvReqAutoW = 0; // P1：其中未核验的部分（分子）
+  const reqAutoUnanswered = []; // 2026-10-01：这些未核验的必选项对应哪些字段（供「补答这 N 项」入口消费，UI 不再自行复算 canAutoCheck 口径）
   const failedRequired = [];
   const failedVeto = [];
   const unverifiedRequired = [];
@@ -116,6 +123,7 @@ function evaluatePolicyConditions(policy, profile) {
         const pathWeight = path.items.reduce((s, i) => s + i.weight, 0);
         totalWeight += pathWeight;
         requiredTotal += 1;
+        if (path.autoMatch) reqAutoW += pathWeight;
         // 2026-08-13 P1：「不清楚」统一三态拦截——任何 rule 都不对「不清楚」判定，归未核验而非未通过/通过。
         // 一处拦截覆盖所有字段（含白名单型 rule 如 segYears/rd，原会误判未通过；ipr v!=="0" 型原会误判满足）
         const canAutoCheck = !!path.autoMatch && profile[path.autoMatch] !== undefined && profile[path.autoMatch] !== '' && profile[path.autoMatch] !== '不清楚';
@@ -139,6 +147,7 @@ function evaluatePolicyConditions(policy, profile) {
           }
         } else {
           unverifiedRequired.push(label);
+          if (path.autoMatch) { unvReqAutoW += pathWeight; reqAutoUnanswered.push(path.autoMatch); }
           items.push({ name: label, category: cat.category, required: true, veto: false, matched: false, auto: false, unverified: true, weight: pathWeight });
         }
       });
@@ -147,6 +156,7 @@ function evaluatePolicyConditions(policy, profile) {
     cat.items.forEach(item => {
       totalWeight += item.weight;
       if (item.required) requiredTotal += 1;
+      if (item.required && item.autoMatch) reqAutoW += item.weight;
       let matched = false;
       let verdict; // 判定结果：true/false，或 undefined（3 态字段选「不清楚」= 无法判断）
 
@@ -173,6 +183,7 @@ function evaluatePolicyConditions(policy, profile) {
       } else if (!canAutoCheck || verdict === undefined) {
         if (item.veto) unverifiedVeto.push(item.name);
         if (item.required) unverifiedRequired.push(item.name);
+        if (item.required && item.autoMatch && !canAutoCheck) { unvReqAutoW += item.weight; reqAutoUnanswered.push(item.autoMatch); } // 只算"表单能答却没答"；字段已填但规则判不了不算（2026-09-30 修正）
         if (!item.required) unmatchedOptional.push(item.name);
       } else {
         if (item.veto) failedVeto.push(item.name);
@@ -191,9 +202,19 @@ function evaluatePolicyConditions(policy, profile) {
   // 已核验权重占全部条件权重的比例，用于「信息不足」判定
   const coverage = totalWeight > 0 ? verifiedWeight / totalWeight : 0;
   // 已核验覆盖 < 15%（或一个条件都没核验到）→ 信息不足，不做推荐判断
+  // 2026-09-30 P1（方案 A 修正版，X=30%）：必选条件里「表单本来能答」的部分若**未填/选了不清楚**的占比达阈值 → 归「信息不足」。
+  // 口径边界：「字段已填、但规则判不了（verdict===undefined）」不算用户没答（那是引擎/数据问题，见验证记录）。
+  // 为何分母不用「全部必选权重」：实测 214 项未核验必选中 178 项表单根本没有对应字段（83%），
+  // 用全部必选做分母会让 37/38 条政策越线、「近期可申报」归零（见 产品文档/引擎口径-P1改动方案-2026-09-30.md）。
+  const reqAutoRatio = reqAutoW > 0 ? unvReqAutoW / reqAutoW : 0;
+  // P1（2026-09-30 用户拍板 X=30%）：必选条件里「表单能答却没答（未填 / 选了不清楚）」占比达阈值
+  // → **不给「推荐 / 近期档」**。只作门槛、不并入 insufficient：
+  // 并入会把"填写不全"的稀疏画像整体重排（部分匹配 → 信息不足），实测打破 7 条既有档位锚定。
+  // 与 2026-08-13 的 progress≥0.7 门槛同款思路，只是把口径从"全部条件"收窄到"必选条件"。
+  const reqUnverifiedBlocked = reqAutoW > 0 && reqAutoRatio >= REQ_AUTO_UNVERIFIED_MAX;
   const insufficient = verifiedWeight === 0 || coverage < 0.15;
 
-  return { totalWeight, verifiedWeight, matchedWeight, score, coverage, insufficient, requiredTotal, verifiedRequired, failedRequired, failedVeto, unverifiedRequired, unverifiedVeto, matchedItems, unmatchedOptional, items };
+  return { totalWeight, verifiedWeight, matchedWeight, score, coverage, insufficient, requiredTotal, verifiedRequired, reqAutoW, unvReqAutoW, reqAutoRatio, reqUnverifiedBlocked, reqAutoUnanswered, failedRequired, failedVeto, unverifiedRequired, unverifiedVeto, matchedItems, unmatchedOptional, items };
 }
 
 // ============================================================
@@ -450,7 +471,11 @@ function buildRoadmap(profile, now = new Date()) {
     const progress = autoCheckableWeight(p) > 0 ? r.verifiedWeight / autoCheckableWeight(p) : 0;
     if (r.insufficient || progress < 0.7) { layers.insufficient.push(r); return; }
     const gapCount = r.failedRequired.length;
-    if (r.fit >= 70 && gapCount === 0) { layers.near.push(r); return; }
+    if (r.fit >= 70 && gapCount === 0) {
+      // P1（2026-09-30）：必选条件里"表单能答却没答"达阈值 → 不给「近期可申报」，归「信息不足·先补数据」
+      if (r.reqUnverifiedBlocked) { layers.insufficient.push(r); return; }
+      layers.near.push(r); return;
+    }
     if (gapCount <= 2) { layers.mid.push(r); return; }
     layers.long.push(r);
   });
